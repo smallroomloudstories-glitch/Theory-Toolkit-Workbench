@@ -21,6 +21,9 @@
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid #bbb; padding: .45rem; text-align: center; }
     th:first-child, td:first-child { text-align: left; }
+    .string-scope-button { width: 100%; margin: 0; padding: .35rem .45rem; border: 1px solid transparent; background: transparent; text-align: left; }
+    .string-scope-button:hover { border-color: #777; }
+    .string-scope-button.selected { background: #e3efff; border-color: #245a9a; outline: 2px solid #245a9a; outline-offset: -2px; }
     td.fret-position { cursor: pointer; }
     .hidden-note { color: transparent; }
     .selected-note { font-weight: bold; outline: 3px solid currentColor; outline-offset: -4px; }
@@ -55,12 +58,6 @@
     </fieldset>
 
     <fieldset>
-      <legend>Select String Scope</legend>
-      <label><input type="radio" id="all-strings" name="string-scope" checked> All Strings</label>
-      <div id="string-controls"></div>
-    </fieldset>
-
-    <fieldset>
       <legend>Display</legend>
       <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
       <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
@@ -83,15 +80,13 @@
     const focus = createFretboardFocus();
     const focusOverrides = new Set();
     const selectedStrings = new Set();
+    let allStringsActive = true;
     const selectedNotes = new Set();
-    const controls = document.querySelector("#string-controls");
     const noteControls = document.querySelector("#note-controls");
-    const allStrings = document.querySelector("#all-strings");
     const clearNotes = document.querySelector("#clear-notes");
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
     const tuningSelect = document.querySelector("#tuning-select");
-    const stringCheckboxes = [];
     const noteButtons = new Map();
 
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
@@ -108,47 +103,29 @@
       fretboard = buildFretboard(activeTuning.strings, 12);
       focus.clear();
       focusOverrides.clear();
-      rebuildStringControls();
+      resetStringScope();
       renderFretboard();
     });
 
-    function rebuildStringControls() {
-      controls.innerHTML = "";
-      stringCheckboxes.length = 0;
+    function resetStringScope() {
       selectedStrings.clear();
-      allStrings.checked = true;
-
-      for (const stringData of fretboard) {
-        const label = document.createElement("label");
-        label.innerHTML = `<input type="checkbox" value="${stringData.string}"> ${stringData.label}`;
-        controls.appendChild(label);
-        const checkbox = label.querySelector("input");
-        stringCheckboxes.push(checkbox);
-        checkbox.addEventListener("change", (event) => {
-          const stringNumber = Number(event.target.value);
-          if (event.target.checked) {
-            allStrings.checked = false;
-            selectedStrings.add(stringNumber);
-          } else {
-            selectedStrings.delete(stringNumber);
-            if (selectedStrings.size === 0) allStrings.checked = true;
-          }
-          // A scope change does not erase Focus, but previously focused positions
-          // outside the new scope no longer override that scope.
-          focusOverrides.clear();
-          renderFretboard();
-        });
-      }
+      allStringsActive = true;
+      focusOverrides.clear();
     }
 
-    allStrings.addEventListener("change", () => {
-      if (allStrings.checked) {
-        selectedStrings.clear();
-        for (const checkbox of stringCheckboxes) checkbox.checked = false;
+    function toggleStringScope(stringNumber) {
+      if (allStringsActive) {
+        allStringsActive = false;
+        selectedStrings.add(stringNumber);
+      } else if (selectedStrings.has(stringNumber)) {
+        selectedStrings.delete(stringNumber);
+        if (selectedStrings.size === 0) allStringsActive = true;
+      } else {
+        selectedStrings.add(stringNumber);
       }
       focusOverrides.clear();
       renderFretboard();
-    });
+    }
 
     for (const note of CHROMATIC_SHARPS) {
       const button = document.createElement("button");
@@ -200,10 +177,15 @@
 
     document.querySelector("#fretboard-head").innerHTML = `
       <tr>
-        <th>String</th>
+        <th><button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">String</button></th>
         ${Array.from({ length: 13 }, (_, fret) => `<th>${fret === 0 ? "Open" : fret}</th>`).join("")}
       </tr>
     `;
+
+    document.querySelector("#all-strings").addEventListener("click", () => {
+      resetStringScope();
+      renderFretboard();
+    });
 
     function renderFretboard() {
       const body = document.querySelector("#fretboard-body");
@@ -212,10 +194,19 @@
       const hasNoteFilter = selectedNotes.size > 0;
 
       for (const stringData of fretboard) {
-        const stringMatches = allStrings.checked || selectedStrings.has(stringData.string);
+        const stringMatches = allStringsActive || selectedStrings.has(stringData.string);
         const row = document.createElement("tr");
         const stringLabel = document.createElement("td");
-        stringLabel.textContent = stringData.label;
+        const stringButton = document.createElement("button");
+        const stringSelected = allStringsActive || selectedStrings.has(stringData.string);
+        stringButton.type = "button";
+        stringButton.className = "string-scope-button";
+        stringButton.classList.toggle("selected", stringSelected);
+        stringButton.setAttribute("aria-pressed", String(stringSelected));
+        stringButton.textContent = stringData.label;
+        stringButton.title = `Toggle ${stringData.label} string scope`;
+        stringButton.addEventListener("click", () => toggleStringScope(stringData.string));
+        stringLabel.appendChild(stringButton);
         row.appendChild(stringLabel);
 
         stringData.frets.forEach(({ note }, fretNumber) => {
@@ -254,10 +245,13 @@
         });
         body.appendChild(row);
       }
+      const allStringsButton = document.querySelector("#all-strings");
+      allStringsButton.classList.toggle("selected", allStringsActive);
+      allStringsButton.setAttribute("aria-pressed", String(allStringsActive));
       updateFocusStatus();
     }
 
-    rebuildStringControls();
+    resetStringScope();
     updateNoteButtons();
     renderFretboard();
   </script>
