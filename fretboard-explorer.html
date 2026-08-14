@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
   <style>
-    body { font-family: sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    body { font-family: sans-serif; max-width: 1200px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
+    h1 { margin: .35rem 0; }
+    .workbench-mark { margin: .25rem 0; font-weight: bold; }
+    .checkpoint-note { margin: .4rem 0 1rem; max-width: 900px; }
+    .fretboard-wrap { overflow-x: auto; }
+    .focus-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; border: 1px solid #bbb; padding: .55rem .75rem; margin: .75rem 0 1.25rem; }
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; align-items: start; }
+    .controls-grid fieldset { margin: 0; min-width: 0; }
+    .notes-panel { grid-column: 1 / -1; }
     fieldset { margin-bottom: 1.25rem; }
     label { margin-right: 1rem; white-space: nowrap; }
     button { margin: .2rem; padding: .45rem .7rem; cursor: pointer; }
@@ -17,50 +25,53 @@
     .hidden-note { color: transparent; }
     .selected-note { font-weight: bold; outline: 3px solid currentColor; outline-offset: -4px; }
     .focused-position { box-shadow: inset 0 0 0 4px #111; background: #fff3a6; color: #111; font-weight: bold; }
-    .workbench-mark { font-weight: bold; }
   </style>
 </head>
 <body>
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Fretboard Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p>Focus checkpoint 2: Focus acts as a temporary teacher annotation layer. Existing focused positions respect later string-scope changes but remain remembered; clicking a hidden position explicitly brings that focused note into view.</p>
+  <p class="checkpoint-note">Layout checkpoint 1: the fretboard is the primary work surface. Focus remains a temporary teacher annotation layer with remembered string-scope behavior.</p>
 
-  <fieldset>
-    <legend>Instrument</legend>
-    <label>Instrument: <strong>Guitar</strong></label>
-    <label for="tuning-select">Tuning:</label>
-    <select id="tuning-select"></select>
-  </fieldset>
+  <div class="fretboard-wrap">
+    <table>
+      <thead id="fretboard-head"></thead>
+      <tbody id="fretboard-body"></tbody>
+    </table>
+  </div>
 
-  <fieldset>
-    <legend>Select String Scope</legend>
-    <label><input type="radio" id="all-strings" name="string-scope" checked> All Strings</label>
-    <div id="string-controls"></div>
-  </fieldset>
-
-  <fieldset>
-    <legend>Select Notes</legend>
-    <div id="note-controls"></div>
-    <button type="button" id="clear-notes">Clear all</button>
-  </fieldset>
-
-  <fieldset>
-    <legend>Display</legend>
-    <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
-    <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
-  </fieldset>
-
-  <fieldset>
-    <legend>Focus</legend>
-    <button type="button" id="clear-focus">Clear Focus</button>
+  <div class="focus-bar">
+    <strong>Focus:</strong>
     <span id="focus-status">No positions focused</span>
-  </fieldset>
+    <button type="button" id="clear-focus">Clear Focus</button>
+  </div>
 
-  <table>
-    <thead id="fretboard-head"></thead>
-    <tbody id="fretboard-body"></tbody>
-  </table>
+  <div class="controls-grid">
+    <fieldset>
+      <legend>Instrument</legend>
+      <label>Instrument: <strong>Guitar</strong></label>
+      <label for="tuning-select">Tuning:</label>
+      <select id="tuning-select"></select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Select String Scope</legend>
+      <label><input type="radio" id="all-strings" name="string-scope" checked> All Strings</label>
+      <div id="string-controls"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Display</legend>
+      <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
+      <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
+    </fieldset>
+
+    <fieldset class="notes-panel">
+      <legend>Select Notes</legend>
+      <div id="note-controls"></div>
+      <button type="button" id="clear-notes">Clear all</button>
+    </fieldset>
+  </div>
 
   <script type="module">
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
