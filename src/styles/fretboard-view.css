@@ -1,0 +1,50 @@
+.fretboard-wrap { overflow-x: auto; padding: .35rem 0; }
+
+.fretboard-surface {
+  position: relative;
+  min-width: 1180px;
+  padding: 2.9rem 0 2rem;
+  overflow: hidden;
+  background: #f8f5ed;
+  border: 1px solid #999;
+  isolation: isolate;
+}
+
+.fretboard-surface::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background: url("../../assets/studio-guitar-fretboard.png") center / cover no-repeat;
+  opacity: .42;
+}
+
+.fretboard-view {
+  width: 82%;
+  min-width: 968px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, .18);
+}
+
+.fretboard-view th, .fretboard-view td {
+  box-sizing: border-box;
+  height: 2.35rem;
+  min-width: 0;
+  padding: .25rem .08rem;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  border: 1px solid rgba(40, 40, 40, .62);
+}
+
+.fretboard-view th { height: 1.8rem; background: rgba(255, 255, 255, .82); font-size: .78rem; }
+.fretboard-view th:first-child, .fretboard-view td:first-child { text-align: left; }
+.fretboard-view td.fret-position { background: rgba(255, 255, 255, .66); text-shadow: 0 1px 0 #fff; }
+.fretboard-view td.hidden-note, .fretboard-view td.not-in-scale { background: rgba(255, 255, 255, .25); }
+.fretboard-view td.focused-position { background: #fff3a6 !important; }
+
+@media (max-width: 700px) {
+  .fretboard-surface { min-width: 1050px; }
+  .fretboard-view { min-width: 861px; }
+}

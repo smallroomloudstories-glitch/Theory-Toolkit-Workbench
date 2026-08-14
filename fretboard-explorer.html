@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css">
   <style>
     body { font-family: sans-serif; max-width: 1200px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
     .workbench-mark { margin: .25rem 0; font-weight: bold; }
     .checkpoint-note { margin: .4rem 0 1rem; max-width: 900px; }
-    .fretboard-wrap { overflow-x: auto; }
     .focus-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; border: 1px solid #bbb; padding: .55rem .75rem; margin: .75rem 0 1.25rem; }
     .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; align-items: start; }
     .controls-grid fieldset { margin: 0; min-width: 0; }
@@ -18,9 +18,6 @@
     label { margin-right: 1rem; white-space: nowrap; }
     button { margin: .2rem; padding: .45rem .7rem; cursor: pointer; }
     button.selected { font-weight: bold; outline: 3px solid currentColor; outline-offset: 1px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #bbb; padding: .45rem; text-align: center; }
-    th:first-child, td:first-child { text-align: left; }
     .string-scope-button { width: 100%; margin: 0; padding: .35rem .45rem; border: 1px solid transparent; background: transparent; text-align: left; }
     .string-scope-button:hover { border-color: #777; }
     .string-scope-button.selected { background: #e3efff; border-color: #245a9a; outline: 2px solid #245a9a; outline-offset: -2px; }
@@ -37,10 +34,12 @@
   <p class="checkpoint-note">Layout checkpoint 1 — the fretboard is the primary work surface. Focus remains a temporary teacher annotation layer with remembered string-scope behavior.</p>
 
   <div class="fretboard-wrap">
-    <table>
+    <div class="fretboard-surface">
+    <table id="fretboard-table">
       <thead id="fretboard-head"></thead>
       <tbody id="fretboard-body"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="focus-bar">
@@ -74,9 +73,10 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
+    import { FRETBOARD_MAX_FRET, configureFretboardView } from "./src/ui/fretboard-view.js";
 
     let activeTuning = GUITAR_TUNINGS.standard;
-    let fretboard = buildFretboard(activeTuning.strings, 12);
+    let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
     const focus = createFretboardFocus();
     const focusOverrides = new Set();
     const selectedStrings = new Set();
@@ -100,7 +100,7 @@
 
     tuningSelect.addEventListener("change", () => {
       activeTuning = GUITAR_TUNINGS[tuningSelect.value];
-      fretboard = buildFretboard(activeTuning.strings, 12);
+      fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
       focus.clear();
       focusOverrides.clear();
       resetStringScope();
@@ -175,12 +175,12 @@
       clearFocus.disabled = focus.size === 0;
     }
 
-    document.querySelector("#fretboard-head").innerHTML = `
-      <tr>
-        <th><button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">String</button></th>
-        ${Array.from({ length: 13 }, (_, fret) => `<th>${fret === 0 ? "Open" : fret}</th>`).join("")}
-      </tr>
-    `;
+    configureFretboardView({
+      table: document.querySelector("#fretboard-table"),
+      head: document.querySelector("#fretboard-head"),
+      maxFret: FRETBOARD_MAX_FRET,
+      firstHeader: '<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">String</button>'
+    });
 
     document.querySelector("#all-strings").addEventListener("click", () => {
       resetStringScope();
