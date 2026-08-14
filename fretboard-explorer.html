@@ -24,7 +24,7 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Fretboard Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p>Focus checkpoint 1: click any fretboard position to focus that exact location. Click it again to remove focus. Focus is independent of note selection and display filtering.</p>
+  <p>Focus checkpoint 2: Focus acts as a temporary teacher annotation layer. Existing focused positions respect later string-scope changes but remain remembered; clicking a hidden position explicitly brings that focused note into view.</p>
 
   <fieldset>
     <legend>Instrument</legend>
@@ -70,6 +70,7 @@
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, 12);
     const focus = createFretboardFocus();
+    const focusOverrides = new Set();
     const selectedStrings = new Set();
     const selectedNotes = new Set();
     const controls = document.querySelector("#string-controls");
@@ -82,6 +83,8 @@
     const stringCheckboxes = [];
     const noteButtons = new Map();
 
+    const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
+
     for (const tuning of Object.values(GUITAR_TUNINGS)) {
       const option = document.createElement("option");
       option.value = tuning.id;
@@ -93,6 +96,7 @@
       activeTuning = GUITAR_TUNINGS[tuningSelect.value];
       fretboard = buildFretboard(activeTuning.strings, 12);
       focus.clear();
+      focusOverrides.clear();
       rebuildStringControls();
       renderFretboard();
     });
@@ -118,6 +122,9 @@
             selectedStrings.delete(stringNumber);
             if (selectedStrings.size === 0) allStrings.checked = true;
           }
+          // A scope change does not erase Focus, but previously focused positions
+          // outside the new scope no longer override that scope.
+          focusOverrides.clear();
           renderFretboard();
         });
       }
@@ -128,6 +135,7 @@
         selectedStrings.clear();
         for (const checkbox of stringCheckboxes) checkbox.checked = false;
       }
+      focusOverrides.clear();
       renderFretboard();
     });
 
@@ -154,6 +162,7 @@
 
     clearFocus.addEventListener("click", () => {
       focus.clear();
+      focusOverrides.clear();
       renderFretboard();
     });
 
@@ -200,6 +209,9 @@
 
         stringData.frets.forEach(({ note }, fretNumber) => {
           const noteMatches = selectedNotes.has(note);
+          const key = positionKey(stringData.string, fretNumber);
+          const isFocused = focus.has(stringData.string, fretNumber);
+          const isFocusOverride = isFocused && focusOverrides.has(key);
           let visible;
           if (mode === "highlight") visible = stringMatches;
           else if (hasNoteFilter) visible = stringMatches && noteMatches;
@@ -207,15 +219,24 @@
 
           const cell = document.createElement("td");
           cell.classList.add("fret-position");
-          if (!visible) cell.classList.add("hidden-note");
+          if (!visible && !isFocusOverride) cell.classList.add("hidden-note");
           if (visible && noteMatches) cell.classList.add("selected-note");
-          if (focus.has(stringData.string, fretNumber)) cell.classList.add("focused-position");
+          if (isFocused && (visible || isFocusOverride)) cell.classList.add("focused-position");
           cell.textContent = note;
           cell.dataset.string = String(stringData.string);
           cell.dataset.fret = String(fretNumber);
           cell.title = `String ${stringData.string}, ${fretNumber === 0 ? "open" : `fret ${fretNumber}`}: ${note}`;
           cell.addEventListener("click", () => {
-            focus.toggle(stringData.string, fretNumber);
+            const wasFocused = focus.has(stringData.string, fretNumber);
+            if (wasFocused) {
+              focus.toggle(stringData.string, fretNumber);
+              focusOverrides.delete(key);
+            } else {
+              focus.toggle(stringData.string, fretNumber);
+              // Clicking a position that is currently hidden is an explicit
+              // teacher instruction, so Focus temporarily overrides the view.
+              if (!visible) focusOverrides.add(key);
+            }
             renderFretboard();
           });
           row.appendChild(cell);
