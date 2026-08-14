@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theory Toolkit - Fretboard Explorer Workbench</title>
+  <style>
+    body { font-family: sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    fieldset { margin-bottom: 1.25rem; }
+    label { margin-right: 1rem; white-space: nowrap; }
+    button { margin: .2rem; padding: .45rem .7rem; cursor: pointer; }
+    button.selected { font-weight: bold; outline: 3px solid currentColor; outline-offset: 1px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #bbb; padding: .45rem; text-align: center; }
+    th:first-child, td:first-child { text-align: left; }
+    td.fret-position { cursor: pointer; }
+    .hidden-note { color: transparent; }
+    .selected-note { font-weight: bold; outline: 3px solid currentColor; outline-offset: -4px; }
+    .focused-position { box-shadow: inset 0 0 0 4px #111; background: #fff3a6; color: #111; font-weight: bold; }
+    .workbench-mark { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <p><a href="index.html">← Workbench Home</a></p>
+  <h1>Fretboard Explorer — WORKBENCH</h1>
+  <p class="workbench-mark">Experimental development version.</p>
+  <p>Focus checkpoint 1: click any fretboard position to focus that exact location. Click it again to remove focus. Focus is independent of note selection and display filtering.</p>
+
+  <fieldset>
+    <legend>Instrument</legend>
+    <label>Instrument: <strong>Guitar</strong></label>
+    <label for="tuning-select">Tuning:</label>
+    <select id="tuning-select"></select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Select String Scope</legend>
+    <label><input type="radio" id="all-strings" name="string-scope" checked> All Strings</label>
+    <div id="string-controls"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Select Notes</legend>
+    <div id="note-controls"></div>
+    <button type="button" id="clear-notes">Clear all</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Display</legend>
+    <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
+    <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Focus</legend>
+    <button type="button" id="clear-focus">Clear Focus</button>
+    <span id="focus-status">No positions focused</span>
+  </fieldset>
+
+  <table>
+    <thead id="fretboard-head"></thead>
+    <tbody id="fretboard-body"></tbody>
+  </table>
+
+  <script type="module">
+    import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
+    import { buildFretboard } from "./src/engine/fretboard.js";
+    import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
+
+    let activeTuning = GUITAR_TUNINGS.standard;
+    let fretboard = buildFretboard(activeTuning.strings, 12);
+    const focus = createFretboardFocus();
+    const selectedStrings = new Set();
+    const selectedNotes = new Set();
+    const controls = document.querySelector("#string-controls");
+    const noteControls = document.querySelector("#note-controls");
+    const allStrings = document.querySelector("#all-strings");
+    const clearNotes = document.querySelector("#clear-notes");
+    const clearFocus = document.querySelector("#clear-focus");
+    const focusStatus = document.querySelector("#focus-status");
+    const tuningSelect = document.querySelector("#tuning-select");
+    const stringCheckboxes = [];
+    const noteButtons = new Map();
+
+    for (const tuning of Object.values(GUITAR_TUNINGS)) {
+      const option = document.createElement("option");
+      option.value = tuning.id;
+      option.textContent = tuning.name;
+      tuningSelect.appendChild(option);
+    }
+
+    tuningSelect.addEventListener("change", () => {
+      activeTuning = GUITAR_TUNINGS[tuningSelect.value];
+      fretboard = buildFretboard(activeTuning.strings, 12);
+      focus.clear();
+      rebuildStringControls();
+      renderFretboard();
+    });
+
+    function rebuildStringControls() {
+      controls.innerHTML = "";
+      stringCheckboxes.length = 0;
+      selectedStrings.clear();
+      allStrings.checked = true;
+
+      for (const stringData of fretboard) {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" value="${stringData.string}"> ${stringData.label}`;
+        controls.appendChild(label);
+        const checkbox = label.querySelector("input");
+        stringCheckboxes.push(checkbox);
+        checkbox.addEventListener("change", (event) => {
+          const stringNumber = Number(event.target.value);
+          if (event.target.checked) {
+            allStrings.checked = false;
+            selectedStrings.add(stringNumber);
+          } else {
+            selectedStrings.delete(stringNumber);
+            if (selectedStrings.size === 0) allStrings.checked = true;
+          }
+          renderFretboard();
+        });
+      }
+    }
+
+    allStrings.addEventListener("change", () => {
+      if (allStrings.checked) {
+        selectedStrings.clear();
+        for (const checkbox of stringCheckboxes) checkbox.checked = false;
+      }
+      renderFretboard();
+    });
+
+    for (const note of CHROMATIC_SHARPS) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = note;
+      button.setAttribute("aria-pressed", "false");
+      noteControls.appendChild(button);
+      noteButtons.set(note, button);
+      button.addEventListener("click", () => {
+        if (selectedNotes.has(note)) selectedNotes.delete(note);
+        else selectedNotes.add(note);
+        updateNoteButtons();
+        renderFretboard();
+      });
+    }
+
+    clearNotes.addEventListener("click", () => {
+      selectedNotes.clear();
+      updateNoteButtons();
+      renderFretboard();
+    });
+
+    clearFocus.addEventListener("click", () => {
+      focus.clear();
+      renderFretboard();
+    });
+
+    for (const radio of document.querySelectorAll('input[name="display-mode"]')) {
+      radio.addEventListener("change", renderFretboard);
+    }
+
+    function displayMode() {
+      return document.querySelector('input[name="display-mode"]:checked').value;
+    }
+
+    function updateNoteButtons() {
+      for (const [note, button] of noteButtons) {
+        const selected = selectedNotes.has(note);
+        button.classList.toggle("selected", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      }
+    }
+
+    function updateFocusStatus() {
+      focusStatus.textContent = focus.size === 0 ? "No positions focused" : `${focus.size} position${focus.size === 1 ? "" : "s"} focused`;
+      clearFocus.disabled = focus.size === 0;
+    }
+
+    document.querySelector("#fretboard-head").innerHTML = `
+      <tr>
+        <th>String</th>
+        ${Array.from({ length: 13 }, (_, fret) => `<th>${fret === 0 ? "Open" : fret}</th>`).join("")}
+      </tr>
+    `;
+
+    function renderFretboard() {
+      const body = document.querySelector("#fretboard-body");
+      body.innerHTML = "";
+      const mode = displayMode();
+      const hasNoteFilter = selectedNotes.size > 0;
+
+      for (const stringData of fretboard) {
+        const stringMatches = allStrings.checked || selectedStrings.has(stringData.string);
+        const row = document.createElement("tr");
+        const stringLabel = document.createElement("td");
+        stringLabel.textContent = stringData.label;
+        row.appendChild(stringLabel);
+
+        stringData.frets.forEach(({ note }, fretNumber) => {
+          const noteMatches = selectedNotes.has(note);
+          let visible;
+          if (mode === "highlight") visible = stringMatches;
+          else if (hasNoteFilter) visible = stringMatches && noteMatches;
+          else visible = stringMatches;
+
+          const cell = document.createElement("td");
+          cell.classList.add("fret-position");
+          if (!visible) cell.classList.add("hidden-note");
+          if (visible && noteMatches) cell.classList.add("selected-note");
+          if (focus.has(stringData.string, fretNumber)) cell.classList.add("focused-position");
+          cell.textContent = note;
+          cell.dataset.string = String(stringData.string);
+          cell.dataset.fret = String(fretNumber);
+          cell.title = `String ${stringData.string}, ${fretNumber === 0 ? "open" : `fret ${fretNumber}`}: ${note}`;
+          cell.addEventListener("click", () => {
+            focus.toggle(stringData.string, fretNumber);
+            renderFretboard();
+          });
+          row.appendChild(cell);
+        });
+        body.appendChild(row);
+      }
+      updateFocusStatus();
+    }
+
+    rebuildStringControls();
+    updateNoteButtons();
+    renderFretboard();
+  </script>
+</body>
+</html>
