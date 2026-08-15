@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-6">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-7">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -15,6 +15,9 @@
     .controls-grid fieldset { margin: 0; min-width: 0; }
     .display-panel { box-sizing: border-box; width: 23rem; }
     .notes-panel { grid-column: 1 / -1; }
+    .note-panel-actions { display: flex; align-items: center; gap: .65rem; margin-top: .2rem; }
+    .accidental-toggle-control { display: inline-flex; align-items: center; gap: .35rem; font-size: inherit; }
+    #accidental-toggle { box-sizing: border-box; min-width: 2.25rem; margin: .2rem 0; }
     fieldset { margin-bottom: 1.25rem; }
     label { margin-right: 1rem; white-space: nowrap; }
     button { margin: .2rem; padding: .45rem .7rem; cursor: pointer; }
@@ -32,7 +35,7 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Fretboard Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="checkpoint-note">Presentation checkpoint 5 — compact centered markers, reduced note lettering, and smaller accidentals.</p>
+  <p class="checkpoint-note">Presentation checkpoint 6 — centered note groups with a persistent sharps-or-flats display choice.</p>
 
   <div class="fretboard-wrap">
     <div class="fretboard-surface fretboard-diagnostic-surface">
@@ -66,7 +69,13 @@
     <fieldset class="notes-panel">
       <legend>Select Notes</legend>
       <div id="note-controls"></div>
-      <button type="button" id="clear-notes">Clear all</button>
+      <div class="note-panel-actions">
+        <button type="button" id="clear-notes">Clear all</button>
+        <span class="accidental-toggle-control">
+          <span>Accidentals:</span>
+          <button type="button" id="accidental-toggle" aria-label="Showing sharps; switch to flats" title="Switch between sharps and flats">#</button>
+        </span>
+      </div>
     </fieldset>
   </div>
 
@@ -74,7 +83,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-6";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-7";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
@@ -88,9 +97,13 @@
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
     const tuningSelect = document.querySelector("#tuning-select");
+    const accidentalToggle = document.querySelector("#accidental-toggle");
     const noteButtons = new Map();
+    const flatNames = new Map([["C#", "Db"], ["D#", "Eb"], ["F#", "Gb"], ["G#", "Ab"], ["A#", "Bb"]]);
+    let accidentalDisplay = "sharps";
 
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
+    const displayNote = note => accidentalDisplay === "flats" ? (flatNames.get(note) ?? note) : note;
 
     for (const tuning of Object.values(GUITAR_TUNINGS)) {
       const option = document.createElement("option");
@@ -149,6 +162,14 @@
       renderFretboard();
     });
 
+    accidentalToggle.addEventListener("click", () => {
+      accidentalDisplay = accidentalDisplay === "sharps" ? "flats" : "sharps";
+      accidentalToggle.textContent = accidentalDisplay === "sharps" ? "#" : "b";
+      accidentalToggle.setAttribute("aria-label", accidentalDisplay === "sharps" ? "Showing sharps; switch to flats" : "Showing flats; switch to sharps");
+      updateNoteButtons();
+      renderFretboard();
+    });
+
     clearFocus.addEventListener("click", () => {
       focus.clear();
       focusOverrides.clear();
@@ -166,6 +187,7 @@
     function updateNoteButtons() {
       for (const [note, button] of noteButtons) {
         const selected = selectedNotes.has(note);
+        button.textContent = displayNote(note);
         button.classList.toggle("selected", selected);
         button.setAttribute("aria-pressed", String(selected));
       }
@@ -230,10 +252,11 @@
           noteLabel.className = "note-label";
           const noteText = document.createElement("span");
           noteText.className = "note-text";
-          const accidental = note.match(/[#b♯♭]$/)?.[0] ?? "";
+          const shownNote = displayNote(note);
+          const accidental = shownNote.match(/[#b♯♭]$/)?.[0] ?? "";
           const natural = document.createElement("span");
           natural.className = "note-natural";
-          natural.textContent = accidental ? note.slice(0, -accidental.length) : note;
+          natural.textContent = accidental ? shownNote.slice(0, -accidental.length) : shownNote;
           noteText.appendChild(natural);
           if (accidental) {
             const accidentalLabel = document.createElement("span");
@@ -245,7 +268,7 @@
           cell.appendChild(noteLabel);
           cell.dataset.string = String(stringData.string);
           cell.dataset.fret = String(fretNumber);
-          cell.title = `String ${stringData.string}, ${fretNumber === 0 ? "open" : `fret ${fretNumber}`}: ${note}`;
+          cell.title = `String ${stringData.string}, ${fretNumber === 0 ? "open" : `fret ${fretNumber}`}: ${shownNote}`;
           cell.addEventListener("click", () => {
             const wasFocused = focus.has(stringData.string, fretNumber);
             if (wasFocused) {
