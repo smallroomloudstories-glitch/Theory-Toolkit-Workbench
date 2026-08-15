@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260814-5">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260814-6">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -73,7 +73,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260814-5";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260814-6";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);

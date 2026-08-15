@@ -58,9 +58,9 @@ const DEFAULT_GEOMETRY = {
 };
 
 const FRETBOARD_EXPLORER_GEOMETRY = {
-  nutX: 14, lastFretX: 96, headerTop: 13.5, headerHeight: 8.5,
-  nutTopString: 25.75, nutStringGap: 9.7,
-  bodyTopString: 27.25, bodyStringGap: 9.1
+  nutX: 12.5, lastFretX: 97, headerTop: 2, headerHeight: 8.5,
+  nutTopString: 24.5, nutStringGap: 10.2,
+  bodyTopString: 26.1, bodyStringGap: 9.55
 };
 
 function setBox(element, left, top, width, height) {
