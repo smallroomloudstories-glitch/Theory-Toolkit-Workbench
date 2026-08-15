@@ -155,6 +155,12 @@
   box-shadow: none;
 }
 .fretboard-diagnostic td.suppressed-fret .note-label { display: none; }
+.fretboard-diagnostic td[data-fret="12"] .note-label {
+  transform: translate(calc(-50% + 12px), -50%);
+}
+.fretboard-diagnostic td[data-fret="14"] .note-label {
+  transform: translate(calc(-50% + 6px), -50%);
+}
 .fretboard-diagnostic tbody .string-scope-button {
   color: #fff;
   text-shadow: -1px -1px 0 #111, 1px -1px 0 #111, -1px 1px 0 #111, 1px 1px 0 #111;
