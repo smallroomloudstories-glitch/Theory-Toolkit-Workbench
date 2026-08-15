@@ -62,6 +62,61 @@
 .fretboard-diagnostic-surface::before { background-position: -5.25rem calc(50% - 5.25rem); background-size: 162% auto; }
 .fretboard-view td.focused-position { background: #fff3a6 !important; }
 
+/* Finished Fretboard Explorer presentation: calibrated cells remain as large
+   hit targets, but their alignment scaffolding is visually removed. */
+.fretboard-diagnostic { background: transparent; }
+.fretboard-diagnostic th,
+.fretboard-diagnostic td,
+.fretboard-diagnostic th.open-position,
+.fretboard-diagnostic td.open-position,
+.fretboard-diagnostic td.fret-position,
+.fretboard-diagnostic td.hidden-note {
+  border-color: transparent;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+}
+.fretboard-diagnostic th {
+  background: transparent;
+  overflow: visible;
+  font-weight: bold;
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+.fretboard-diagnostic td.fret-position { overflow: visible; }
+.fretboard-diagnostic td.selected-note { outline: none; }
+.fretboard-diagnostic .note-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  line-height: 1;
+}
+.fretboard-diagnostic td.selected-note .note-label {
+  color: #063f75;
+  font-weight: 800;
+  text-shadow: 0 1px 0 #fff, 0 0 3px #fff;
+}
+.fretboard-diagnostic td.focused-position {
+  color: #111;
+  background: transparent !important;
+  box-shadow: none;
+  font-weight: bold;
+}
+.fretboard-diagnostic td.focused-position .note-label {
+  width: 1.55rem;
+  height: 1.55rem;
+  box-sizing: border-box;
+  border: 3px solid #111;
+  border-radius: 50%;
+  background: #fff3a6;
+  color: #111;
+  text-shadow: none;
+}
+
 @media (max-width: 700px) {
   .fretboard-surface { min-width: 1050px; }
 }
