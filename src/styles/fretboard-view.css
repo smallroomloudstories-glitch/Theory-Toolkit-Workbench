@@ -3,7 +3,8 @@
 .fretboard-surface {
   position: relative;
   min-width: 1180px;
-  padding: 5rem 0 2rem;
+  min-height: 342px;
+  padding: 0;
   overflow: hidden;
   background: #f8f5ed;
   border: 1px solid #999;
@@ -15,13 +16,16 @@
   inset: 0;
   z-index: -1;
   content: "";
-  background: url("../../assets/studio-guitar-fretboard.png") left center / 120% auto no-repeat;
-  opacity: .5;
+  background: url("../../assets/studio-guitar-fretboard.png") left center / 140% auto no-repeat;
+  opacity: .52;
 }
 
 .fretboard-view {
-  width: 95%;
-  min-width: 1121px;
+  position: absolute;
+  top: 7rem;
+  left: 0;
+  width: 94%;
+  min-width: 1109px;
   table-layout: fixed;
   border-collapse: collapse;
   background: rgba(255, 255, 255, .18);
@@ -29,7 +33,7 @@
 
 .fretboard-view th, .fretboard-view td {
   box-sizing: border-box;
-  height: 1.45rem;
+  height: 2.1rem;
   min-width: 0;
   padding: .1rem .05rem;
   overflow: hidden;
@@ -40,6 +44,7 @@
 }
 
 .fretboard-view th { height: 1.8rem; background: rgba(255, 255, 255, .82); font-size: .78rem; }
+.fretboard-view .string-scope-button { margin: 0; padding: .1rem .25rem; line-height: 1.1; font-size: .76rem; }
 .fretboard-view th:first-child, .fretboard-view td:first-child { text-align: left; }
 .fretboard-view td.fret-position { background: rgba(255, 255, 255, .66); text-shadow: 0 1px 0 #fff; }
 .fretboard-view td.hidden-note, .fretboard-view td.not-in-scale { background: rgba(255, 255, 255, .25); }
@@ -47,5 +52,5 @@
 
 @media (max-width: 700px) {
   .fretboard-surface { min-width: 1050px; }
-  .fretboard-view { min-width: 998px; }
+  .fretboard-view { min-width: 987px; }
 }

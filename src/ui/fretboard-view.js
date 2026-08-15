@@ -1,4 +1,6 @@
-export const FRETBOARD_MAX_FRET = 18;
+// The illustrated STUDio guitar remains legible through fret 15. This still
+// carries the chromatic sequence beyond the octave at fret 12.
+export const FRETBOARD_MAX_FRET = 15;
 
 // Equal-temperament fret positions. Each fret occupies the physical distance
 // between two adjacent points on a scale length, so cells narrow toward the body.
