@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-2">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-3">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -13,6 +13,7 @@
     .focus-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; border: 1px solid #bbb; padding: .55rem .75rem; margin: .75rem 0 1.25rem; }
     .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; align-items: start; }
     .controls-grid fieldset { margin: 0; min-width: 0; }
+    .display-panel { box-sizing: border-box; width: max-content; min-width: 21rem; max-width: 100%; }
     .notes-panel { grid-column: 1 / -1; }
     fieldset { margin-bottom: 1.25rem; }
     label { margin-right: 1rem; white-space: nowrap; }
@@ -31,7 +32,7 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Fretboard Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="checkpoint-note">Presentation checkpoint 2 — larger note markers, compact string selectors, and temporary unselected-note comparison control.</p>
+  <p class="checkpoint-note">Presentation checkpoint 3 — bold note markers, compact nut-side string selectors, and fret numbers below the neck.</p>
 
   <div class="fretboard-wrap">
     <div class="fretboard-surface fretboard-diagnostic-surface">
@@ -56,11 +57,10 @@
       <select id="tuning-select"></select>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="display-panel">
       <legend>Display</legend>
       <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
       <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
-      <label title="Temporary comparison control"><input type="checkbox" id="show-unselected" checked> Show unselected note labels in white (temporary)</label>
     </fieldset>
 
     <fieldset class="notes-panel">
@@ -74,7 +74,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-2";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-3";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
@@ -88,7 +88,6 @@
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
     const tuningSelect = document.querySelector("#tuning-select");
-    const showUnselected = document.querySelector("#show-unselected");
     const noteButtons = new Map();
 
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
@@ -159,7 +158,6 @@
     for (const radio of document.querySelectorAll('input[name="display-mode"]')) {
       radio.addEventListener("change", renderFretboard);
     }
-    showUnselected.addEventListener("change", renderFretboard);
 
     function displayMode() {
       return document.querySelector('input[name="display-mode"]:checked').value;
@@ -182,7 +180,7 @@
       table: document.querySelector("#fretboard-table"),
       head: document.querySelector("#fretboard-head"),
       maxFret: FRETBOARD_MAX_FRET,
-      firstHeader: '<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">String</button>'
+      firstHeader: '<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">Show All</button>'
     });
 
     document.querySelector("#all-strings").addEventListener("click", () => {
@@ -219,7 +217,7 @@
           const isFocusOverride = isFocused && focusOverrides.has(key);
           let visible;
           if (mode === "highlight") visible = stringMatches;
-          else if (hasNoteFilter) visible = stringMatches && (noteMatches || showUnselected.checked);
+          else if (hasNoteFilter) visible = stringMatches && noteMatches;
           else visible = stringMatches;
 
           const cell = document.createElement("td");

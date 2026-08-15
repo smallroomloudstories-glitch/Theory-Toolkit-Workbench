@@ -94,7 +94,7 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
   color: #fff;
-  font-size: .95rem;
+  font-size: 1.9rem;
   font-weight: 700;
   line-height: 1;
   text-shadow: 0 1px 2px #111, 0 0 3px #111;
@@ -104,8 +104,8 @@
   text-shadow: none;
 }
 .fretboard-diagnostic td.selected-note .note-label {
-  width: 1.95rem;
-  height: 1.95rem;
+  width: 3.9rem;
+  height: 3.9rem;
   box-sizing: border-box;
   border: 2px solid #fff;
   border-radius: 50%;
@@ -122,12 +122,20 @@
   font-weight: bold;
 }
 .fretboard-diagnostic td.focused-position .note-label {
-  width: 1.95rem;
-  height: 1.95rem;
+  width: 3.9rem;
+  height: 3.9rem;
   box-sizing: border-box;
   border: 3px solid #111;
   border-radius: 50%;
   background: #fff3a6;
+  color: #111;
+  text-shadow: none;
+}
+.fretboard-diagnostic tbody .string-scope-button {
+  color: #fff;
+  text-shadow: -1px -1px 0 #111, 1px -1px 0 #111, -1px 1px 0 #111, 1px 1px 0 #111;
+}
+.fretboard-diagnostic tbody .string-scope-button.selected {
   color: #111;
   text-shadow: none;
 }
