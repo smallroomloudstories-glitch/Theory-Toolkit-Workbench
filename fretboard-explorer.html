@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-5">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-6">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
     .workbench-mark { margin: .25rem 0; font-weight: bold; }
     .checkpoint-note { margin: .4rem 0 1rem; max-width: 900px; }
     .focus-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; border: 1px solid #bbb; padding: .55rem .75rem; margin: .75rem 0 1.25rem; }
-    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; align-items: start; }
+    .controls-grid { display: grid; grid-template-columns: max-content max-content 1fr; gap: 1rem; align-items: start; }
     .controls-grid fieldset { margin: 0; min-width: 0; }
-    .display-panel { box-sizing: border-box; width: max-content; min-width: 21rem; max-width: 100%; }
+    .display-panel { box-sizing: border-box; width: 23rem; }
     .notes-panel { grid-column: 1 / -1; }
     fieldset { margin-bottom: 1.25rem; }
     label { margin-right: 1rem; white-space: nowrap; }
@@ -32,7 +32,7 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Fretboard Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="checkpoint-note">Presentation checkpoint 4 — reduced markers, consistently left-aligned note labels, and a clear 15th fret.</p>
+  <p class="checkpoint-note">Presentation checkpoint 5 — compact centered markers, reduced note lettering, and smaller accidentals.</p>
 
   <div class="fretboard-wrap">
     <div class="fretboard-surface fretboard-diagnostic-surface">
@@ -74,7 +74,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-5";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-6";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
@@ -228,7 +228,20 @@
           if (isFocused && (visible || isFocusOverride)) cell.classList.add("focused-position");
           const noteLabel = document.createElement("span");
           noteLabel.className = "note-label";
-          noteLabel.textContent = note;
+          const noteText = document.createElement("span");
+          noteText.className = "note-text";
+          const accidental = note.match(/[#b♯♭]$/)?.[0] ?? "";
+          const natural = document.createElement("span");
+          natural.className = "note-natural";
+          natural.textContent = accidental ? note.slice(0, -accidental.length) : note;
+          noteText.appendChild(natural);
+          if (accidental) {
+            const accidentalLabel = document.createElement("span");
+            accidentalLabel.className = "note-accidental";
+            accidentalLabel.textContent = accidental;
+            noteText.appendChild(accidentalLabel);
+          }
+          noteLabel.appendChild(noteText);
           cell.appendChild(noteLabel);
           cell.dataset.string = String(stringData.string);
           cell.dataset.fret = String(fretNumber);
