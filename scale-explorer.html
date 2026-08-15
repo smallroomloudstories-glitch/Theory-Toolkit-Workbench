@@ -3,7 +3,7 @@
 <p><a href="index.html">← Workbench Home</a></p>
 <h1>Scale Explorer — WORKBENCH</h1>
 <p class="workbench-mark">Experimental development version.</p>
-<p class="checkpoint-note">Presentation checkpoint 3 — centered seven-note chromatic key wheel with smoother controlled scrolling.</p>
+<p class="checkpoint-note">Presentation checkpoint 4 — centered seven-note chromatic key wheel with a 25ms scroll limiter.</p>
 
 <div class="fretboard-wrap">
   <div class="fretboard-surface fretboard-diagnostic-surface">
@@ -90,7 +90,7 @@ configureFretboardView({table:document.querySelector("#fretboard-table"),head:fr
 document.querySelector("#all-strings").addEventListener("click",()=>{resetStringScope();render()});
 accidentalToggle.addEventListener("click",()=>{accidentalDisplay=accidentalDisplay==="sharps"?"flats":"sharps";updateAccidentalControls();render()});
 keyWheelTrigger.addEventListener("click",()=>{if(keyWheelMenu.hidden)openKeyWheel();else closeKeyWheel()});
-keyWheelMenu.addEventListener("wheel",event=>{event.preventDefault();const now=performance.now();if(Math.abs(event.deltaY)<1||now-lastWheelStep<70)return;lastWheelStep=now;moveKeyWheel(event.deltaY>0?1:-1)},{passive:false});
+keyWheelMenu.addEventListener("wheel",event=>{event.preventDefault();const now=performance.now();if(Math.abs(event.deltaY)<1||now-lastWheelStep<25)return;lastWheelStep=now;moveKeyWheel(event.deltaY>0?1:-1)},{passive:false});
 keyWheelTrigger.addEventListener("keydown",event=>{if(event.key!=="ArrowDown"&&event.key!=="ArrowUp"&&event.key!=="Escape")return;event.preventDefault();if(event.key==="Escape"){closeKeyWheel();return}if(keyWheelMenu.hidden)openKeyWheel();moveKeyWheel(event.key==="ArrowDown"?1:-1);keyWheelMenu.querySelector(".center").focus()});
 keyWheelMenu.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeKeyWheel();keyWheelTrigger.focus();return}if(event.key!=="ArrowDown"&&event.key!=="ArrowUp")return;event.preventDefault();moveKeyWheel(event.key==="ArrowDown"?1:-1);keyWheelMenu.querySelector(".center").focus()});
 document.addEventListener("click",event=>{if(!keyWheel.contains(event.target))closeKeyWheel()});
