@@ -89,9 +89,14 @@ function stringBox(stringIndex, xCenter) {
 export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
   const boundaries = fretBoundaries(maxFret);
   const headerCells = table.querySelectorAll("thead th");
+  const compactOpen = table.classList.contains("fretboard-diagnostic");
+  const openWidth = compactOpen ? 3 : 6;
 
   if (headerCells[0]) setBox(headerCells[0], 0, HEADER_TOP, 7.5, HEADER_HEIGHT);
-  if (headerCells[1]) setBox(headerCells[1], NUT_X - 3, HEADER_TOP, 6, HEADER_HEIGHT);
+  if (headerCells[1]) {
+    headerCells[1].classList.add("open-position");
+    setBox(headerCells[1], NUT_X - (openWidth / 2), HEADER_TOP, openWidth, HEADER_HEIGHT);
+  }
   for (let fret = 1; fret <= maxFret; fret += 1) {
     const left = boundaries[fret - 1];
     setBox(headerCells[fret + 1], left, HEADER_TOP, boundaries[fret] - left, HEADER_HEIGHT);
@@ -103,8 +108,9 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
     if (cells[0]) setBox(cells[0], 0, labelBox.top, 7.5, labelBox.height);
 
     if (cells[1]) {
+      cells[1].classList.add("open-position");
       const openBox = stringBox(stringIndex, NUT_X);
-      setBox(cells[1], NUT_X - 3, openBox.top, 6, openBox.height);
+      setBox(cells[1], NUT_X - (openWidth / 2), openBox.top, openWidth, openBox.height);
     }
 
     for (let fret = 1; fret <= maxFret; fret += 1) {
