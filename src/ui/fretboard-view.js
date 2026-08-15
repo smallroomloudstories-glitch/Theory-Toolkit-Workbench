@@ -51,14 +51,17 @@ export function configureFretboardView({ table, head, maxFret = FRETBOARD_MAX_FR
   positionFretboardCells(table, maxFret);
 }
 
-const NUT_X = 16;
-const LAST_FRET_X = 94;
-const HEADER_TOP = 32.5;
-const HEADER_HEIGHT = 8.5;
-const NUT_TOP_STRING = 46;
-const NUT_STRING_GAP = 8.8;
-const BODY_TOP_STRING = 41.5;
-const BODY_STRING_GAP = 8.3;
+const DEFAULT_GEOMETRY = {
+  nutX: 16, lastFretX: 94, headerTop: 32.5, headerHeight: 8.5,
+  nutTopString: 46, nutStringGap: 8.8,
+  bodyTopString: 41.5, bodyStringGap: 8.3
+};
+
+const FRETBOARD_EXPLORER_GEOMETRY = {
+  nutX: 14, lastFretX: 96, headerTop: 13.5, headerHeight: 8.5,
+  nutTopString: 25.75, nutStringGap: 9.7,
+  bodyTopString: 27.25, bodyStringGap: 9.1
+};
 
 function setBox(element, left, top, width, height) {
   element.style.setProperty("--cell-left", `${left}%`);
@@ -67,56 +70,57 @@ function setBox(element, left, top, width, height) {
   element.style.setProperty("--cell-height", `${height}%`);
 }
 
-function fretBoundaries(maxFret) {
+function fretBoundaries(maxFret, geometry) {
   const widths = fretWidths(maxFret);
   const total = widths.reduce((sum, width) => sum + width, 0);
-  let position = NUT_X;
+  let position = geometry.nutX;
   return [position, ...widths.map((width) => {
-    position += (width / total) * (LAST_FRET_X - NUT_X);
+    position += (width / total) * (geometry.lastFretX - geometry.nutX);
     return position;
   })];
 }
 
-function stringBox(stringIndex, xCenter) {
-  const progress = Math.max(0, Math.min(1, (xCenter - NUT_X) / (LAST_FRET_X - NUT_X)));
-  const nutCenter = NUT_TOP_STRING + (stringIndex * NUT_STRING_GAP);
-  const bodyCenter = BODY_TOP_STRING + (stringIndex * BODY_STRING_GAP);
+function stringBox(stringIndex, xCenter, geometry) {
+  const progress = Math.max(0, Math.min(1, (xCenter - geometry.nutX) / (geometry.lastFretX - geometry.nutX)));
+  const nutCenter = geometry.nutTopString + (stringIndex * geometry.nutStringGap);
+  const bodyCenter = geometry.bodyTopString + (stringIndex * geometry.bodyStringGap);
   const center = nutCenter + ((bodyCenter - nutCenter) * progress);
-  const height = NUT_STRING_GAP + ((BODY_STRING_GAP - NUT_STRING_GAP) * progress);
+  const height = geometry.nutStringGap + ((geometry.bodyStringGap - geometry.nutStringGap) * progress);
   return { top: center - (height / 2), height };
 }
 
 export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
-  const boundaries = fretBoundaries(maxFret);
-  const headerCells = table.querySelectorAll("thead th");
   const compactOpen = table.classList.contains("fretboard-diagnostic");
+  const geometry = compactOpen ? FRETBOARD_EXPLORER_GEOMETRY : DEFAULT_GEOMETRY;
+  const boundaries = fretBoundaries(maxFret, geometry);
+  const headerCells = table.querySelectorAll("thead th");
   const openWidth = compactOpen ? 3 : 6;
 
-  if (headerCells[0]) setBox(headerCells[0], 0, HEADER_TOP, 7.5, HEADER_HEIGHT);
+  if (headerCells[0]) setBox(headerCells[0], 0, geometry.headerTop, 7.5, geometry.headerHeight);
   if (headerCells[1]) {
     headerCells[1].classList.add("open-position");
-    setBox(headerCells[1], NUT_X - (openWidth / 2), HEADER_TOP, openWidth, HEADER_HEIGHT);
+    setBox(headerCells[1], geometry.nutX - (openWidth / 2), geometry.headerTop, openWidth, geometry.headerHeight);
   }
   for (let fret = 1; fret <= maxFret; fret += 1) {
     const left = boundaries[fret - 1];
-    setBox(headerCells[fret + 1], left, HEADER_TOP, boundaries[fret] - left, HEADER_HEIGHT);
+    setBox(headerCells[fret + 1], left, geometry.headerTop, boundaries[fret] - left, geometry.headerHeight);
   }
 
   table.querySelectorAll("tbody tr").forEach((row, stringIndex) => {
     const cells = row.querySelectorAll("td");
-    const labelBox = stringBox(stringIndex, NUT_X);
+    const labelBox = stringBox(stringIndex, geometry.nutX, geometry);
     if (cells[0]) setBox(cells[0], 0, labelBox.top, 7.5, labelBox.height);
 
     if (cells[1]) {
       cells[1].classList.add("open-position");
-      const openBox = stringBox(stringIndex, NUT_X);
-      setBox(cells[1], NUT_X - (openWidth / 2), openBox.top, openWidth, openBox.height);
+      const openBox = stringBox(stringIndex, geometry.nutX, geometry);
+      setBox(cells[1], geometry.nutX - (openWidth / 2), openBox.top, openWidth, openBox.height);
     }
 
     for (let fret = 1; fret <= maxFret; fret += 1) {
       const left = boundaries[fret - 1];
       const width = boundaries[fret] - left;
-      const box = stringBox(stringIndex, left + (width / 2));
+      const box = stringBox(stringIndex, left + (width / 2), geometry);
       if (cells[fret + 1]) setBox(cells[fret + 1], left, box.top, width, box.height);
     }
   });

@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260814-4">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260814-5">
   <style>
-    body { font-family: sans-serif; max-width: 1500px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
+    body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
     .workbench-mark { margin: .25rem 0; font-weight: bold; }
     .checkpoint-note { margin: .4rem 0 1rem; max-width: 900px; }
@@ -34,7 +34,7 @@
   <p class="checkpoint-note">Alignment checkpoint 3 — tapered 15-fret STUDio guitar view. Focus remains a temporary teacher annotation layer with remembered string-scope behavior.</p>
 
   <div class="fretboard-wrap">
-    <div class="fretboard-surface">
+    <div class="fretboard-surface fretboard-diagnostic-surface">
     <table id="fretboard-table" class="fretboard-diagnostic">
       <thead id="fretboard-head"></thead>
       <tbody id="fretboard-body"></tbody>
@@ -73,7 +73,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260814-4";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260814-5";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
