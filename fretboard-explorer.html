@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-1">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-2">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -60,6 +60,7 @@
       <legend>Display</legend>
       <label><input type="radio" name="display-mode" value="filter" checked> Filter selected notes</label>
       <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
+      <label title="Temporary comparison control"><input type="checkbox" id="show-unselected" checked> Show unselected note labels in white (temporary)</label>
     </fieldset>
 
     <fieldset class="notes-panel">
@@ -73,7 +74,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-1";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-2";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
@@ -87,6 +88,7 @@
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
     const tuningSelect = document.querySelector("#tuning-select");
+    const showUnselected = document.querySelector("#show-unselected");
     const noteButtons = new Map();
 
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
@@ -157,6 +159,7 @@
     for (const radio of document.querySelectorAll('input[name="display-mode"]')) {
       radio.addEventListener("change", renderFretboard);
     }
+    showUnselected.addEventListener("change", renderFretboard);
 
     function displayMode() {
       return document.querySelector('input[name="display-mode"]:checked').value;
@@ -216,7 +219,7 @@
           const isFocusOverride = isFocused && focusOverrides.has(key);
           let visible;
           if (mode === "highlight") visible = stringMatches;
-          else if (hasNoteFilter) visible = stringMatches && noteMatches;
+          else if (hasNoteFilter) visible = stringMatches && (noteMatches || showUnselected.checked);
           else visible = stringMatches;
 
           const cell = document.createElement("td");

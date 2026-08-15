@@ -59,6 +59,7 @@ const DEFAULT_GEOMETRY = {
 
 const FRETBOARD_EXPLORER_GEOMETRY = {
   nutX: 13.88, lastFretX: 101.5, headerTop: 2, headerHeight: 8.5,
+  labelLeft: 8.75, labelWidth: 4.5,
   nutTopString: 24.5, nutStringGap: 10.2,
   bodyTopString: 17.8, bodyStringGap: 11.8,
   // Calibrated directly to the marked fret wires in the locked STUDio image.
@@ -105,7 +106,7 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
   const headerCells = table.querySelectorAll("thead th");
   const openWidth = compactOpen ? 3 : 6;
 
-  if (headerCells[0]) setBox(headerCells[0], 0, geometry.headerTop, 7.5, geometry.headerHeight);
+  if (headerCells[0]) setBox(headerCells[0], geometry.labelLeft ?? 0, geometry.headerTop, geometry.labelWidth ?? 7.5, geometry.headerHeight);
   if (headerCells[1]) {
     headerCells[1].classList.add("open-position");
     setBox(headerCells[1], geometry.nutX - (openWidth / 2), geometry.headerTop, openWidth, geometry.headerHeight);
@@ -118,7 +119,7 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
   table.querySelectorAll("tbody tr").forEach((row, stringIndex) => {
     const cells = row.querySelectorAll("td");
     const labelBox = stringBox(stringIndex, geometry.nutX, geometry);
-    if (cells[0]) setBox(cells[0], 0, labelBox.top, 7.5, labelBox.height);
+    if (cells[0]) setBox(cells[0], geometry.labelLeft ?? 0, labelBox.top, geometry.labelWidth ?? 7.5, labelBox.height);
 
     if (cells[1]) {
       cells[1].classList.add("open-position");

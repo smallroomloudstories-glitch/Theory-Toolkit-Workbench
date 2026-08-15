@@ -93,12 +93,27 @@
   place-items: center;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  color: #fff;
+  font-size: .95rem;
+  font-weight: 700;
   line-height: 1;
+  text-shadow: 0 1px 2px #111, 0 0 3px #111;
+}
+.fretboard-diagnostic td.hidden-note .note-label {
+  color: transparent;
+  text-shadow: none;
 }
 .fretboard-diagnostic td.selected-note .note-label {
+  width: 1.95rem;
+  height: 1.95rem;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .94);
   color: #063f75;
   font-weight: 800;
-  text-shadow: 0 1px 0 #fff, 0 0 3px #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .45);
+  text-shadow: none;
 }
 .fretboard-diagnostic td.focused-position {
   color: #111;
@@ -107,8 +122,8 @@
   font-weight: bold;
 }
 .fretboard-diagnostic td.focused-position .note-label {
-  width: 1.55rem;
-  height: 1.55rem;
+  width: 1.95rem;
+  height: 1.95rem;
   box-sizing: border-box;
   border: 3px solid #111;
   border-radius: 50%;
