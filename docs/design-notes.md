@@ -94,19 +94,61 @@ Do not solve the broader navigation/presentation architecture yet. One promising
 - Fret spacing and string paths are calibrated to the illustration rather than assuming a perfect mathematical instrument. The accepted checkpoint uses measured fret boundaries and separately interpolated outside-string paths.
 - Fretboard Explorer alignment checkpoint 5 was declared “good enough.” The guitar image is now locked; future work should not move, crop, or zoom it without a new explicit decision.
 
-### Next presentation checkpoint before external promotion
+### Illustrated presentation checkpoint completed
 
-Remove the temporary alignment scaffolding from Fretboard Explorer:
+The scaffold-free illustrated presentation was completed and approved in the Workbench on 2026-08-15:
 
-- Hide fret-cell grid lines and translucent cell backgrounds.
-- Keep the fret-number row separated above the neck, without box scaffolding.
-- Display notes directly on the illustrated strings.
-- Render manually focused notes as circles centered on the string.
-- Preserve the entire invisible fret cell as the click/touch target; only the visible Focus treatment becomes circular.
-- Keep string-selection controls visibly identifiable as controls.
-- Complete and approve this presentation pass in Fretboard Explorer before applying the shared treatment to Scale Explorer or promoting the illustrated fretboard to external testing.
+- Fret-cell grid lines and translucent cell backgrounds are hidden.
+- Fret numbers and Open are displayed below the neck without box scaffolding; Show All remains above the string selectors.
+- Notes are drawn directly over the illustrated strings with calibrated narrow-fret corrections.
+- Selected notes and manually focused notes use circular markers centered around their visible labels.
+- The complete invisible fret cell remains the click/touch target even though the visible treatment is compact.
+- Compact string controls remain visibly identifiable and retain remembered string-scope behavior.
+- Fret 15 remains part of the shared geometry and hit-area model, but its note labels are suppressed because they are clipped at the edge of the illustration.
+- The complete treatment was approved first in Fretboard Explorer and then ported to Scale Explorer without changing Scale Explorer's scale, position, interval, or Focus logic.
 
 ### Next build priority
 
 After the illustrated fretboard presentation checkpoint is accepted, return to the beginner-useful Chord Explorer. It remains the next major teaching capability and should consume the shared fretboard geometry, Focus behavior, and presentation rather than creating another fretboard implementation.
 
+## Session close — 2026-08-15: approved fretboard presentation and Scale Explorer port
+
+### Fretboard Explorer presentation accepted
+
+- The locked STUDio guitar crop, zoom, vertical placement, calibrated fret boundaries, and tapered string paths were preserved.
+- Notes use a common left-aligned label area within each physical fret position. Main note letters are larger than accidentals; sharp and flat characters are deliberately smaller.
+- Selected notes use white circular markers. Manual Focus uses yellow circular markers with a dark border. The whole invisible fret area remains clickable.
+- String selector boxes were reduced and placed immediately left of the nut without overlapping the open-string hit area. Unselected string labels use white lettering with a dark outline; selected/all-string behavior remains unchanged.
+- Show All sits above the individual string selectors. Open and fret numbers sit below the neck.
+- Presentation-specific note offsets are applied at frets 12 and 14. Do not change the shared guitar image or calibrated geometry to replace these small overlay corrections.
+- Hover tooltips identify string, fret/open position, and displayed pitch.
+
+### Enharmonic display behavior
+
+- Sharps are the default display; flats are opt-in through a compact `#` / `b` toggle.
+- The toggle respells the five shared pitch classes: C# / Db, D# / Eb, F# / Gb, G# / Ab, and A# / Bb. Natural notes are unchanged.
+- Enharmonic switching is display-only. Canonical pitch-class values remain sharp-based internally so selections, Focus, tuning, scale logic, and physical positions survive a spelling change.
+- Key-aware theoretical spellings such as B#, Cb, E#, and Fb are outside this simple global display preference and remain future scale/chord-spelling work.
+
+### Scale Explorer presentation port accepted
+
+- Scale Explorer now consumes the approved illustrated surface, string selectors, Focus markers, fret-number placement, note typography, sharp/flat display behavior, and narrow-fret corrections.
+- Existing Major/Minor, Diatonic/Pentatonic/Blues, whole-fretboard/position, five-shape, and note/interval behavior was preserved and browser-tested.
+- Root, third, fifth, and blue-note meanings retain their established colors but now use circular markers instead of whole-cell fills.
+- Focus remains tied to exact physical positions while musical views change. String scope may hide out-of-scope Focus while retaining it in memory, matching the accepted shared behavior.
+
+### Chromatic key wheel accepted
+
+- Scale Explorer's Root / Key control is a compact custom wheel backed by the existing canonical selector.
+- Clicking the selector opens seven chromatic notes: the current center note, three above, and three below.
+- The wheel is geometrically centered over the closed selector, allowing the pointer to remain stationary while scrolling and then click the note currently beneath it.
+- Notes advance in chromatic order and wrap indefinitely in either direction.
+- Mouse-wheel and two-finger touchpad scrolling are supported. The accepted limiter is 25 milliseconds per one-semitone movement: intentionally responsive, while still preventing completely uncontrolled acceleration. Different input devices will feel somewhat different.
+- Clicking a visible note commits it and closes the wheel. Arrow keys navigate; Enter commits; Escape closes.
+- The sharp/flat preference respells the wheel without changing its canonical order or selected pitch class.
+
+### Promotion state and next work
+
+- All work in this session remains in `Theory-Toolkit-Workbench`; it has not yet been promoted to the forward-facing external-test repository.
+- Fretboard Explorer and Scale Explorer are considered presentation-complete enough for testing. Further visual changes should be driven by real tester feedback rather than attempts at abstract perfection.
+- The next major build priority remains the beginner-useful Chord Explorer. It should reuse this shared illustrated fretboard, geometry, string scope, Focus behavior, note-marker language, and enharmonic display model.
