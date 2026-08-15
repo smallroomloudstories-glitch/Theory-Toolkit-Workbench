@@ -60,11 +60,11 @@ const DEFAULT_GEOMETRY = {
 const FRETBOARD_EXPLORER_GEOMETRY = {
   nutX: 13.88, lastFretX: 101.5, headerTop: 2, headerHeight: 8.5,
   nutTopString: 24.5, nutStringGap: 10.2,
-  bodyTopString: 26.1, bodyStringGap: 9.55,
+  bodyTopString: 17.8, bodyStringGap: 11.8,
   // Calibrated directly to the marked fret wires in the locked STUDio image.
   fretBoundaries: [
     13.88, 23.58, 31.88, 39.64, 46.79, 53.58, 60.18, 66.18,
-    71.45, 76.97, 82.48, 87.33, 92.06, 95.82, 98.30, 101.50
+    71.80, 76.97, 82.48, 87.33, 92.06, 96.15, 98.35, 101.50
   ]
 };
 
