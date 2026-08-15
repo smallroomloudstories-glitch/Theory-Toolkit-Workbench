@@ -73,7 +73,7 @@
     import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView } from "./src/ui/fretboard-view.js";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js";
 
     let activeTuning = GUITAR_TUNINGS.standard;
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
@@ -248,6 +248,7 @@
       const allStringsButton = document.querySelector("#all-strings");
       allStringsButton.classList.toggle("selected", allStringsActive);
       allStringsButton.setAttribute("aria-pressed", String(allStringsActive));
+      positionFretboardCells(document.querySelector("#fretboard-table"), FRETBOARD_MAX_FRET);
       updateFocusStatus();
     }
 
