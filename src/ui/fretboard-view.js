@@ -59,8 +59,8 @@ const DEFAULT_GEOMETRY = {
 
 const FRETBOARD_EXPLORER_GEOMETRY = {
   nutX: 13.88, lastFretX: 101.5, headerTop: 88, headerHeight: 7.5,
-  labelLeft: 11.2, labelWidth: 2.25,
-  selectorHeaderLeft: 9.25, selectorHeaderTop: 12.5,
+  labelLeft: 9.8, labelWidth: 2.25,
+  selectorHeaderLeft: 7.85, selectorHeaderTop: 12.5,
   selectorHeaderWidth: 4.2, selectorHeaderHeight: 5.8,
   nutTopString: 24.5, nutStringGap: 10.2,
   bodyTopString: 17.8, bodyStringGap: 11.8,
