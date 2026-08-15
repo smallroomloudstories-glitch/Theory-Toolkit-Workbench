@@ -58,9 +58,14 @@ const DEFAULT_GEOMETRY = {
 };
 
 const FRETBOARD_EXPLORER_GEOMETRY = {
-  nutX: 12.5, lastFretX: 97, headerTop: 2, headerHeight: 8.5,
+  nutX: 13.88, lastFretX: 101.5, headerTop: 2, headerHeight: 8.5,
   nutTopString: 24.5, nutStringGap: 10.2,
-  bodyTopString: 26.1, bodyStringGap: 9.55
+  bodyTopString: 26.1, bodyStringGap: 9.55,
+  // Calibrated directly to the marked fret wires in the locked STUDio image.
+  fretBoundaries: [
+    13.88, 23.58, 31.88, 39.64, 46.79, 53.58, 60.18, 66.18,
+    71.45, 76.97, 82.48, 87.33, 92.06, 95.82, 98.30, 101.50
+  ]
 };
 
 function setBox(element, left, top, width, height) {
@@ -71,6 +76,10 @@ function setBox(element, left, top, width, height) {
 }
 
 function fretBoundaries(maxFret, geometry) {
+  if (geometry.fretBoundaries?.length === maxFret + 1) {
+    return [...geometry.fretBoundaries];
+  }
+
   const widths = fretWidths(maxFret);
   const total = widths.reduce((sum, width) => sum + width, 0);
   let position = geometry.nutX;
