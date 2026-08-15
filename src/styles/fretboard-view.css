@@ -169,6 +169,55 @@
   color: #111;
   text-shadow: none;
 }
+.fretboard-diagnostic .string-scope-button {
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+}
+.fretboard-diagnostic .string-scope-button:hover { border-color: #777; }
+.fretboard-diagnostic .string-scope-button.selected {
+  border-color: #245a9a;
+  outline: 2px solid #245a9a;
+  outline-offset: -2px;
+  background: #e3efff;
+}
+
+/* Scale Explorer keeps its musical role colors, translated from whole-cell
+   fills into the shared circular fretboard marker language. */
+.scale-fretboard td.scale-note .note-label { color: #222; text-shadow: none; }
+.scale-fretboard td.scale-note .note-text::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 2rem;
+  height: 2rem;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .45);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+.scale-fretboard td.root-note .note-text::before { border: 3px solid #163b1a; }
+.scale-fretboard td.role-root .note-label { color: #163b1a; }
+.scale-fretboard td.role-root .note-text::before { border-color: #88bf8c; background: #bfe8c2; }
+.scale-fretboard td.role-third .note-label { color: #fff; }
+.scale-fretboard td.role-third .note-text::before { border-color: #444; background: #666; }
+.scale-fretboard td.role-fifth .note-label { color: #222; }
+.scale-fretboard td.role-fifth .note-text::before { border-color: #aaa; background: #d8d8d8; }
+.scale-fretboard td.blue-note .note-label { color: #003d73; }
+.scale-fretboard td.blue-note .note-text::before { border-color: #7db7ec; background: #b9dcff; }
+.scale-fretboard td.focused-position .note-label { color: #111; }
+.scale-fretboard td.focused-position .note-text::before {
+  border: 3px solid #111;
+  background: #fff3a6;
+  box-shadow: none;
+}
 
 @media (max-width: 700px) {
   .fretboard-surface { min-width: 1050px; }
