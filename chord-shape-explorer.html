@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theory Toolkit - Chord Shape Explorer Workbench</title>
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260815-9">
+  <style>
+    body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
+    h1 { margin: .35rem 0; }
+    .workbench-mark { margin: .25rem 0; font-weight: bold; }
+    .checkpoint-note { margin: .4rem 0 1rem; max-width: 950px; }
+    button { font: inherit; cursor: pointer; }
+    .focus-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; border: 1px solid #bbb; padding: .55rem .75rem; margin: .75rem 0 1.25rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: stretch; }
+    fieldset { min-width: 0; margin: 0; }
+    .chord-panel { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; }
+    .control-label { display: block; margin-bottom: .35rem; font-weight: bold; }
+    .chord-wheel { position: relative; width: 8rem; }
+    .chord-wheel-trigger { width: 100%; padding: .45rem .6rem; border: 1px solid #777; background: #fff; text-align: left; }
+    .chord-wheel-trigger::after { float: right; content: "▾"; }
+    .chord-wheel-menu { position: absolute; top: 50%; left: 0; z-index: 20; width: 100%; box-sizing: border-box; border: 1px solid #777; background: #fff; box-shadow: 0 .25rem .75rem rgba(0,0,0,.25); overflow: hidden; transform: translateY(-50%); }
+    .chord-wheel-menu[hidden] { display: none; }
+    .chord-wheel-option { display: block; width: 100%; margin: 0; padding: .3rem .55rem; border: 0; background: #fff; text-align: center; }
+    .chord-wheel-option:hover, .chord-wheel-option:focus { background: #e3efff; }
+    .chord-wheel-option.center { border-top: 1px solid #777; border-bottom: 1px solid #777; background: #f3f3f3; font-weight: bold; }
+    .chord-tones { min-width: 12rem; padding: .45rem .7rem; border: 1px solid #bbb; background: #f3f3f3; }
+    .chord-tones strong { display: inline-block; min-width: 7.5rem; }
+    #clear-chord, #accidental-toggle { padding: .45rem .7rem; }
+    #accidental-toggle { min-width: 2.5rem; }
+    .instrument-panel p { margin: .35rem 0; }
+    .string-scope-button { width: 100%; margin: 0; padding: .35rem .45rem; border: 1px solid transparent; background: transparent; text-align: left; }
+    .string-scope-button:hover { border-color: #777; }
+    .string-scope-button.selected { background: #e3efff; border-color: #245a9a; outline: 2px solid #245a9a; outline-offset: -2px; }
+    td.fret-position { cursor: pointer; }
+    .muted-position .note-label { display: grid !important; color: #fff !important; font-size: 1.35rem !important; text-shadow: 0 1px 2px #111, 0 0 3px #111 !important; }
+    .muted-position .note-natural { font-size: 0; }
+    .muted-position .note-natural::after { content: "×"; font-size: 1.35rem; }
+  </style>
+</head>
+<body>
+  <p><a href="index.html">← Workbench Home</a></p>
+  <h1>Chord Shape Explorer — WORKBENCH</h1>
+  <p class="workbench-mark">Experimental development version.</p>
+  <p class="checkpoint-note">Build 1 — beginner open-chord shapes on the shared illustrated fretboard. Select a complete fingering from the chord wheel; use Focus to discuss individual chord tones.</p>
+
+  <div class="fretboard-wrap"><div class="fretboard-surface fretboard-diagnostic-surface"><table id="fretboard-table" class="fretboard-view fretboard-diagnostic"><thead id="fretboard-head"></thead><tbody id="fretboard-body"></tbody></table></div></div>
+
+  <div class="focus-bar"><strong>Focus:</strong><span id="focus-status">No positions focused</span><button type="button" id="clear-focus">Clear Focus</button></div>
+
+  <div class="controls">
+    <fieldset class="instrument-panel"><legend>Instrument</legend><p>Instrument: <strong>Guitar</strong></p><p>Tuning: <strong>Standard (E A D G B E)</strong></p></fieldset>
+    <fieldset class="chord-panel">
+      <legend>Chord Shape</legend>
+      <div><span class="control-label">Chord:</span><div class="chord-wheel" id="chord-wheel"><button type="button" id="chord-wheel-trigger" class="chord-wheel-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose a chord shape">Choose chord</button><div id="chord-wheel-menu" class="chord-wheel-menu" role="listbox" aria-label="Chord shapes" hidden></div></div></div>
+      <div class="chord-tones"><strong>Chord tones:</strong> <span id="chord-tones">—</span></div>
+      <button type="button" id="clear-chord" disabled>Clear Chord</button>
+      <span><span class="control-label">Accidentals:</span><button type="button" id="accidental-toggle" aria-label="Showing sharps; switch to flats" title="Switch between sharps and flats">#</button></span>
+    </fieldset>
+  </div>
+
+  <script type="module">
+    import { GUITAR_TUNINGS } from "./src/data/music-data.js";
+    import { buildFretboard } from "./src/engine/fretboard.js";
+    import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-7";
+
+    const CHORDS = [
+      { id: "A", label: "A", tones: ["A", "C#", "E"], frets: [0, 2, 2, 2, 0, null] },
+      { id: "Am", label: "Am", tones: ["A", "C", "E"], frets: [0, 1, 2, 2, 0, null] },
+      { id: "Asus2", label: "Asus2", tones: ["A", "B", "E"], frets: [0, 0, 2, 2, 0, null] },
+      { id: "C", label: "C", tones: ["C", "E", "G"], frets: [0, 1, 0, 2, 3, null] },
+      { id: "D", label: "D", tones: ["D", "F#", "A"], frets: [2, 3, 2, 0, null, null] },
+      { id: "Dm", label: "Dm", tones: ["D", "F", "A"], frets: [1, 3, 2, 0, null, null] },
+      { id: "E", label: "E", tones: ["E", "G#", "B"], frets: [0, 0, 1, 2, 2, 0] },
+      { id: "Em", label: "Em", tones: ["E", "G", "B"], frets: [0, 0, 0, 2, 2, 0] },
+      { id: "easy-f", label: "Easy F", tones: ["F", "A", "C"], frets: [1, 1, 2, 3, null, null] },
+      { id: "G", label: "G", tones: ["G", "B", "D"], frets: [3, 0, 0, 0, 2, 3] }
+    ];
+    const flatNames = new Map([["C#", "Db"], ["D#", "Eb"], ["F#", "Gb"], ["G#", "Ab"], ["A#", "Bb"]]);
+    const fretboard = buildFretboard(GUITAR_TUNINGS.standard.strings, FRETBOARD_MAX_FRET);
+    const focus = createFretboardFocus(), focusOverrides = new Set(), selectedStrings = new Set();
+    let allStringsActive = true, selectedChord = null, wheelCenter = 0, accidentalDisplay = "sharps", lastWheelStep = 0;
+    const head = document.querySelector("#fretboard-head"), body = document.querySelector("#fretboard-body"), wheel = document.querySelector("#chord-wheel"), wheelTrigger = document.querySelector("#chord-wheel-trigger"), wheelMenu = document.querySelector("#chord-wheel-menu"), chordTones = document.querySelector("#chord-tones"), clearChord = document.querySelector("#clear-chord"), clearFocus = document.querySelector("#clear-focus"), focusStatus = document.querySelector("#focus-status"), accidentalToggle = document.querySelector("#accidental-toggle");
+    const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
+    const displayNote = note => accidentalDisplay === "flats" ? (flatNames.get(note) ?? note) : note;
+    const wrapIndex = index => (index + CHORDS.length) % CHORDS.length;
+
+    function resetStringScope(){selectedStrings.clear();allStringsActive=true;focusOverrides.clear()}
+    function toggleStringScope(n){if(allStringsActive){allStringsActive=false;selectedStrings.add(n)}else if(selectedStrings.has(n)){selectedStrings.delete(n);if(selectedStrings.size===0)allStringsActive=true}else selectedStrings.add(n);focusOverrides.clear();render()}
+    function renderNoteLabel(note){const shown=displayNote(note),accidental=shown.match(/[#b]$/)?.[0]??"",label=document.createElement("span"),text=document.createElement("span"),natural=document.createElement("span");label.className="note-label";text.className="note-text";natural.className="note-natural";natural.textContent=accidental?shown.slice(0,-1):shown;text.appendChild(natural);if(accidental){const a=document.createElement("span");a.className="note-accidental";a.textContent=accidental;text.appendChild(a)}label.appendChild(text);return label}
+    function renderWheel(){wheelMenu.innerHTML="";for(let offset=-3;offset<=3;offset+=1){const chord=CHORDS[wrapIndex(wheelCenter+offset)],option=document.createElement("button");option.type="button";option.className="chord-wheel-option";option.classList.toggle("center",offset===0);option.setAttribute("role","option");option.setAttribute("aria-selected",String(selectedChord?.id===chord.id));option.textContent=chord.label;option.addEventListener("click",()=>selectChord(chord));wheelMenu.appendChild(option)}}
+    function openWheel(){renderWheel();wheelMenu.hidden=false;wheelTrigger.setAttribute("aria-expanded","true")}
+    function closeWheel(){wheelMenu.hidden=true;wheelTrigger.setAttribute("aria-expanded","false")}
+    function moveWheel(direction){wheelCenter=wrapIndex(wheelCenter+direction);renderWheel()}
+    function selectChord(chord){selectedChord=chord;wheelCenter=CHORDS.findIndex(item=>item.id===chord.id);wheelTrigger.textContent=chord.label;clearChord.disabled=false;closeWheel();render()}
+    function clearSelectedChord(){selectedChord=null;wheelCenter=0;wheelTrigger.textContent="Choose chord";clearChord.disabled=true;closeWheel();render()}
+    function updateFocusStatus(){focusStatus.textContent=focus.size===0?"No positions focused":`${focus.size} position${focus.size===1?"":"s"} focused`;clearFocus.disabled=focus.size===0}
+
+    function render(){
+      body.innerHTML="";
+      fretboard.forEach((stringData,stringIndex)=>{const row=document.createElement("tr"),labelCell=document.createElement("td"),stringButton=document.createElement("button"),stringSelected=allStringsActive||selectedStrings.has(stringData.string);stringButton.type="button";stringButton.className="string-scope-button";stringButton.classList.toggle("selected",stringSelected);stringButton.setAttribute("aria-pressed",String(stringSelected));stringButton.textContent=stringData.label;stringButton.title=`Toggle ${stringData.label} string scope`;stringButton.addEventListener("click",()=>toggleStringScope(stringData.string));labelCell.appendChild(stringButton);row.appendChild(labelCell);
+        stringData.frets.forEach(({note},fretNumber)=>{const cell=document.createElement("td"),key=positionKey(stringData.string,fretNumber),chordFret=selectedChord?.frets[stringIndex],isPlayed=chordFret===fretNumber,isMuted=Boolean(selectedChord)&&chordFret===null&&fretNumber===0,isFocused=focus.has(stringData.string,fretNumber),inScope=allStringsActive||selectedStrings.has(stringData.string),visible=inScope&&(isPlayed||isMuted||isFocused);cell.className="fret-position";if(fretNumber===FRETBOARD_MAX_FRET)cell.classList.add("suppressed-fret");if(!visible&&!focusOverrides.has(key))cell.classList.add("hidden-note");if(isPlayed&&inScope)cell.classList.add("selected-note","chord-position");if(isMuted&&inScope)cell.classList.add("muted-position");if(isFocused&&(inScope||focusOverrides.has(key)))cell.classList.add("focused-position");cell.appendChild(renderNoteLabel(note));cell.dataset.string=String(stringData.string);cell.dataset.fret=String(fretNumber);cell.title=isMuted?`String ${stringData.string}: muted in ${selectedChord.label}`:`String ${stringData.string}, ${fretNumber===0?"open":`fret ${fretNumber}`}: ${displayNote(note)}`;cell.addEventListener("click",()=>{if(focus.has(stringData.string,fretNumber)){focus.toggle(stringData.string,fretNumber);focusOverrides.delete(key)}else{focus.toggle(stringData.string,fretNumber);if(!inScope)focusOverrides.add(key)}render()});row.appendChild(cell)});body.appendChild(row)});
+      const all=document.querySelector("#all-strings");all.classList.toggle("selected",allStringsActive);all.setAttribute("aria-pressed",String(allStringsActive));chordTones.textContent=selectedChord?selectedChord.tones.map(displayNote).join(" – "):"—";positionFretboardCells(document.querySelector("#fretboard-table"),FRETBOARD_MAX_FRET);updateFocusStatus()
+    }
+
+    configureFretboardView({table:document.querySelector("#fretboard-table"),head,maxFret:FRETBOARD_MAX_FRET,firstHeader:'<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">Show All</button>'});
+    document.querySelector("#all-strings").addEventListener("click",()=>{resetStringScope();render()});
+    wheelTrigger.addEventListener("click",()=>wheelMenu.hidden?openWheel():closeWheel());
+    wheelMenu.addEventListener("wheel",event=>{event.preventDefault();const now=performance.now();if(Math.abs(event.deltaY)<1||now-lastWheelStep<25)return;lastWheelStep=now;moveWheel(event.deltaY>0?1:-1)},{passive:false});
+    wheelTrigger.addEventListener("keydown",event=>{if(!["ArrowDown","ArrowUp","Escape"].includes(event.key))return;event.preventDefault();if(event.key==="Escape"){closeWheel();return}if(wheelMenu.hidden)openWheel();moveWheel(event.key==="ArrowDown"?1:-1);wheelMenu.querySelector(".center").focus()});
+    wheelMenu.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeWheel();wheelTrigger.focus();return}if(!["ArrowDown","ArrowUp"].includes(event.key))return;event.preventDefault();moveWheel(event.key==="ArrowDown"?1:-1);wheelMenu.querySelector(".center").focus()});
+    document.addEventListener("click",event=>{if(!wheel.contains(event.target))closeWheel()});
+    clearChord.addEventListener("click",clearSelectedChord);
+    clearFocus.addEventListener("click",()=>{focus.clear();focusOverrides.clear();render()});
+    accidentalToggle.addEventListener("click",()=>{accidentalDisplay=accidentalDisplay==="sharps"?"flats":"sharps";accidentalToggle.textContent=accidentalDisplay==="sharps"?"#":"b";accidentalToggle.setAttribute("aria-label",accidentalDisplay==="sharps"?"Showing sharps; switch to flats":"Showing flats; switch to sharps");render()});
+    resetStringScope();render();
+  </script>
+</body>
+</html>
