@@ -6,11 +6,10 @@
 
 ## Environment and promotion workflow
 
-Theory Toolkit uses three distinct stages:
+Theory Toolkit uses one development environment and one forward-facing code line:
 
 - **Workbench** — internal development between Rob and ChatGPT. Experimental, incomplete, or broken work belongs here. The Workbench URL is not distributed to outside testers.
-- **External Test** — approved Workbench features are deliberately promoted to the testing pages in the main `Theory-Toolkit` repository for outside testing.
-- **Live** — after testing, approved features may later be promoted to the public Theory Toolkit reached through smallroomloudstories.com.
+- **Forward-facing `Theory-Toolkit/main`** — approved Workbench features are deliberately promoted here. The same tested code serves as the external live-test environment now and will become the live public site when it is linked or published from smallroomloudstories.com. There is no separate live-code branch or second product promotion.
 
 The Workbench is the authoritative home of this design-notes document (THE BOOK™). Development documentation does not need to be promoted with product code.
 
@@ -149,6 +148,14 @@ After the illustrated fretboard presentation checkpoint is accepted, return to t
 
 ### Promotion state and next work
 
-- All work in this session remains in `Theory-Toolkit-Workbench`; it has not yet been promoted to the forward-facing external-test repository.
 - Fretboard Explorer and Scale Explorer are considered presentation-complete enough for testing. Further visual changes should be driven by real tester feedback rather than attempts at abstract perfection.
 - The next major build priority remains the beginner-useful Chord Explorer. It should reuse this shared illustrated fretboard, geometry, string scope, Focus behavior, note-marker language, and enharmonic display model.
+
+## Promotion checkpoint — 2026-08-16
+
+- The approved Fretboard Explorer and Scale Explorer were promoted from `Theory-Toolkit-Workbench/main` to the forward-facing `Theory-Toolkit/main` in commit `1d6262cd51f68bcf032d1024beee87b72e8dde35`.
+- Existing tester URLs and the tester-feedback system were preserved. The promoted pages are `tests/fretboard-selection-test.html` and `tests/scale-explorer-test.html`, with `tests/index.html` as their landing page.
+- The shared illustrated presentation files and STUDio guitar asset were added to the forward-facing repository. The existing music-data and fretboard engines remained in place because they were functionally compatible.
+- Browser verification confirmed that both deployed Explorers load with populated controls, illustrated fretboards, interactive note selection and Focus, string scope, enharmonic display, and feedback access. Scale Explorer also retains its chromatic key wheel and scale controls.
+- `Theory-Toolkit/main` is now both the live-test code line and the eventual live-site code line. Going live through smallroomloudstories.com will expose this tested artifact rather than create another code fork.
+- The next development session begins the Chord Shape Explorer in the Workbench only.
