@@ -223,3 +223,69 @@ After the illustrated fretboard presentation checkpoint is accepted, return to t
 - Fretboard Explorer, Chord Shape Explorer, Scale Explorer, and Key Explorer are all available in the forward-facing GitHub Pages test environment.
 - The current goal is to gather real human feedback rather than add speculative polish.
 - The project remains intended as a free-to-use teaching supplement that can eventually reach a wider community.
+
+
+## Future design brief: Progression Explorer
+
+### Purpose and instructional level
+
+- Progression Explorer is a later-stage theory tool for students who already have introductory familiarity with chords, the fretboard, scales, and keys under an instructor's guidance.
+- It is primarily about harmonic relationships rather than guitar fingering. A guitar may be useful while exploring, but the Explorer does not require the illustrated fretboard.
+- Do not add a dedicated “view this in Chord Shape Explorer” invitation merely because chords are present. Normal site navigation is sufficient. By this point, the student should already know where to return for chord-shape or fingering help.
+- Progression Explorer should not become a complete independent harmony course. It should identify relationships, provide concise language for discussing them, and direct the student's attention toward what can be heard. The instructor determines the depth, exceptions, and lesson sequence.
+- The Explorer should provide enough interpretation to be useful rather than presenting unexplained chord data. Appropriate prompts include “Why it works,” “Listen for,” and “Try changing.”
+
+### Key-relative chord presentation
+
+- Use the established centered key-wheel interaction for selecting a key.
+- Display the seven diatonic chords of the selected key as a compact reference, labeled I, ii, iii, IV, V, vi, and vii°.
+- Show chord names and qualities, but do not identify or display the component root, third, and fifth notes in this reference. Key Explorer and Chord Shape Explorer already serve those purposes.
+- Example in C major: I C, ii Dm, iii Em, IV F, V G, vi Am, vii° Bdim.
+- Begin with major-key harmony unless a later design decision deliberately adds minor-key progression behavior.
+
+### Common Progressions list
+
+- Store each progression as an abstract Roman-numeral sequence rather than hard-coded chord names.
+- Beside every Common Progressions entry, translate the progression into chord names from the currently selected key.
+- Example entries in C major:
+  - I–IV–V–I becomes C–F–G–C.
+  - I–V–vi–IV becomes C–G–Am–F.
+  - ii–V–I becomes Dm–G–C.
+  - vi–IV–I–V becomes Am–F–C–G.
+- Changing the selected key updates the chord names everywhere while preserving the selected progression and its Roman-numeral identity.
+- Each progression entry is selectable. Selecting it opens a stable detail area without causing distracting page jumps.
+
+### Selected-progression details
+
+The detail presentation may include:
+
+- The Roman-numeral pattern.
+- The translated chords in the currently selected key.
+- A short “Why it works” explanation.
+- A “Listen for” prompt describing tension, release, expectation, delayed resolution, looping behavior, or another clearly audible relationship.
+- A limited “Try changing” suggestion, such as reversing two chords or testing a common substitution.
+- Common variations or substitutions when they belong at the current instructional level.
+- Example songs and authorized listening links when available.
+
+Keep each explanation concise. For example, an I–V–vi–IV description may identify I as home, V as creating tension, vi as delaying the expected return while sharing notes with I, and IV as creating a stable path back to the beginning. Deeper topics such as detailed voice leading, harmonic rhythm, melody interaction, inversions, cadential classification, borrowed harmony, and exceptions can be introduced selectively or reserved for later expansion and instructor discussion.
+
+### Song examples and listening links
+
+- A “Songs that use it” or “Hear it in context” section should connect abstract progressions to recognizable music.
+- Each example should identify the song, artist, relevant section such as verse or chorus, the progression used there, and the recording's actual key when known.
+- Song examples remain attached to the abstract progression, not to the currently selected display key. If the Explorer is showing C major but the recording is in E major, state that explicitly. This reinforces transposition.
+- Do not imply that an entire song uses one repeating progression when the example applies only to a specific section or uses a variation.
+- Link priority:
+  1. Official artist or label YouTube video.
+  2. Official audio uploaded by the artist or label.
+  3. Another legitimate free listening service.
+  4. Unlinked song and artist identification when no suitable authorized free source is available.
+- Link outward rather than hosting or reproducing copyrighted audio.
+- These are educational references, not affiliate links. Do not use referral identifiers or accept compensation without explicit disclosure.
+- External links should be reviewed periodically because videos and streaming addresses can disappear or change.
+
+### Later harmonic expansion
+
+- Progression Explorer may eventually grow from common diatonic patterns into secondary dominants, useful out-of-key connecting chords, borrowed chords, modal interchange, modulation between keys, and other practical harmonic movement.
+- Begin simply. More advanced features should be added in response to real teaching needs and informed tester input rather than attempting to encode all of harmony in the first build.
+- The larger learning path remains: Fretboard Explorer to Chord Shape Explorer to Scale Explorer to Key Explorer, followed by Progression Explorer. Triad Groups Explorer may provide an additional bridge between key knowledge, fretboard harmony, and progression movement.
