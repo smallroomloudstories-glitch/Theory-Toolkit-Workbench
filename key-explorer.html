@@ -71,10 +71,8 @@
     .explorer-invitation { margin: .4rem 0 0; color: #555; font-size: .88rem; }
     .explorer-invitation a { font-weight: bold; }
     #clear-chord { padding: .25rem .5rem; }
-    .philosophy { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin-top: .8rem; }
-    .philosophy p { margin: 0; padding: .5rem .65rem; border-left: 4px solid #555; background: #f5f5f5; font-size: .9rem; }
     @media (max-width: 760px) {
-      .detail-panel, .philosophy { grid-template-columns: 1fr; }
+      .detail-panel { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -121,11 +119,6 @@
     </section>
     <p class="explorer-invitation">Want to explore these chords on guitar? Open the <a href="chord-shape-explorer.html" target="_blank" rel="noopener">Chord Shape Explorer</a> to view available shapes and use Focus to demonstrate other fingerings.</p>
   </main>
-
-  <div class="philosophy">
-    <p>Music theory isn’t a rulebook—it’s a field guide. It helps you recognize the paths others have taken, understand why they work, and choose whether to follow them or head off in your own direction.</p>
-    <p>Learn the common patterns first. Once you understand why they work, you’ll know which ones to keep, which ones to bend, and which ones to ignore.</p>
-  </div>
 
   <script type="module">
     import { MAJOR_KEYS, DIATONIC_CHORDS, HARMONY } from "./src/data/key-explorer-data.js?v=20260818-2";
