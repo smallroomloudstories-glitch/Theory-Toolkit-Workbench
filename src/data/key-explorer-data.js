@@ -7,7 +7,7 @@ export const MAJOR_KEYS = [
   { id: "Eb", label: "Eb", notes: ["Eb", "F", "G", "Ab", "Bb", "C", "D"] },
   { id: "E", label: "E", notes: ["E", "F#", "G#", "A", "B", "C#", "D#"] },
   { id: "F", label: "F", notes: ["F", "G", "A", "Bb", "C", "D", "E"] },
-  { id: "F#/Gb", label: "F#/Gb", notes: ["F#/Gb", "G#", "A#", "B", "C#", "D#", "F"] },
+  { id: "F#", label: "F#", notes: ["F#", "G#", "A#", "B", "C#", "D#", "E#"] },
   { id: "G", label: "G", notes: ["G", "A", "B", "C", "D", "E", "F#"] },
   { id: "Ab", label: "Ab", notes: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"] },
   { id: "A", label: "A", notes: ["A", "B", "C#", "D", "E", "F#", "G#"] },
@@ -62,4 +62,3 @@ export const HARMONY = {
     explanation: "Built on the leading tone, this diminished chord strongly wants to resolve to the tonic because of its unstable sound."
   }
 };
-
