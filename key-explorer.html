@@ -24,53 +24,53 @@
     button:focus-visible { outline: 3px solid #245a9a; outline-offset: 2px; }
     .workbench-mark { margin: .25rem 0; font-weight: bold; }
     .checkpoint-note { margin: .4rem 0 1.5rem; max-width: 980px; }
-    .key-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; padding: 1rem; border: 1px solid var(--soft-border); background: #fafafa; }
+    .key-controls { display: flex; flex-wrap: wrap; align-items: end; gap: .65rem; padding: .55rem .7rem; border: 1px solid var(--soft-border); background: #fafafa; }
     .control-label { display: block; margin-bottom: .35rem; font-weight: bold; }
-    .key-wheel { position: relative; width: 8rem; }
-    .key-wheel-trigger { width: 100%; min-height: 2.35rem; padding: .45rem .6rem; border: 1px solid #777; background: #fff; text-align: left; }
+    .key-wheel { position: relative; width: 6.5rem; }
+    .key-wheel-trigger { width: 100%; min-height: 1.9rem; padding: .25rem .45rem; border: 1px solid #777; background: #fff; text-align: left; }
     .key-wheel-trigger::after { float: right; content: "▾"; }
     .key-wheel-menu { position: absolute; top: 50%; left: 0; z-index: 20; width: 100%; border: 1px solid #777; background: #fff; box-shadow: 0 .25rem .75rem rgba(0,0,0,.25); overflow: hidden; transform: translateY(-50%); }
     .key-wheel-menu[hidden] { display: none; }
-    .key-wheel-option { display: block; width: 100%; margin: 0; padding: .32rem .55rem; border: 0; background: #fff; text-align: center; }
+    .key-wheel-option { display: block; width: 100%; margin: 0; padding: .22rem .4rem; border: 0; background: #fff; text-align: center; }
     .key-wheel-option:hover, .key-wheel-option:focus { background: #e3efff; }
     .key-wheel-option.center { border-top: 1px solid #777; border-bottom: 1px solid #777; background: #f1f1f1; font-weight: bold; }
     .key-wheel-help { color: #555; max-width: 34rem; }
-    .workspace[hidden] { display: none; }
-    .section-title { margin: 1.5rem 0 .6rem; }
-    .scale-scroll, .chord-scroll { overflow-x: auto; padding: .2rem 0 .5rem; }
-    .scale-strip { display: grid; grid-template-columns: repeat(7, minmax(115px, 1fr)); min-width: 805px; border: 1px solid var(--border); }
-    .scale-cell { min-height: 7.3rem; padding: .65rem .45rem; border-right: 1px solid var(--soft-border); text-align: center; background: #fff; }
+    .section-title { margin: 1rem 0 .4rem; font-size: 1.25rem; }
+    .scale-scroll, .chord-scroll { overflow-x: auto; padding: .1rem 0 .3rem; }
+    .scale-strip { display: grid; grid-template-columns: repeat(7, minmax(95px, 1fr)); min-width: 665px; border: 1px solid var(--border); }
+    .scale-cell { min-height: 4.25rem; padding: .32rem .3rem; border-right: 1px solid var(--soft-border); text-align: center; background: #fff; }
     .scale-cell:last-child { border-right: 0; }
     .scale-degree { display: block; color: #555; font-size: .9rem; }
-    .scale-note { display: block; margin-top: .35rem; font-size: 2rem; font-weight: bold; }
-    .tone-role { display: block; min-height: 1.35rem; margin-top: .35rem; font-size: .82rem; font-weight: bold; text-transform: uppercase; letter-spacing: .03em; }
+    .scale-note { display: block; margin-top: .12rem; min-height: 1.7rem; font-size: 1.35rem; font-weight: bold; }
+    .tone-role { display: block; min-height: 1rem; margin-top: .05rem; font-size: .7rem; font-weight: bold; text-transform: uppercase; letter-spacing: .03em; }
     .tone-root { background: var(--root); color: var(--root-ink); }
     .tone-third { background: var(--third); color: var(--third-ink); }
     .tone-fifth { background: var(--fifth); color: var(--fifth-ink); }
-    .legend { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; min-height: 2rem; margin: .65rem 0 0; color: #444; }
-    .legend[hidden] { display: none; }
-    .chip { display: inline-block; padding: .16rem .45rem; border: 1px solid #888; font-weight: bold; }
+    .legend { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; min-height: 1.8rem; margin: .35rem 0 0; color: #444; }
+    .legend.empty { visibility: hidden; }
+    .chip { display: inline-block; padding: .08rem .3rem; border: 1px solid #888; font-size: .85rem; font-weight: bold; }
     .root-chip { background: var(--root); color: var(--root-ink); }
     .third-chip { background: var(--third); color: var(--third-ink); }
     .fifth-chip { background: var(--fifth); color: var(--fifth-ink); }
-    .chord-grid { display: grid; grid-template-columns: repeat(7, minmax(145px, 1fr)); min-width: 1015px; gap: .55rem; }
-    .chord-card { min-height: 10rem; padding: .75rem .55rem; border: 2px solid #999; background: #fff; text-align: center; }
+    .chord-grid { display: grid; grid-template-columns: repeat(7, minmax(115px, 1fr)); min-width: 805px; gap: .35rem; }
+    .chord-card { min-height: 6.25rem; padding: .4rem .35rem; border: 2px solid #999; background: #fff; text-align: center; }
     .chord-card:hover { border-color: var(--selected); background: #f5f9ff; }
-    .chord-card.selected { border: 4px solid var(--selected); padding: calc(.75rem - 2px) calc(.55rem - 2px); background: #eaf3ff; }
-    .chord-degree { display: block; font-size: 1.25rem; font-weight: bold; }
-    .chord-name { display: block; margin: .45rem 0 .1rem; font-size: 1.45rem; font-weight: bold; }
-    .chord-quality { display: block; color: #555; }
-    .chord-formula { display: block; margin-top: .65rem; font-weight: bold; }
-    .detail-panel { display: grid; grid-template-columns: minmax(210px, .75fr) minmax(330px, 1.5fr); gap: 1rem; margin-top: 1.25rem; padding: 1rem 1.2rem; border: 1px solid var(--border); background: var(--surface); }
-    .detail-panel[hidden] { display: none; }
-    .detail-heading { margin: 0 0 .7rem; }
-    .detail-facts { display: grid; grid-template-columns: max-content 1fr; gap: .45rem .75rem; margin: 0; }
+    .chord-card.selected { border: 4px solid var(--selected); padding: calc(.4rem - 2px) calc(.35rem - 2px); background: #eaf3ff; }
+    .chord-card:disabled { cursor: default; color: transparent; }
+    .chord-degree { display: block; font-size: 1rem; font-weight: bold; }
+    .chord-name { display: block; min-height: 1.45rem; margin: .2rem 0 .05rem; font-size: 1.15rem; font-weight: bold; }
+    .chord-quality { display: block; min-height: 1.2rem; color: #555; font-size: .85rem; }
+    .chord-formula { display: block; min-height: 1.2rem; margin-top: .25rem; font-size: .86rem; font-weight: bold; }
+    .detail-panel { display: grid; grid-template-columns: minmax(200px, .75fr) minmax(300px, 1.5fr); gap: .65rem; min-height: 5.7rem; margin-top: .65rem; padding: .55rem .7rem; border: 1px solid var(--border); background: var(--surface); }
+    .detail-panel.empty > * { visibility: hidden; }
+    .detail-heading { margin: 0 0 .35rem; font-size: 1.15rem; }
+    .detail-facts { display: grid; grid-template-columns: max-content 1fr; gap: .22rem .5rem; margin: 0; font-size: .9rem; }
     .detail-facts dt { font-weight: bold; }
     .detail-facts dd { margin: 0; }
-    .detail-explanation { margin: 0; font-size: 1.08rem; }
-    #clear-chord { padding: .45rem .75rem; }
-    .philosophy { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-    .philosophy p { margin: 0; padding: .85rem 1rem; border-left: 4px solid #555; background: #f5f5f5; }
+    .detail-explanation { margin: 0; font-size: .95rem; }
+    #clear-chord { padding: .25rem .5rem; }
+    .philosophy { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin-top: .8rem; }
+    .philosophy p { margin: 0; padding: .5rem .65rem; border-left: 4px solid #555; background: #f5f5f5; font-size: .9rem; }
     @media (max-width: 760px) {
       .detail-panel, .philosophy { grid-template-columns: 1fr; }
     }
@@ -94,10 +94,10 @@
     <span class="key-wheel-help">Click the key control, then scroll in either direction or choose a visible key.</span>
   </section>
 
-  <main class="workspace" id="workspace" hidden>
+  <main class="workspace" id="workspace">
     <h2 class="section-title" id="scale-heading">Scale</h2>
     <div class="scale-scroll"><div class="scale-strip" id="scale-strip" aria-labelledby="scale-heading"></div></div>
-    <div class="legend" id="tone-legend" hidden>
+    <div class="legend empty" id="tone-legend">
       <strong>Selected chord tones:</strong>
       <span class="chip root-chip">Root</span>
       <span class="chip third-chip">3rd</span>
@@ -107,7 +107,7 @@
     <h2 class="section-title" id="chords-heading">Diatonic Chords</h2>
     <div class="chord-scroll"><div class="chord-grid" id="chord-grid" aria-labelledby="chords-heading"></div></div>
 
-    <section class="detail-panel" id="detail-panel" aria-live="polite" hidden>
+    <section class="detail-panel empty" id="detail-panel" aria-live="polite">
       <div>
         <h2 class="detail-heading" id="detail-heading"></h2>
         <dl class="detail-facts">
@@ -187,7 +187,6 @@
       selectedKey = key;
       wheelCenter = MAJOR_KEYS.findIndex(item => item.id === key.id);
       wheelTrigger.textContent = key.label;
-      workspace.hidden = false;
       closeWheel();
       render();
       wheelTrigger.focus();
@@ -221,11 +220,23 @@
         cell.innerHTML = `<span class="scale-degree">Scale degree ${index + 1}</span><span class="scale-note">${note}</span><span class="tone-role">${role?.label ?? ""}</span>`;
         scaleStrip.appendChild(cell);
       });
-      toneLegend.hidden = !selectedChord;
+      toneLegend.classList.toggle("empty", !selectedChord);
     }
 
     function renderChords() {
       chordGrid.innerHTML = "";
+      if (!selectedKey) {
+        DIATONIC_CHORDS.forEach(() => {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "chord-card";
+          card.disabled = true;
+          card.setAttribute("aria-hidden", "true");
+          card.innerHTML = '<span class="chord-degree">—</span><span class="chord-name"></span><span class="chord-quality"></span><span class="chord-formula"></span>';
+          chordGrid.appendChild(card);
+        });
+        return;
+      }
       DIATONIC_CHORDS.forEach(chord => {
         const name = chordName(selectedKey, chord);
         const tones = chordTones(selectedKey, chord);
@@ -242,7 +253,7 @@
 
     function renderDetails(selectedChord) {
       if (!selectedChord) {
-        detailPanel.hidden = true;
+        detailPanel.classList.add("empty");
         return;
       }
       const harmony = HARMONY[selectedChord.degree];
@@ -250,11 +261,24 @@
       alsoCalled.textContent = harmony.alsoCalled;
       movesTo.textContent = harmony.movesTo;
       detailExplanation.textContent = harmony.explanation;
-      detailPanel.hidden = false;
+      detailPanel.classList.remove("empty");
     }
 
     function render() {
-      if (!selectedKey) return;
+      if (!selectedKey) {
+        scaleHeading.textContent = "Major Scale";
+        scaleStrip.innerHTML = "";
+        for (let index = 0; index < 7; index += 1) {
+          const cell = document.createElement("div");
+          cell.className = "scale-cell";
+          cell.innerHTML = `<span class="scale-degree">Scale degree ${index + 1}</span><span class="scale-note"></span><span class="tone-role"></span>`;
+          scaleStrip.appendChild(cell);
+        }
+        toneLegend.classList.add("empty");
+        renderChords();
+        renderDetails(null);
+        return;
+      }
       const selectedChord = DIATONIC_CHORDS.find(chord => chord.degree === selectedDegree) ?? null;
       renderScale(selectedChord);
       renderChords();
@@ -291,7 +315,7 @@
     });
     document.addEventListener("click", event => { if (!wheel.contains(event.target)) closeWheel(); });
     clearChord.addEventListener("click", clearSelectedChord);
+    render();
   </script>
 </body>
 </html>
-
