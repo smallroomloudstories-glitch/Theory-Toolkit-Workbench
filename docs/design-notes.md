@@ -159,3 +159,67 @@ After the illustrated fretboard presentation checkpoint is accepted, return to t
 - Browser verification confirmed that both deployed Explorers load with populated controls, illustrated fretboards, interactive note selection and Focus, string scope, enharmonic display, and feedback access. Scale Explorer also retains its chromatic key wheel and scale controls.
 - `Theory-Toolkit/main` is now both the live-test code line and the eventual live-site code line. Going live through smallroomloudstories.com will expose this tested artifact rather than create another code fork.
 - The next development session begins the Chord Shape Explorer in the Workbench only.
+
+
+## Session close — 2026-08-18: Chord Shape Explorer, Key Explorer, and broader public testing
+
+### Chord Shape Explorer completed and promoted
+
+- Chord Shape Explorer was built in the Workbench on the approved shared illustrated fretboard and then promoted to the forward-facing test repository.
+- The initial programmed open-chord library contains A, Am, Asus2, C, D, Dm, E, Em, Easy F, and G. The selector groups related chord families and opens with no chord selected.
+- The chord panel shows chord tones in root, third, fifth order. Notes and fingering labels are alternate views of the same shape.
+- Default beginner fingerings match Rob's intended teaching sequence. Fingering assignments can be changed during a demonstration without changing the underlying note positions; those temporary edits need not persist when switching views.
+- Programmed chord positions support a three-state teaching cycle: visible, Focus, and hidden. Clear Focus removes Focus only and does not reset the chord presentation.
+- Nut positions support normal/open, Focus, and muted states. Muting is shown with a red X and may be applied to any string.
+- Nut interaction was extended beyond programmed chord shapes. With no chord selected, every open-string position can still cycle through normal, Focus, and muted. This makes the Explorer useful for manually constructing and demonstrating unprogrammed chords and voicings anywhere on the fretboard.
+- The no-chord nut behavior was fixed in both Workbench and the forward-facing test build. Rob verified its usefulness by quickly mapping a B diminished chord and exploring it across the fretboard.
+
+### Key Explorer completed and promoted
+
+- Key Explorer was translated from the original Theory Toolkit spreadsheet into a compact browser Explorer.
+- C major and its I chord are the default presentation so the page opens with meaningful information rather than blank placeholders.
+- The chromatic key wheel uses the accepted centered, indefinitely wrapping wheel interaction and 25 millisecond input limiter.
+- Key spelling follows key-signature and Circle of Fifths conventions rather than a global sharp/flat preference. This includes theoretical spellings such as E# in F# major when required to preserve one letter name per scale degree.
+- Each major key displays its seven scale degrees, diatonic triads, chord qualities, chord tones, harmonic role descriptions, alternate functional names, and common next-chord destinations.
+- Selecting a diatonic chord highlights its root, third, and fifth within the scale. Detail and selected-tone regions retain their physical space when cleared so the page does not jump.
+- A single quiet invitation links to Chord Shape Explorer. Individual chord cards do not attempt to duplicate Chord Shape Explorer's fingering presentation.
+- The general philosophy box ending with “Learn the common patterns first” was removed from both versions. That material belongs more naturally in the future Progression Explorer.
+- Key Explorer was promoted to the forward-facing repository, added to Current Builds as a New Feature, connected to the feedback system, and dated August 18, 2026.
+
+### Feedback delivery
+
+- The browser feedback form submits through the Cloudflare Worker to the private Theory Toolkit Feedback repository.
+- The Worker also sends a notification through Resend to the Small Room, Loud Stories email account. The Resend API key remains a Cloudflare secret and must never be committed to either repository.
+- End-to-end submission and email delivery were verified.
+- Gmail routes these notifications directly into a Feedback label without producing a loud phone notification. GitHub issues remain the durable feedback record.
+
+### Broader tester outreach
+
+- The forward-facing GitHub Pages build is ready for a broader public-beta testing audience.
+- A call for testers was prepared and posted to the Zombie Guitar community. It asks for general functional and presentation feedback, with particular attention to additions that would improve Key Explorer while keeping it focused on keys.
+- The message credits Brian Kelly's Zombie Guitar lessons as the foundation of much of Rob's theory knowledge while stating explicitly that Theory Toolkit is Rob's independent project. Brian and Zombie Guitar are not involved in its development or responsible for its content; any errors come from Rob's interpretation, not Brian's teaching.
+- The message also establishes that Theory Toolkit is a free visual supplement to instruction. It is not intended to replace an instructor or teach music theory independently.
+- Additional music communities may be invited after the initial broader response. The current approved public test remains hosted through GitHub until the permanent domain arrangement is implemented.
+
+### Eventual smallroomloudstories.com publication
+
+- Permanent publication is tabled until after broader testing. No repository or DNS changes are required now.
+- The preferred direction is a unified address such as smallroomloudstories.com/theory-toolkit/.
+- Theory Toolkit should remain in its own authoritative repository. A future GitHub Actions deployment can assemble the approved Toolkit into a theory-toolkit path inside the published SRLS website without maintaining a second manual copy or creating another testing environment.
+- A simpler alternative remains theory.smallroomloudstories.com, configured as a custom subdomain for the Theory Toolkit GitHub Pages repository.
+- Cloudflare proxying is possible but not preferred because it adds rewriting, caching, and asset-path complexity.
+- Namecheap is the domain registrar. This does not change the architecture. Before any DNS-dependent option is implemented, verify which provider's nameservers are authoritative. The path-based GitHub Actions option does not require a DNS change.
+
+### Future Explorer boundaries
+
+- Modes Explorer remains a separate future tool rather than being folded into Key Explorer.
+- Progression Explorer should eventually cover common Western progressions, chord movement, modulation between keys, useful out-of-key connecting chords, borrowed harmony, and modal interchange. It may begin simply and expand with input from testers who have deeper harmonic experience.
+- Triad Groups Explorer is now a formal future candidate. It should show the same triad across the fretboard and across different three-string groups, inversions, root/third/fifth locations, natural movement between nearby triads, connections to familiar chord shapes, voice leading, and the development of musically appropriate double stops for improvising over chord changes.
+- The intended conceptual path is Key Explorer to Triad Groups Explorer to Progression Explorer: identify the harmony, locate and manipulate it on the neck, then understand how it moves.
+- Chord Shape Explorer remains distinct. It answers how a chord or voicing can be played and illustrated; Triad Groups Explorer will answer how harmony is distributed across the neck and used melodically.
+
+### Current state
+
+- Fretboard Explorer, Chord Shape Explorer, Scale Explorer, and Key Explorer are all available in the forward-facing GitHub Pages test environment.
+- The current goal is to gather real human feedback rather than add speculative polish.
+- The project remains intended as a free-to-use teaching supplement that can eventually reach a wider community.
