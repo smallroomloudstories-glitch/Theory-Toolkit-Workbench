@@ -80,17 +80,17 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Key Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="checkpoint-note">Build 1 — explore a major key’s scale, diatonic chords, triad construction, and common harmonic movement.</p>
+  <p class="checkpoint-note">Build 2 — compact major-key harmony map with C major selected by default.</p>
 
   <section class="key-controls" aria-labelledby="key-control-heading">
     <div>
       <span class="control-label" id="key-control-heading">Major Key</span>
       <div class="key-wheel" id="key-wheel">
-        <button type="button" class="key-wheel-trigger" id="key-wheel-trigger" aria-haspopup="listbox" aria-expanded="false">Choose key</button>
+        <button type="button" class="key-wheel-trigger" id="key-wheel-trigger" aria-haspopup="listbox" aria-expanded="false">C</button>
         <div class="key-wheel-menu" id="key-wheel-menu" role="listbox" aria-label="Major keys" hidden></div>
       </div>
     </div>
-    <button type="button" id="clear-chord" disabled>Clear Chord</button>
+    <button type="button" id="clear-chord">Clear Chord</button>
     <span class="key-wheel-help">Click the key control, then scroll in either direction or choose a visible key.</span>
   </section>
 
@@ -142,8 +142,8 @@
     const movesTo = document.querySelector("#moves-to");
     const detailExplanation = document.querySelector("#detail-explanation");
 
-    let selectedKey = null;
-    let selectedDegree = null;
+    let selectedKey = MAJOR_KEYS[0];
+    let selectedDegree = "I";
     let wheelCenter = 0;
     let lastWheelStep = 0;
 
