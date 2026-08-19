@@ -1,0 +1,29 @@
+.mobile-support-notice {
+  margin: .7rem 0 1rem;
+  padding: .55rem .75rem;
+  border: 1px solid #b88300;
+  border-left: 5px solid #b88300;
+  background: #fff7d6;
+  color: #3f3300;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
+.mobile-support-notice strong {
+  display: inline;
+}
+
+@media (max-width: 760px) {
+  .mobile-support-notice {
+    margin: .75rem 0 1rem;
+    padding: .8rem;
+    border-width: 2px 2px 2px 6px;
+    background: #fff0ae;
+    font-size: 1rem;
+  }
+
+  .mobile-support-notice strong {
+    display: block;
+    margin-bottom: .25rem;
+  }
+}
