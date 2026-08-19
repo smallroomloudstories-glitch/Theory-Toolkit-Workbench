@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260819-2dot">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260819-cleanup1">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -22,13 +22,6 @@
     label { margin-right: 1rem; white-space: nowrap; }
     button { margin: .2rem; padding: .45rem .7rem; cursor: pointer; }
     button.selected { font-weight: bold; outline: 3px solid currentColor; outline-offset: 1px; }
-    .string-scope-button { width: 100%; margin: 0; padding: .35rem .45rem; border: 1px solid transparent; background: transparent; text-align: left; }
-    .string-scope-button:hover { border-color: #777; }
-    .string-scope-button.selected { background: #e3efff; border-color: #245a9a; outline: 2px solid #245a9a; outline-offset: -2px; }
-    td.fret-position { cursor: pointer; }
-    .hidden-note { color: transparent; }
-    .selected-note { font-weight: bold; outline: 3px solid currentColor; outline-offset: -4px; }
-    .focused-position { box-shadow: inset 0 0 0 4px #111; background: #fff3a6; color: #111; font-weight: bold; }
   </style>
   <link rel="stylesheet" href="src/ui/mobile-support-notice.css">
 </head>
@@ -42,7 +35,7 @@
 
   <div class="fretboard-wrap">
     <div class="fretboard-surface fretboard-diagnostic-surface">
-    <table id="fretboard-table" class="fretboard-diagnostic">
+    <table id="fretboard-table" class="fretboard-view fretboard-diagnostic">
       <thead id="fretboard-head"></thead>
       <tbody id="fretboard-body"></tbody>
     </table>
