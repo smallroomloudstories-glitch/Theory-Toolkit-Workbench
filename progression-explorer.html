@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theory Toolkit - Progression Explorer Workbench</title>
+  <style>
+    :root {
+      --border: #aaa;
+      --soft-border: #ccc;
+      --surface: #f5f5f5;
+      --selected: #1e4f87;
+      --selected-soft: #eaf3ff;
+      --tonic: #bfe8c2;
+      --tonic-ink: #163b1a;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: sans-serif; max-width: 1450px; margin: 1.25rem auto 2.5rem; padding: 0 1rem; line-height: 1.4; }
+    h1 { margin: .35rem 0; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #245a9a; outline-offset: 2px; }
+    .workbench-mark { margin: .25rem 0; font-weight: bold; }
+    .checkpoint-note { margin: .4rem 0 1.5rem; max-width: 980px; }
+    .key-controls { display: flex; flex-wrap: wrap; align-items: end; gap: .65rem; padding: .55rem .7rem; border: 1px solid var(--soft-border); background: #fafafa; }
+    .control-label { display: block; margin-bottom: .35rem; font-weight: bold; }
+    .key-wheel { position: relative; width: 6.5rem; }
+    .key-wheel-trigger { width: 100%; min-height: 1.9rem; padding: .25rem .45rem; border: 1px solid #777; background: #fff; text-align: left; }
+    .key-wheel-trigger::after { float: right; content: "▾"; }
+    .key-wheel-menu { position: absolute; top: 50%; left: 0; z-index: 20; width: 100%; border: 1px solid #777; background: #fff; box-shadow: 0 .25rem .75rem rgba(0,0,0,.25); overflow: hidden; transform: translateY(-50%); }
+    .key-wheel-menu[hidden] { display: none; }
+    .key-wheel-option { display: block; width: 100%; margin: 0; padding: .22rem .4rem; border: 0; background: #fff; text-align: center; }
+    .key-wheel-option:hover, .key-wheel-option:focus { background: #e3efff; }
+    .key-wheel-option.center { border-top: 1px solid #777; border-bottom: 1px solid #777; background: #f1f1f1; font-weight: bold; }
+    .key-wheel-help { color: #555; max-width: 34rem; }
+    .section-title { margin: 1rem 0 .4rem; font-size: 1.25rem; }
+    .chord-scroll { overflow-x: auto; padding: .1rem 0 .3rem; }
+    .chord-grid { display: grid; grid-template-columns: repeat(7, minmax(105px, 1fr)); min-width: 735px; gap: .35rem; }
+    .chord-card { min-height: 4.65rem; padding: .4rem .35rem; border: 2px solid #999; background: #fff; text-align: center; }
+    .chord-card.used { border-color: var(--selected); background: var(--selected-soft); }
+    .chord-card.tonic { background: var(--tonic); color: var(--tonic-ink); }
+    .chord-degree { display: block; font-size: 1rem; font-weight: bold; }
+    .chord-name { display: block; min-height: 1.45rem; margin: .2rem 0 .05rem; font-size: 1.15rem; font-weight: bold; }
+    .chord-quality { display: block; color: #555; font-size: .82rem; }
+    .progression-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: .55rem; }
+    .progression-card { min-height: 6rem; padding: .55rem .65rem; border: 2px solid #999; background: #fff; text-align: left; }
+    .progression-card:hover { border-color: var(--selected); background: #f5f9ff; }
+    .progression-card.selected { border: 4px solid var(--selected); padding: calc(.55rem - 2px) calc(.65rem - 2px); background: var(--selected-soft); }
+    .progression-numerals { display: block; font-size: 1.12rem; font-weight: bold; }
+    .progression-chords { display: block; margin-top: .3rem; font-size: 1rem; }
+    .progression-name { display: block; margin-top: .25rem; color: #555; font-size: .85rem; }
+    .detail-panel { display: grid; grid-template-columns: minmax(230px, .8fr) minmax(330px, 1.4fr); gap: 1rem; min-height: 10.5rem; margin-top: .75rem; padding: .7rem .8rem; border: 1px solid var(--border); background: var(--surface); }
+    .detail-panel.empty > * { visibility: hidden; }
+    .detail-heading { margin: 0 0 .35rem; font-size: 1.2rem; }
+    .detail-sequence { margin: .2rem 0 .65rem; font-size: 1.15rem; font-weight: bold; }
+    .detail-facts { display: grid; grid-template-columns: max-content 1fr; gap: .25rem .55rem; margin: 0; font-size: .9rem; }
+    .detail-facts dt { font-weight: bold; }
+    .detail-facts dd { margin: 0; }
+    .detail-explanation { margin: 0; }
+    .song-placeholder { margin: .75rem 0 0; padding-top: .6rem; border-top: 1px solid var(--soft-border); color: #555; font-size: .9rem; }
+    #clear-progression { padding: .25rem .5rem; }
+    @media (max-width: 760px) {
+      .detail-panel { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="index.html">← Workbench Home</a></p>
+  <h1>Progression Explorer — WORKBENCH</h1>
+  <p class="workbench-mark">Experimental development version.</p>
+  <p class="checkpoint-note">Build 1 — explore common progressions made entirely from the seven diatonic chords of a major key.</p>
+
+  <section class="key-controls" aria-labelledby="key-control-heading">
+    <div>
+      <span class="control-label" id="key-control-heading">Major Key</span>
+      <div class="key-wheel" id="key-wheel">
+        <button type="button" class="key-wheel-trigger" id="key-wheel-trigger" aria-haspopup="listbox" aria-expanded="false">C</button>
+        <div class="key-wheel-menu" id="key-wheel-menu" role="listbox" aria-label="Major keys" hidden></div>
+      </div>
+    </div>
+    <button type="button" id="clear-progression" disabled>Clear Progression</button>
+    <span class="key-wheel-help">Click the key control, then scroll in either direction or choose a visible key.</span>
+  </section>
+
+  <main>
+    <h2 class="section-title" id="chords-heading">Diatonic Chords in C Major</h2>
+    <div class="chord-scroll"><div class="chord-grid" id="chord-grid" aria-labelledby="chords-heading"></div></div>
+
+    <h2 class="section-title" id="progressions-heading">Common Progressions</h2>
+    <div class="progression-grid" id="progression-grid" aria-labelledby="progressions-heading"></div>
+
+    <section class="detail-panel empty" id="detail-panel" aria-live="polite">
+      <div>
+        <h2 class="detail-heading" id="detail-heading"></h2>
+        <p class="detail-sequence" id="detail-sequence"></p>
+        <dl class="detail-facts">
+          <dt>Pattern</dt><dd id="detail-pattern"></dd>
+          <dt>Variation</dt><dd id="detail-variation"></dd>
+        </dl>
+      </div>
+      <div>
+        <p class="detail-explanation" id="detail-explanation"></p>
+        <p class="song-placeholder"><strong>Example songs:</strong> Reserved for a later build after the presentation and linking approach are approved.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { MAJOR_KEYS, DIATONIC_CHORDS } from "./src/data/key-explorer-data.js?v=20260818-2";
+
+    const PROGRESSIONS = [
+      {
+        id: "one-four-five",
+        numerals: ["I", "IV", "V"],
+        name: "The foundational three-chord movement",
+        variation: "I – IV – V – I or I – V – IV – I",
+        explanation: "This is one of the clearest demonstrations of major-key harmony. The tonic establishes home, the IV chord moves away from home, and the V chord creates the strongest pull back toward I. The three chords can be reordered and repeated in many ways without losing the key’s identity."
+      },
+      {
+        id: "one-five-six-four",
+        numerals: ["I", "V", "vi", "IV"],
+        name: "A widely used four-chord loop",
+        variation: "vi – IV – I – V",
+        explanation: "The tonic begins from a stable place, V adds forward motion, vi introduces the relative minor color, and IV opens the harmony before the loop returns home. Because every chord connects smoothly, the pattern can repeat without demanding a hard ending."
+      },
+      {
+        id: "six-four-one-five",
+        numerals: ["vi", "IV", "I", "V"],
+        name: "The relative-minor-starting loop",
+        variation: "I – V – vi – IV",
+        explanation: "This uses the same four chords as I – V – vi – IV, but beginning on vi changes the emotional center. It often sounds more reflective at first, then grows brighter when it reaches I before V turns the progression back toward vi."
+      },
+      {
+        id: "one-six-four-five",
+        numerals: ["I", "vi", "IV", "V"],
+        name: "The classic tonic-to-relative-minor pattern",
+        variation: "I – vi – ii – V",
+        explanation: "I and vi share two chord tones, so the first move sounds smooth while shifting from major stability toward relative-minor color. IV then prepares V, and V supplies the tension that leads naturally back to I."
+      },
+      {
+        id: "two-five-one",
+        numerals: ["ii", "V", "I"],
+        name: "The strongest functional resolution",
+        variation: "ii – V – I – vi or IV – V – I",
+        explanation: "The ii chord acts as a predominant, V creates dominant tension, and I resolves that tension. This compact movement makes the functions of preparation, tension, and resolution especially easy to hear."
+      },
+      {
+        id: "one-four-six-five",
+        numerals: ["I", "IV", "vi", "V"],
+        name: "A major-key loop with a late dominant turn",
+        variation: "I – IV – vi – V – I",
+        explanation: "I begins at home and IV broadens the sound. Moving to vi adds relative-minor contrast without leaving the key, while V at the end creates a clear turn back toward I when the progression repeats or resolves."
+      }
+    ];
+
+    const wheel = document.querySelector("#key-wheel");
+    const wheelTrigger = document.querySelector("#key-wheel-trigger");
+    const wheelMenu = document.querySelector("#key-wheel-menu");
+    const clearProgression = document.querySelector("#clear-progression");
+    const chordsHeading = document.querySelector("#chords-heading");
+    const chordGrid = document.querySelector("#chord-grid");
+    const progressionGrid = document.querySelector("#progression-grid");
+    const detailPanel = document.querySelector("#detail-panel");
+    const detailHeading = document.querySelector("#detail-heading");
+    const detailSequence = document.querySelector("#detail-sequence");
+    const detailPattern = document.querySelector("#detail-pattern");
+    const detailVariation = document.querySelector("#detail-variation");
+    const detailExplanation = document.querySelector("#detail-explanation");
+
+    let selectedKey = MAJOR_KEYS[0];
+    let selectedProgression = null;
+    let wheelCenter = 0;
+    let lastWheelStep = 0;
+
+    const wrapIndex = index => (index + MAJOR_KEYS.length) % MAJOR_KEYS.length;
+    const chordForDegree = degree => DIATONIC_CHORDS.find(chord => chord.degree === degree);
+    const chordName = (key, chord) => `${key.notes[chord.triadDegrees[0]]}${chord.suffix}`;
+    const progressionChordNames = progression => progression.numerals.map(degree => chordName(selectedKey, chordForDegree(degree)));
+
+    function renderWheel() {
+      wheelMenu.innerHTML = "";
+      for (let offset = -3; offset <= 3; offset += 1) {
+        const key = MAJOR_KEYS[wrapIndex(wheelCenter + offset)];
+        const option = document.createElement("button");
+        option.type = "button";
+        option.className = `key-wheel-option${offset === 0 ? " center" : ""}`;
+        option.textContent = key.label;
+        option.setAttribute("role", "option");
+        option.setAttribute("aria-selected", String(selectedKey.id === key.id));
+        option.addEventListener("click", () => selectKey(key));
+        wheelMenu.appendChild(option);
+      }
+    }
+
+    function openWheel() {
+      wheelCenter = MAJOR_KEYS.findIndex(key => key.id === selectedKey.id);
+      renderWheel();
+      wheelMenu.hidden = false;
+      wheelTrigger.setAttribute("aria-expanded", "true");
+    }
+
+    function closeWheel() {
+      wheelMenu.hidden = true;
+      wheelTrigger.setAttribute("aria-expanded", "false");
+    }
+
+    function moveWheel(direction) {
+      wheelCenter = wrapIndex(wheelCenter + direction);
+      renderWheel();
+    }
+
+    function selectKey(key) {
+      selectedKey = key;
+      wheelCenter = MAJOR_KEYS.findIndex(item => item.id === key.id);
+      wheelTrigger.textContent = key.label;
+      closeWheel();
+      render();
+      wheelTrigger.focus();
+    }
+
+    function selectProgression(progression) {
+      selectedProgression = progression;
+      clearProgression.disabled = false;
+      render();
+    }
+
+    function clearSelectedProgression() {
+      selectedProgression = null;
+      clearProgression.disabled = true;
+      render();
+    }
+
+    function renderChords() {
+      chordsHeading.textContent = `Diatonic Chords in ${selectedKey.label} Major`;
+      chordGrid.innerHTML = "";
+      const usedDegrees = new Set(selectedProgression?.numerals ?? []);
+      DIATONIC_CHORDS.forEach(chord => {
+        const card = document.createElement("div");
+        card.className = `chord-card${usedDegrees.has(chord.degree) ? " used" : ""}${chord.degree === "I" ? " tonic" : ""}`;
+        card.innerHTML = `<span class="chord-degree">${chord.degree}</span><span class="chord-name">${chordName(selectedKey, chord)}</span><span class="chord-quality">${chord.quality}</span>`;
+        chordGrid.appendChild(card);
+      });
+    }
+
+    function renderProgressions() {
+      progressionGrid.innerHTML = "";
+      PROGRESSIONS.forEach(progression => {
+        const card = document.createElement("button");
+        const selected = selectedProgression?.id === progression.id;
+        card.type = "button";
+        card.className = `progression-card${selected ? " selected" : ""}`;
+        card.setAttribute("aria-pressed", String(selected));
+        card.innerHTML = `<span class="progression-numerals">${progression.numerals.join(" – ")}</span><span class="progression-chords">${progressionChordNames(progression).join(" – ")}</span><span class="progression-name">${progression.name}</span>`;
+        card.addEventListener("click", () => selectProgression(progression));
+        progressionGrid.appendChild(card);
+      });
+    }
+
+    function renderDetails() {
+      if (!selectedProgression) {
+        detailPanel.classList.add("empty");
+        return;
+      }
+      detailHeading.textContent = selectedProgression.name;
+      detailSequence.textContent = progressionChordNames(selectedProgression).join(" – ");
+      detailPattern.textContent = selectedProgression.numerals.join(" – ");
+      detailVariation.textContent = selectedProgression.variation;
+      detailExplanation.textContent = selectedProgression.explanation;
+      detailPanel.classList.remove("empty");
+    }
+
+    function render() {
+      renderChords();
+      renderProgressions();
+      renderDetails();
+    }
+
+    wheelTrigger.addEventListener("click", () => wheelMenu.hidden ? openWheel() : closeWheel());
+    wheelMenu.addEventListener("wheel", event => {
+      event.preventDefault();
+      const now = performance.now();
+      if (Math.abs(event.deltaY) < 1 || now - lastWheelStep < 25) return;
+      lastWheelStep = now;
+      moveWheel(event.deltaY > 0 ? 1 : -1);
+    }, { passive: false });
+    wheelTrigger.addEventListener("keydown", event => {
+      if (!["ArrowDown", "ArrowUp", "Escape"].includes(event.key)) return;
+      event.preventDefault();
+      if (event.key === "Escape") { closeWheel(); return; }
+      if (wheelMenu.hidden) openWheel();
+      moveWheel(event.key === "ArrowDown" ? 1 : -1);
+      wheelMenu.querySelector(".center").focus();
+    });
+    wheelMenu.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeWheel();
+        wheelTrigger.focus();
+        return;
+      }
+      if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
+      event.preventDefault();
+      moveWheel(event.key === "ArrowDown" ? 1 : -1);
+      wheelMenu.querySelector(".center").focus();
+    });
+    document.addEventListener("click", event => { if (!wheel.contains(event.target)) closeWheel(); });
+    clearProgression.addEventListener("click", clearSelectedProgression);
+    render();
+  </script>
+</body>
+</html>
