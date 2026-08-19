@@ -289,3 +289,71 @@ Keep each explanation concise. For example, an I–V–vi–IV description may i
 - Progression Explorer may eventually grow from common diatonic patterns into secondary dominants, useful out-of-key connecting chords, borrowed chords, modal interchange, modulation between keys, and other practical harmonic movement.
 - Begin simply. More advanced features should be added in response to real teaching needs and informed tester input rather than attempting to encode all of harmony in the first build.
 - The larger learning path remains: Fretboard Explorer to Chord Shape Explorer to Scale Explorer to Key Explorer, followed by Progression Explorer. Triad Groups Explorer may provide an additional bridge between key knowledge, fretboard harmony, and progression movement.
+
+## Progression Explorer Build 1: session close, 2026-08-19
+
+### Implemented in Workbench
+
+- Added `progression-explorer.html` and linked it from the Workbench landing page.
+- Build 1 remains strictly within the seven diatonic chords of a selected major key.
+- C major is the default. The Explorer reuses the established centered key wheel with indefinite chromatic scrolling and a 25 ms limiter.
+- The page displays I, ii, iii, IV, V, vi, and vii° with their translated chord names and qualities.
+- Six starting progression entries are included:
+  - I - IV - V
+  - I - V - vi - IV
+  - vi - IV - I - V
+  - I - vi - IV - V
+  - ii - V - I
+  - I - IV - vi - V
+- Selecting a progression highlights its participating diatonic chords and fills a stable detail area with the Roman-numeral pattern, translated chords, a concise explanation, and a common variation.
+- A Clear Progression control returns the page to its neutral state.
+- No fretboard, chord-tone breakdown, borrowed harmony, modulation, or other advanced material is included in Build 1.
+- The page is not yet promoted to the live test repository.
+
+### Restored learning guidance
+
+The original spreadsheet guidance now appears above the progression choices:
+
+> Learn the common patterns first. Once you understand why they work, you'll know which ones to keep, which ones to bend, and which ones to ignore.
+>
+> Music theory isn't a rulebook; it's a field guide. It helps you recognize the paths others have taken, understand why they work, and choose whether to follow them or head off in your own direction.
+
+### Three-chord family decision
+
+- I - IV - V and I - V - IV should be treated as one foundational three-chord family rather than separate progression entries.
+- Their song examples will be divided into clearly labeled I - IV - V and I - V - IV groups.
+- The explanation should distinguish their motion: I - IV - V builds toward dominant tension and an expected return to I, while I - V - IV reaches the dominant earlier and relaxes toward IV.
+- Reordered four-chord loops remain separate entries when their starting point and order create a distinctly different flavor, especially I - V - vi - IV versus vi - IV - I - V.
+
+### Song-example plan before promotion
+
+- Adding verified song examples and authorized listening links is the largest remaining requirement before live-test promotion.
+- Aim for two or three strong examples per progression at minimum, with additional examples for the combined three-chord family.
+- Seek examples across divergent genres such as rock, folk, country, bluegrass, pop, blues, and related traditions so no progression is accidentally presented as genre-specific.
+- Balance genre coverage across the Explorer rather than forcing a weak example into every genre slot.
+- Each example should include:
+  - Song and artist.
+  - Recording key.
+  - Roman-numeral progression and actual chords.
+  - The section where it occurs, such as verse or chorus.
+  - A concise note explaining where the progression changes elsewhere in the song.
+  - An official artist or label link when available, followed by other legitimate free listening sources when necessary.
+  - Capo, alternate tuning, transposition, or close-variation notes when relevant.
+- Label exact uses, section-only uses, close variations, and brief departures honestly.
+- Progressions are part of a song's harmonic foundation, not its genre identity. Rhythm, melody, phrasing, arrangement, and performance distinguish songs that share the same chord movement.
+- Research and verify each example individually rather than relying on unsourced progression lists.
+
+### Featured medley demonstration
+
+- Add a small featured explanation linked to an authorized four-chord pop-song medley, likely the Axis of Awesome-style demonstration after the best official source is verified.
+- Explain that the medley works because the songs are transposed into a common key and share a compatible repeating chord framework.
+- Clarify that the original recordings may use different keys, may use the progression only in one section, and may reorder, shorten, or slightly alter it.
+- Use the demonstration to reinforce why the Toolkit presents progressions with Roman numerals: the relationship survives transposition.
+- Do not imply that songs sharing a progression are musically identical.
+
+### Next session
+
+- Begin identifying and verifying song examples for the six Build 1 progression families.
+- Prefer official artist or label YouTube videos, then official audio, then another legitimate free listening service.
+- Confirm the recorded key, exact progression, relevant song section, and any departures before adding an example to the Explorer.
+
