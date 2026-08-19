@@ -43,12 +43,15 @@
     .muted-position .note-natural { font-size: 0; }
     .muted-position .note-natural::after { content: "×"; font-size: 1.35rem; }
   </style>
+  <link rel="stylesheet" href="src/ui/mobile-support-notice.css">
 </head>
 <body>
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Shape Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
   <p class="checkpoint-note">Build 1 — beginner open-chord shapes on the shared illustrated fretboard. Select a complete fingering from the chord wheel; use Focus to discuss individual chord tones.</p>
+
+<aside class="mobile-support-notice" role="note"><strong>Mobile notice:</strong> The illustrated fretboard Explorers are currently designed for laptop and desktop screens. On phones, notes may be missing or misaligned. Mobile presentation is still in development.</aside>
 
   <div class="fretboard-wrap"><div class="fretboard-surface fretboard-diagnostic-surface"><table id="fretboard-table" class="fretboard-view fretboard-diagnostic"><thead id="fretboard-head"></thead><tbody id="fretboard-body"></tbody></table></div></div>
 
