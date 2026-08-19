@@ -16,7 +16,7 @@
   inset: 0;
   z-index: -1;
   content: "";
-  background: url("../../assets/studio-guitar-fretboard.png") left center / 140% auto no-repeat;
+  background: url("../../assets/studio-guitar-fretboard.png?v=20260819-2dot") left center / 140% auto no-repeat;
   opacity: .52;
 }
 
