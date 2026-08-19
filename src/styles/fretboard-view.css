@@ -82,7 +82,7 @@
   font-weight: bold;
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
-.fretboard-diagnostic td.fret-position { overflow: visible; }
+.fretboard-diagnostic td.fret-position { overflow: visible; cursor: pointer; }
 .fretboard-diagnostic td.selected-note { outline: none; }
 .fretboard-diagnostic .note-label {
   position: absolute;
