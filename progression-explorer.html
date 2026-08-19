@@ -42,6 +42,9 @@
     .chord-name { display: block; min-height: 1.45rem; margin: .2rem 0 .05rem; font-size: 1.15rem; font-weight: bold; }
     .chord-quality { display: block; color: #555; font-size: .82rem; }
     .progression-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: .55rem; }
+    .guidance-note { margin: 0 0 .65rem; padding: .6rem .75rem; border-left: 4px solid #777; background: #f7f7f7; color: #333; }
+    .guidance-note p { margin: 0; }
+    .guidance-note p + p { margin-top: .35rem; }
     .progression-card { min-height: 6rem; padding: .55rem .65rem; border: 2px solid #999; background: #fff; text-align: left; }
     .progression-card:hover { border-color: var(--selected); background: #f5f9ff; }
     .progression-card.selected { border: 4px solid var(--selected); padding: calc(.55rem - 2px) calc(.65rem - 2px); background: var(--selected-soft); }
@@ -86,6 +89,10 @@
     <div class="chord-scroll"><div class="chord-grid" id="chord-grid" aria-labelledby="chords-heading"></div></div>
 
     <h2 class="section-title" id="progressions-heading">Common Progressions</h2>
+    <aside class="guidance-note" role="note">
+      <p><strong>Learn the common patterns first.</strong> Once you understand why they work, you'll know which ones to keep, which ones to bend, and which ones to ignore.</p>
+      <p>Music theory isn't a rulebook; it's a field guide. It helps you recognize the paths others have taken, understand why they work, and choose whether to follow them or head off in your own direction.</p>
+    </aside>
     <div class="progression-grid" id="progression-grid" aria-labelledby="progressions-heading"></div>
 
     <section class="detail-panel empty" id="detail-panel" aria-live="polite">
