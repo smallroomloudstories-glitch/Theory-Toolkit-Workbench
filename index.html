@@ -5,46 +5,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit — Workbench</title>
   <style>
-    body { font-family: sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
-    .banner { border: 3px solid #222; padding: 1rem 1.25rem; margin-bottom: 2rem; }
-    .tool { border: 1px solid #bbb; padding: 1rem 1.25rem; margin: 1rem 0; }
+    :root {
+      --border: #aaa;
+      --soft-border: #ccc;
+      --surface: #f5f5f5;
+      --accent: #1e4f87;
+      --accent-soft: #eaf3ff;
+      --new: #fff3a6;
+      --new-ink: #5f4b00;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: sans-serif; max-width: 1100px; margin: 1.5rem auto 3rem; padding: 0 1rem; line-height: 1.5; color: #222; }
+    h1, h2, h3 { line-height: 1.2; }
     a { font-weight: bold; }
+    .hero { border: 3px solid #222; padding: 1rem 1.25rem; background: #fafafa; }
+    .hero h1 { margin: 0 0 .35rem; }
+    .hero p { max-width: 850px; margin: .35rem 0; }
+    .workbench-mark { font-weight: bold; }
+    .start-note { margin: 1rem 0 .8rem; padding: .7rem .85rem; border-left: 5px solid var(--accent); background: var(--accent-soft); }
+    .start-note p { margin: .2rem 0; }
+    .section-heading { margin: 1.25rem 0 .25rem; }
+    .section-intro { margin: 0 0 .8rem; color: #555; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .75rem; }
+    .tool { display: flex; flex-direction: column; min-height: 12rem; padding: .85rem 1rem; border: 2px solid var(--border); background: #fff; }
+    .tool:hover { border-color: var(--accent); background: #f8fbff; }
+    .tool h3 { margin: 0 0 .35rem; }
+    .tool p { margin: .25rem 0; }
+    .tool-link { margin-top: auto !important; padding-top: .7rem; }
+    .tool-link a { display: inline-block; padding: .45rem .65rem; border: 1px solid var(--accent); background: var(--accent); color: #fff; text-decoration: none; }
+    .tool-link a:hover, .tool-link a:focus { background: #153b68; }
+    .new-feature { display: inline-block; margin-left: .35rem; padding: .05rem .35rem; border: 1px solid #8a6d00; background: var(--new); color: var(--new-ink); font-size: .75rem; vertical-align: .15rem; }
+    .tester-note { margin-top: 2rem; padding: 1rem 1.2rem; border: 1px solid var(--soft-border); background: var(--surface); }
+    .tester-note h2 { margin-top: 0; }
+    .tester-note li { margin: .55rem 0; }
+    @media (max-width: 650px) {
+      body { margin-top: .75rem; }
+      .hero { padding: .8rem .9rem; }
+      .tool-grid { grid-template-columns: 1fr; }
+    }
   </style>
   <link rel="stylesheet" href="src/ui/mobile-support-notice.css">
 </head>
 <body>
-  <div class="banner">
+  <header class="hero">
     <h1>Theory Toolkit — WORKBENCH</h1>
-    <p>Internal development and experimental builds. Features here may be incomplete or broken.</p>
+    <p class="workbench-mark">Experimental development version.</p>
+    <p>Theory Toolkit is a visual companion for music students and instructors. It is designed to make musical relationships easier to see during a lesson and easier to revisit while practicing or reviewing.</p>
+  </header>
+
+  <aside class="mobile-support-notice" role="note"><strong>Best viewed on a laptop or desktop:</strong> The illustrated fretboard Explorers are not yet optimized for phones, where notes may be missing or misaligned.</aside>
+
+  <div class="start-note">
+    <p><strong>New to Theory Toolkit?</strong></p>
+    <p>Start with <a href="fretboard-explorer.html">Fretboard Explorer</a> to explore note locations, or <a href="chord-shape-explorer.html">Chord Shape Explorer</a> to demonstrate beginner chord fingerings.</p>
   </div>
 
-  <aside class="mobile-support-notice" role="note"><strong>Mobile notice:</strong> The illustrated fretboard Explorers are currently designed for laptop and desktop screens. On phones, notes may be missing or misaligned. Mobile presentation is still in development.</aside>
+  <main>
+    <h2 class="section-heading" id="explorers">Choose an Explorer</h2>
+    <p class="section-intro">Open any Explorer below and begin experimenting with its controls.</p>
 
-  <h2>Current Workbench Tools</h2>
-  <div class="tool">
-    <h3>Fretboard Explorer</h3>
-    <p>Current checkpoint: shared individual-position Focus behavior.</p>
-    <p><a href="fretboard-explorer.html">Open Fretboard Explorer Workbench</a></p>
-  </div>
-  <div class="tool">
-    <h3>Scale Explorer</h3>
-    <p>Current checkpoint: Scale Explorer Build 5 with shared individual-position Focus behavior.</p>
-    <p><a href="scale-explorer.html">Open Scale Explorer Workbench</a></p>
-  </div>
-  <div class="tool">
-    <h3>Chord Shape Explorer</h3>
-    <p>Current checkpoint: beginner open-chord shapes on the shared illustrated fretboard.</p>
-    <p><a href="chord-shape-explorer.html">Open Chord Shape Explorer Workbench</a></p>
-  </div>
-  <div class="tool">
-    <h3>Key Explorer</h3>
-    <p>Build 2: compact major-key harmony map with C major selected by default.</p>
-    <p><a href="key-explorer.html">Open Key Explorer Workbench</a></p>
-  </div>
-  <div class="tool">
-    <h3>Progression Explorer</h3>
-    <p>Build 1: common progressions using only the seven diatonic chords of a selected major key.</p>
-    <p><a href="progression-explorer.html">Open Progression Explorer Workbench</a></p>
-  </div>
+    <div class="tool-grid">
+      <article class="tool">
+        <h3>Fretboard Explorer</h3>
+        <p>Explore note locations, direct string selection, note filtering, enharmonic labels, tunings, and temporary Focus annotations.</p>
+        <p class="tool-link"><a href="fretboard-explorer.html">Open Fretboard Explorer</a></p>
+      </article>
+
+      <article class="tool">
+        <h3>Chord Shape Explorer</h3>
+        <p>Explore beginner open-chord shapes, chord tones, editable fingerings, open and muted strings, and teacher-directed Focus.</p>
+        <p class="tool-link"><a href="chord-shape-explorer.html">Open Chord Shape Explorer</a></p>
+      </article>
+
+      <article class="tool">
+        <h3>Scale Explorer</h3>
+        <p>Explore major and minor diatonic, pentatonic, and blues scales across the fretboard or within five familiar shapes.</p>
+        <p class="tool-link"><a href="scale-explorer.html">Open Scale Explorer</a></p>
+      </article>
+
+      <article class="tool">
+        <h3>Key Explorer</h3>
+        <p>Explore major-key scales, diatonic chords, triad construction, harmonic roles, and common chord movement.</p>
+        <p class="tool-link"><a href="key-explorer.html">Open Key Explorer</a></p>
+      </article>
+
+      <article class="tool">
+        <h3>Progression Explorer <span class="new-feature">Workbench Preview</span></h3>
+        <p>Explore common chord progressions using the seven diatonic chords of any selected major key.</p>
+        <p class="tool-link"><a href="progression-explorer.html">Open Progression Explorer</a></p>
+      </article>
+    </div>
+
+    <section class="tester-note" aria-labelledby="testing-heading">
+      <h2 id="testing-heading">How to help test Theory Toolkit</h2>
+      <p>Please explore rather than following a strict test script. Change selections, try combinations, and see whether each page behaves the way you expect it to.</p>
+      <p>The feedback I am most interested in is:</p>
+      <ul>
+        <li><strong>What worked?</strong> What felt clear, useful, or intuitive?</li>
+        <li><strong>What did not?</strong> Did anything behave incorrectly, confusingly, or awkwardly?</li>
+        <li><strong>What did you expect?</strong> If something surprised you, what did you think would happen instead?</li>
+        <li><strong>What would you like to see added?</strong> Is there a control, comparison, view, or piece of information that would make this more useful?</li>
+      </ul>
+      <p>You do not need to be a music-theory expert to give useful feedback. If something does not make sense, that itself is useful information. Instructors and experienced players are also encouraged to identify anything musically misleading or anything they would present differently to a student.</p>
+      <p>Theory Toolkit is a teaching supplement. It does not replace an instructor or independently teach music theory.</p>
+    </section>
+  </main>
 </body>
 </html>
