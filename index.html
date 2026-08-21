@@ -38,6 +38,32 @@
     .tester-note { margin-top: 2rem; padding: 1rem 1.2rem; border: 1px solid var(--soft-border); background: var(--surface); }
     .tester-note h2 { margin-top: 0; }
     .tester-note li { margin: .55rem 0; }
+    .scroll-cue {
+      position: fixed;
+      left: 50%;
+      bottom: .8rem;
+      z-index: 30;
+      padding: .4rem .75rem;
+      border: 1px solid #153b68;
+      border-radius: 999px;
+      background: rgba(30, 79, 135, .94);
+      color: #fff;
+      font: inherit;
+      font-weight: bold;
+      box-shadow: 0 .2rem .65rem rgba(0, 0, 0, .28);
+      cursor: pointer;
+      transform: translateX(-50%);
+      animation: scroll-nudge 1.8s ease-in-out infinite;
+    }
+    .scroll-cue[hidden] { display: none; }
+    .scroll-cue:hover, .scroll-cue:focus-visible { background: #153b68; }
+    @keyframes scroll-nudge {
+      0%, 65%, 100% { transform: translate(-50%, 0); }
+      78% { transform: translate(-50%, .28rem); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-cue { animation: none; }
+    }
     @media (max-width: 650px) {
       body { margin-top: .75rem; }
       .hero { padding: .8rem .9rem; }
@@ -110,5 +136,24 @@
       <p>Theory Toolkit is a teaching supplement. It does not replace an instructor or independently teach music theory.</p>
     </section>
   </main>
+
+  <button type="button" class="scroll-cue" id="scroll-cue" aria-label="Scroll down to see more">More below ↓</button>
+
+  <script>
+    const scrollCue = document.querySelector("#scroll-cue");
+
+    function updateScrollCue() {
+      const page = document.documentElement;
+      const hasMoreBelow = window.scrollY + window.innerHeight < page.scrollHeight - 32;
+      scrollCue.hidden = !hasMoreBelow;
+    }
+
+    scrollCue.addEventListener("click", () => {
+      window.scrollBy({ top: window.innerHeight * .75, behavior: "smooth" });
+    });
+    window.addEventListener("scroll", updateScrollCue, { passive: true });
+    window.addEventListener("resize", updateScrollCue);
+    updateScrollCue();
+  </script>
 </body>
 </html>
