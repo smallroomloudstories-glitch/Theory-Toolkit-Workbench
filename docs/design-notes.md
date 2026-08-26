@@ -357,3 +357,102 @@ The original spreadsheet guidance now appears above the progression choices:
 - Prefer official artist or label YouTube videos, then official audio, then another legitimate free listening service.
 - Confirm the recorded key, exact progression, relevant song section, and any departures before adding an example to the Explorer.
 
+
+
+## Session close — 2026-08-26: outside feedback, CAVARTS demonstration, and permanent address
+
+### First detailed outside-user feedback
+
+Daryl Clemons submitted two unusually useful reports after finding Theory Toolkit through Rob's Facebook post:
+
+- In Fretboard Explorer, he entered without instructions, created a custom diagram containing 23 focused positions, described the Explorer as a valuable fretboard-learning and diagram-building tool, and requested lap-steel tunings and printable output.
+- The requested six-string lap-steel tunings are D A D F# A D and C G C D G C. These appear compatible with the existing pitch-and-fret engine, but implementation must wait for informed answers about low-to-high order, string numbering and labels, expected orientation, other important tunings, and whether lap-steel users would prefer a neutral fretboard instead of the STUDio guitar illustration.
+- In Scale Explorer, he selected F major pentatonic over the whole fretboard and reported that the presentation revealed usable notes missing from his everyday playing. He called it his favorite Toolkit feature and said he intended to use it.
+- These reports validate two intended roles: Fretboard Explorer as an instructor-controlled custom diagram workspace, and Scale Explorer as a discovery and practice tool that makes musical relationships visible without requiring a walkthrough.
+
+Daryl received a combined response thanking him and inviting further lap-steel guidance without assigning him an obligation to design the feature.
+
+### PDF export direction
+
+- Clean PDF export is preferred over building browser-print behavior first.
+- The first useful export should contain the fretboard and relevant diagram information without controls, feedback UI, or page scaffolding.
+- A generated PDF can be saved, shared, printed, and collected into practice or instruction binders through the user's normal PDF software.
+- Consider including tuning, accidental preference, and a small optional title or label area, but do not turn the first version into a general document-layout system.
+- Begin with Fretboard Explorer. Reuse the export capability elsewhere only after the first implementation is accepted.
+
+### Paul Lilly feedback and future audio
+
+Paul Lilly reviewed the Toolkit and compared it with FaChords and Fret Monster. His suggestions included individual-note audio, chord playback, arpeggiated 1–3–5 presentation, a keyboard relationship view, triads across the neck, additional tunings, and a left-handed view.
+
+- These suggestions reinforce previously identified directions rather than requiring an immediate change in scope.
+- Audio should eventually be a shared musical capability: individual pitches in Fretboard Explorer, scales or positions in Scale Explorer, strummed and arpeggiated shapes in Chord Shape Explorer, and 1–3–5 playback in a future Triad Groups Explorer.
+- Audio triggering requires deliberate interaction design because normal clicks already select, Focus, hide, restore, or mute positions. Do not bolt audio onto the existing click cycle without resolving that conflict.
+- A correct left-handed view still requires proper string order, physical note positions, labels, interaction geometry, and suitable artwork. It is not a simple image flip.
+- Triad Groups Explorer remains a strong future priority for inversions, adjacent string groups, movement across the neck, voice leading, and double-stop relationships.
+
+FaChords is a mature chord reference and teaching site with significant overlap, but it does not invalidate Theory Toolkit. Theory Toolkit's distinguishing direction is an instructor-controlled visual workspace and a consistent Swiss Army Knife of related Explorers, not an attempt to become the largest chord encyclopedia. When another resource already solves a problem exceptionally well, Theory Toolkit may link to it, learn from it, build only the teaching behavior still needed, or explicitly decide that duplication is unnecessary.
+
+### CAVARTS demonstration opportunity
+
+Paul offered two recurring CAVARTS opportunities:
+
+- Office Hours on the last Friday of each month at 1:00 p.m. Eastern, normally attended by roughly 15–20 teachers and players.
+- The Cyber Instructor meeting on the fourth Wednesday of each month at 7:00 p.m. Eastern, normally attended by about a dozen regular instructors. After the demonstration, Paul may send an email request for feedback to more than 80 Cyber Chapter volunteers.
+
+Rob selected the Wednesday, September 23, 2026 meeting at 7:00 p.m. Eastern as the best fit because the Friday event conflicts with his workday. A response was sent asking Paul to confirm availability and provide:
+
+- Expected presentation length.
+- Meeting platform and screen-sharing capability.
+- Whether the meeting is recorded.
+- Whether questions should occur during or after the demonstration.
+- Whether participants should watch or open the Toolkit and follow along.
+- Any normal agenda or meeting format that should shape preparation.
+
+### Demonstration mindset and preparation
+
+The demonstration is not a sales pitch and does not require defending Theory Toolkit against every existing resource.
+
+- Theory Toolkit was built first to help Rob teach his own students. That purpose has already made it worthwhile.
+- Broader usefulness is welcome, but universal adoption is neither required nor expected.
+- The purpose of the CAVARTS session is to show intentional teaching uses and learn what other instructors expect, find unclear, or would genuinely use.
+- “Another site does this better” is useful research. Appropriate responses may include linking to that resource, studying what it does well, adding a missing capability, explaining the different teaching purpose, or deciding not to duplicate it.
+- Before the meeting, prepare a deliberate path through the Explorers, one or two concrete teaching examples per view, concise opening and closing language, optional sections that can be skipped, and practiced answers to predictable questions.
+- Rehearse interruptions and skeptical comparisons. Freeze consequential interface changes well before the event and verify the exact public build used for screen sharing.
+- Do not rush audio or left-handed presentation merely to impress the meeting. Complete only features that can be tested and stabilized.
+
+### Free-use and funding position
+
+- The browser version is intended to remain free and fully functional. Do not remove useful web features or cripple the free experience to manufacture a paid tier.
+- A possible future app may offer genuinely additional services such as accounts, saved Explorer states, saved lesson plans, quizzes, and other persistence-dependent conveniences.
+- There are real development, hosting, service, equipment, and time costs, but Rob does not currently need to recover them.
+- A future voluntary “buy me a coffee” or “shot of bourbon” contribution link is compatible with free use.
+- Advertising is not planned. If costs eventually make it necessary, prefer static, unobtrusive, mostly text advertising.
+- Payment, donation, subscription, or advertising interaction must never be required to use the core web Toolkit.
+
+### Permanent public address
+
+The preferred permanent public address is now:
+
+`https://theorytoolkit.smallroomloudstories.com/`
+
+This is preferred over a path beneath the podcast site because it gives Theory Toolkit its own identity while keeping it clearly within the Small Room, Loud Stories domain.
+
+- Keep `Theory-Toolkit` as the authoritative approved-release repository and continue using GitHub Pages as the underlying static host.
+- Publish the approved landing page at the subdomain root rather than exposing `/tests/` as the permanent public location.
+- Preserve the Workbench-to-approved-repository promotion model; do not create a manually maintained copy inside the podcast repository.
+- Existing GitHub Pages links must continue to lead users to the Toolkit.
+- Retired `/tests/` pages should display a clear moved notice, an immediate destination link, and an automatic redirect after approximately 10 seconds. Ten seconds is long enough to read and update a bookmark without making the visitor wait unnecessarily.
+- Preserve destination intent for direct old links: an old Scale Explorer URL should lead to the new Scale Explorer, not merely the landing page.
+- During migration, update the Cloudflare feedback Worker to allow both `https://smallroomloudstories-glitch.github.io` and `https://theorytoolkit.smallroomloudstories.com`. Otherwise feedback from the new browser origin will fail with a 403.
+- Add the custom domain in the Theory-Toolkit repository before adding the Namecheap DNS CNAME, then verify DNS, HTTPS, assets, internal navigation, Explorer behavior, and end-to-end feedback.
+- The expected Namecheap DNS record is host `theorytoolkit`, pointing to `smallroomloudstories-glitch.github.io`, without the repository name.
+- Keep both feedback origins during the transition and remove the old origin only after there is a deliberate reason to stop supporting legacy access.
+
+No DNS or production-domain change was made during this session. Prepare the root release and compatibility behavior first, then perform the domain migration as a controlled, independently verified increment.
+
+### Outreach status
+
+- Reddit is not a practical outreach channel under current community policies. r/MusicTheory now disallows self-made app and diagram posts unless the author is a regular contributor who receives prior moderator approval; attempts to work around that rule in comments may also result in removal or a ban.
+- Rob does not intend to manufacture forum participation merely to qualify for promotion. Open theory discussions are often tedious and are not the best use of development time.
+- Direct instructor relationships, Guitars for Veterans, Facebook musician contacts, and referrals are producing more valuable engagement.
+- Daryl's feedback confirms that a small number of serious users is more valuable at this stage than broad low-engagement visibility.
