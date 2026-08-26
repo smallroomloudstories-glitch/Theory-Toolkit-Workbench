@@ -51,7 +51,8 @@
   <div class="controls-grid">
     <fieldset>
       <legend>Instrument</legend>
-      <label>Instrument: <strong>Guitar</strong></label>
+      <label for="instrument-select">Instrument:</label>
+      <select id="instrument-select"></select>
       <label for="tuning-select">Tuning:</label>
       <select id="tuning-select"></select>
     </fieldset>
@@ -76,12 +77,13 @@
   </div>
 
   <script type="module">
-    import { CHROMATIC_SHARPS, GUITAR_TUNINGS } from "./src/data/music-data.js";
+    import { CHROMATIC_SHARPS, FRETBOARD_INSTRUMENTS } from "./src/data/music-data.js";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
     import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260815-7";
 
-    let activeTuning = GUITAR_TUNINGS.standard;
+    let activeInstrument = FRETBOARD_INSTRUMENTS.guitar;
+    let activeTuning = activeInstrument.tunings[activeInstrument.defaultTuning];
     let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
     const focus = createFretboardFocus();
     const focusOverrides = new Set();
@@ -92,6 +94,7 @@
     const clearNotes = document.querySelector("#clear-notes");
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
+    const instrumentSelect = document.querySelector("#instrument-select");
     const tuningSelect = document.querySelector("#tuning-select");
     const accidentalToggle = document.querySelector("#accidental-toggle");
     const noteButtons = new Map();
@@ -101,20 +104,41 @@
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
     const displayNote = note => accidentalDisplay === "flats" ? (flatNames.get(note) ?? note) : note;
 
-    for (const tuning of Object.values(GUITAR_TUNINGS)) {
+    for (const instrument of Object.values(FRETBOARD_INSTRUMENTS)) {
       const option = document.createElement("option");
-      option.value = tuning.id;
-      option.textContent = tuning.name;
-      tuningSelect.appendChild(option);
+      option.value = instrument.id;
+      option.textContent = instrument.name;
+      instrumentSelect.appendChild(option);
     }
 
-    tuningSelect.addEventListener("change", () => {
-      activeTuning = GUITAR_TUNINGS[tuningSelect.value];
+    function populateTuningSelect() {
+      tuningSelect.innerHTML = "";
+      for (const tuning of Object.values(activeInstrument.tunings)) {
+        const option = document.createElement("option");
+        option.value = tuning.id;
+        option.textContent = tuning.name;
+        tuningSelect.appendChild(option);
+      }
+      tuningSelect.value = activeTuning.id;
+    }
+
+    function applyTuning() {
       fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
       focus.clear();
-      focusOverrides.clear();
       resetStringScope();
       renderFretboard();
+    }
+
+    instrumentSelect.addEventListener("change", () => {
+      activeInstrument = FRETBOARD_INSTRUMENTS[instrumentSelect.value];
+      activeTuning = activeInstrument.tunings[activeInstrument.defaultTuning];
+      populateTuningSelect();
+      applyTuning();
+    });
+
+    tuningSelect.addEventListener("change", () => {
+      activeTuning = activeInstrument.tunings[tuningSelect.value];
+      applyTuning();
     });
 
     function resetStringScope() {
@@ -290,6 +314,7 @@
     }
 
     resetStringScope();
+    populateTuningSelect();
     updateNoteButtons();
     renderFretboard();
   </script>
