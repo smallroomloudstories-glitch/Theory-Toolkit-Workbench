@@ -35,4 +35,46 @@ export const GUITAR_TUNINGS = {
   }
 };
 
+export const LAP_STEEL_TUNINGS = {
+  openD: {
+    id: "openD",
+    name: "Open D (D A D F# A D)",
+    strings: [
+      { string: 1, label: "1 (D)", note: "D" },
+      { string: 2, label: "2 (A)", note: "A" },
+      { string: 3, label: "3 (F#)", note: "F#" },
+      { string: 4, label: "4 (D)", note: "D" },
+      { string: 5, label: "5 (A)", note: "A" },
+      { string: 6, label: "6 (D)", note: "D" }
+    ]
+  },
+  cgcdgc: {
+    id: "cgcdgc",
+    name: "C G C D G C",
+    strings: [
+      { string: 1, label: "1 (C)", note: "C" },
+      { string: 2, label: "2 (G)", note: "G" },
+      { string: 3, label: "3 (D)", note: "D" },
+      { string: 4, label: "4 (C)", note: "C" },
+      { string: 5, label: "5 (G)", note: "G" },
+      { string: 6, label: "6 (C)", note: "C" }
+    ]
+  }
+};
+
+export const FRETBOARD_INSTRUMENTS = {
+  guitar: {
+    id: "guitar",
+    name: "Guitar",
+    defaultTuning: "standard",
+    tunings: GUITAR_TUNINGS
+  },
+  lapSteel: {
+    id: "lapSteel",
+    name: "Lap Steel",
+    defaultTuning: "openD",
+    tunings: LAP_STEEL_TUNINGS
+  }
+};
+
 export const STANDARD_GUITAR_TUNING = GUITAR_TUNINGS.standard.strings;
