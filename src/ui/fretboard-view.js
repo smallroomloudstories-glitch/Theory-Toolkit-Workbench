@@ -74,8 +74,8 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 const LAP_STEEL_EXPLORER_GEOMETRY = {
   // Calibrated directly to the strings and position lines in Daryl Clemons's
   // close photograph. The note rows follow the strings' subtle widening.
-  nutX: 7.35, openX: 2.81, lastFretX: 100, headerTop: 88, headerHeight: 7.5,
-  labelLeft: -0.5, labelWidth: 3,
+  nutX: 7.35, openX: 5.08, lastFretX: 100, headerTop: 88, headerHeight: 7.5,
+  labelLeft: 1.1, labelWidth: 3,
   selectorHeaderLeft: .4, selectorHeaderTop: 3,
   selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
   nutTopString: 24.36, nutStringGap: 10.26,
