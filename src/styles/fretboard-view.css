@@ -62,7 +62,7 @@
 .fretboard-diagnostic .open-position { z-index: 2; border-color: transparent; background: rgba(255, 255, 255, .58); }
 .fretboard-diagnostic-surface::before { background-position: -5.25rem calc(50% - 5.25rem); background-size: 162% auto; }
 .fretboard-diagnostic-surface[data-instrument="lapSteel"]::before {
-  background-image: url("../../assets/daryl-rogue-lap-steel.webp?v=20260827-2");
+  background-image: url("../../assets/daryl-electro-hawaiian-lap-steel.webp?v=20260827-1");
   background-position: center center;
   background-size: contain;
 }
