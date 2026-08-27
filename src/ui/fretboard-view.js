@@ -72,8 +72,8 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 };
 
 const LAP_STEEL_EXPLORER_GEOMETRY = {
-  // X coordinates are resolved from the centered, contain-fitted artwork at
-  // runtime so the overlay follows the instrument as the viewport widens.
+  // X coordinates are resolved from Daryl Clemons's centered, contain-fitted
+  // Electro Hawaiian artwork so the overlay follows it as the viewport widens.
   headerTop: 88, headerHeight: 7.5,
   labelWidth: 2.75,
   selectorHeaderTop: 12.5, selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
