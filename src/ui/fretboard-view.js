@@ -72,17 +72,17 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 };
 
 const LAP_STEEL_EXPLORER_GEOMETRY = {
-  // Calibrated directly to the visible position lines in the cropped Electro
-  // Hawaiian illustration. Fret 15 remains interactive but unlabeled.
-  nutX: 11.30, lastFretX: 95.13, headerTop: 88, headerHeight: 7.5,
-  labelLeft: 7.1, labelWidth: 3,
-  selectorHeaderLeft: 1.8, selectorHeaderTop: 6,
+  // Calibrated directly to the strings and position lines in Daryl Clemons's
+  // close photograph. Fret 15 remains interactive but unlabeled.
+  nutX: 5.08, lastFretX: 87.41, headerTop: 88, headerHeight: 7.5,
+  labelLeft: 1.1, labelWidth: 3,
+  selectorHeaderLeft: .4, selectorHeaderTop: 3,
   selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
-  nutTopString: 23.5, nutStringGap: 12.6,
-  bodyTopString: 23.5, bodyStringGap: 12.6,
+  nutTopString: 24.36, nutStringGap: 10.26,
+  bodyTopString: 24.36, bodyStringGap: 10.26,
   fretBoundaries: [
-    11.30, 20.31, 27.56, 34.72, 41.35, 47.77, 53.68, 59.38,
-    64.77, 69.84, 74.61, 79.27, 83.63, 87.67, 91.50, 95.13
+    5.08, 12.43, 19.57, 26.38, 32.97, 39.24, 45.19, 50.81,
+    56.16, 61.24, 66.11, 70.76, 75.24, 79.57, 83.57, 87.41
   ]
 };
 
