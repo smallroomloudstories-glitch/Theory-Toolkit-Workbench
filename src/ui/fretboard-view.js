@@ -74,16 +74,16 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 const LAP_STEEL_EXPLORER_GEOMETRY = {
   // Calibrated directly to the strings and position lines in Daryl Clemons's
   // close photograph. The note rows follow the strings' subtle widening.
-  nutX: 5.08, lastFretX: 97.73, headerTop: 88, headerHeight: 7.5,
-  labelLeft: 1.1, labelWidth: 3,
+  nutX: 7.35, openX: 2.81, lastFretX: 100, headerTop: 88, headerHeight: 7.5,
+  labelLeft: -0.5, labelWidth: 3,
   selectorHeaderLeft: .4, selectorHeaderTop: 3,
   selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
   nutTopString: 24.36, nutStringGap: 10.26,
   bodyTopString: 18, bodyStringGap: 13.2,
   fretBoundaries: [
-    5.08, 12.43, 19.57, 26.38, 32.97, 39.24, 45.19, 50.81,
-    56.16, 61.24, 66.11, 70.76, 75.24, 79.57, 83.57, 87.41,
-    90.97, 94.43, 97.73
+    7.35, 14.70, 21.84, 28.65, 35.24, 41.51, 47.46, 53.08,
+    58.43, 63.51, 68.38, 73.03, 77.51, 81.84, 85.84, 89.68,
+    93.24, 96.70, 100
   ]
 };
 
@@ -137,7 +137,8 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, inst
   }
   if (headerCells[1]) {
     headerCells[1].classList.add("open-position");
-    setBox(headerCells[1], geometry.nutX - (openWidth / 2), geometry.headerTop, openWidth, geometry.headerHeight);
+    const openX = geometry.openX ?? geometry.nutX;
+    setBox(headerCells[1], openX - (openWidth / 2), geometry.headerTop, openWidth, geometry.headerHeight);
   }
   for (let fret = 1; fret <= maxFret; fret += 1) {
     const left = boundaries[fret - 1];
@@ -151,8 +152,9 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, inst
 
     if (cells[1]) {
       cells[1].classList.add("open-position");
-      const openBox = stringBox(stringIndex, geometry.nutX, geometry);
-      setBox(cells[1], geometry.nutX - (openWidth / 2), openBox.top, openWidth, openBox.height);
+      const openX = geometry.openX ?? geometry.nutX;
+      const openBox = stringBox(stringIndex, openX, geometry);
+      setBox(cells[1], openX - (openWidth / 2), openBox.top, openWidth, openBox.height);
     }
 
     for (let fret = 1; fret <= maxFret; fret += 1) {
