@@ -74,12 +74,12 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 const LAP_STEEL_EXPLORER_GEOMETRY = {
   // Calibrated to Daryl Clemons's Rogue lap-steel illustration. The image is
   // fitted by height and centered within the shared Explorer surface.
-  nutX: 23.5, lastFretX: 55.8, headerTop: 88, headerHeight: 7.5,
+  nutX: 21.5, lastFretX: 57, headerTop: 88, headerHeight: 7.5,
   labelLeft: 18.5, labelWidth: 2.75,
   selectorHeaderLeft: 14.5, selectorHeaderTop: 12.5,
   selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
-  nutTopString: 44.2, nutStringGap: 4.25,
-  bodyTopString: 44.2, bodyStringGap: 4.25
+  nutTopString: 40, nutStringGap: 4.6,
+  bodyTopString: 40, bodyStringGap: 4.6
 };
 
 function setBox(element, left, top, width, height) {
