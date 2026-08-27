@@ -72,41 +72,19 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 };
 
 const LAP_STEEL_EXPLORER_GEOMETRY = {
-  // X coordinates are resolved from Daryl Clemons's centered, contain-fitted
-  // Electro Hawaiian artwork so the overlay follows it as the viewport widens.
-  headerTop: 88, headerHeight: 7.5,
-  labelWidth: 2.75,
-  selectorHeaderTop: 12.5, selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
-  nutTopString: 39.5, nutStringGap: 4.8,
-  bodyTopString: 39.5, bodyStringGap: 4.8
+  // Calibrated directly to the visible position lines in the cropped Electro
+  // Hawaiian illustration. Fret 15 remains interactive but unlabeled.
+  nutX: 11.30, lastFretX: 95.13, headerTop: 88, headerHeight: 7.5,
+  labelLeft: 7.1, labelWidth: 3,
+  selectorHeaderLeft: 1.8, selectorHeaderTop: 6,
+  selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
+  nutTopString: 23.5, nutStringGap: 12.6,
+  bodyTopString: 23.5, bodyStringGap: 12.6,
+  fretBoundaries: [
+    11.30, 20.31, 27.56, 34.72, 41.35, 47.77, 53.68, 59.38,
+    64.77, 69.84, 74.61, 79.27, 83.63, 87.67, 91.50, 95.13
+  ]
 };
-
-const LAP_STEEL_IMAGE = {
-  width: 1745,
-  height: 636,
-  nutFraction: .165,
-  lastFretFraction: .62
-};
-
-function lapSteelGeometry(table) {
-  const surface = table.closest(".fretboard-surface");
-  const surfaceWidth = surface?.clientWidth || 1180;
-  const surfaceHeight = surface?.clientHeight || 342;
-  const imageAspect = LAP_STEEL_IMAGE.width / LAP_STEEL_IMAGE.height;
-  const renderedWidth = Math.min(surfaceWidth, surfaceHeight * imageAspect);
-  const imageLeft = (surfaceWidth - renderedWidth) / 2;
-  const asPercent = pixels => (pixels / surfaceWidth) * 100;
-  const nutX = asPercent(imageLeft + (renderedWidth * LAP_STEEL_IMAGE.nutFraction));
-  const lastFretX = asPercent(imageLeft + (renderedWidth * LAP_STEEL_IMAGE.lastFretFraction));
-
-  return {
-    ...LAP_STEEL_EXPLORER_GEOMETRY,
-    nutX,
-    lastFretX,
-    labelLeft: nutX - 3.2,
-    selectorHeaderLeft: nutX - 10
-  };
-}
 
 function setBox(element, left, top, width, height) {
   element.style.setProperty("--cell-left", `${left}%`);
@@ -141,7 +119,7 @@ function stringBox(stringIndex, xCenter, geometry) {
 export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, instrumentId = table.dataset.instrument) {
   const compactOpen = table.classList.contains("fretboard-diagnostic");
   const geometry = compactOpen
-    ? (instrumentId === "lapSteel" ? lapSteelGeometry(table) : FRETBOARD_EXPLORER_GEOMETRY)
+    ? (instrumentId === "lapSteel" ? LAP_STEEL_EXPLORER_GEOMETRY : FRETBOARD_EXPLORER_GEOMETRY)
     : DEFAULT_GEOMETRY;
   const boundaries = fretBoundaries(maxFret, geometry);
   const headerCells = table.querySelectorAll("thead th");
