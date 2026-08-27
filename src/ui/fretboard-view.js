@@ -74,7 +74,7 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
 const LAP_STEEL_EXPLORER_GEOMETRY = {
   // Calibrated directly to the strings and position lines in Daryl Clemons's
   // close photograph. The note rows follow the strings' subtle widening.
-  nutX: 7.35, openX: 5.08, lastFretX: 100, headerTop: 88, headerHeight: 7.5,
+  nutX: 7.35, openX: 5.08, openNoteX: 5.69, lastFretX: 100, headerTop: 88, headerHeight: 7.5,
   labelLeft: 1.1, labelWidth: 3,
   selectorHeaderLeft: .4, selectorHeaderTop: 3,
   selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
@@ -152,7 +152,7 @@ export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, inst
 
     if (cells[1]) {
       cells[1].classList.add("open-position");
-      const openX = geometry.openX ?? geometry.nutX;
+      const openX = geometry.openNoteX ?? geometry.openX ?? geometry.nutX;
       const openBox = stringBox(stringIndex, openX, geometry);
       setBox(cells[1], openX - (openWidth / 2), openBox.top, openWidth, openBox.height);
     }
