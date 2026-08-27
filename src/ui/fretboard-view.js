@@ -71,6 +71,17 @@ const FRETBOARD_EXPLORER_GEOMETRY = {
   ]
 };
 
+const LAP_STEEL_EXPLORER_GEOMETRY = {
+  // Calibrated to Daryl Clemons's Rogue lap-steel illustration. The image is
+  // fitted by height and centered within the shared Explorer surface.
+  nutX: 23.5, lastFretX: 55.8, headerTop: 88, headerHeight: 7.5,
+  labelLeft: 18.5, labelWidth: 2.75,
+  selectorHeaderLeft: 14.5, selectorHeaderTop: 12.5,
+  selectorHeaderWidth: 6, selectorHeaderHeight: 5.8,
+  nutTopString: 44.2, nutStringGap: 4.25,
+  bodyTopString: 44.2, bodyStringGap: 4.25
+};
+
 function setBox(element, left, top, width, height) {
   element.style.setProperty("--cell-left", `${left}%`);
   element.style.setProperty("--cell-top", `${top}%`);
@@ -101,9 +112,11 @@ function stringBox(stringIndex, xCenter, geometry) {
   return { top: center - (height / 2), height };
 }
 
-export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET) {
+export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, instrumentId = table.dataset.instrument) {
   const compactOpen = table.classList.contains("fretboard-diagnostic");
-  const geometry = compactOpen ? FRETBOARD_EXPLORER_GEOMETRY : DEFAULT_GEOMETRY;
+  const geometry = compactOpen
+    ? (instrumentId === "lapSteel" ? LAP_STEEL_EXPLORER_GEOMETRY : FRETBOARD_EXPLORER_GEOMETRY)
+    : DEFAULT_GEOMETRY;
   const boundaries = fretBoundaries(maxFret, geometry);
   const headerCells = table.querySelectorAll("thead th");
   const openWidth = compactOpen ? 3 : 6;

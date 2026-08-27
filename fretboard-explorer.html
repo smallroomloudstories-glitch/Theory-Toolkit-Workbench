@@ -94,6 +94,8 @@
     const clearNotes = document.querySelector("#clear-notes");
     const clearFocus = document.querySelector("#clear-focus");
     const focusStatus = document.querySelector("#focus-status");
+    const fretboardSurface = document.querySelector(".fretboard-diagnostic-surface");
+    const fretboardTable = document.querySelector("#fretboard-table");
     const instrumentSelect = document.querySelector("#instrument-select");
     const tuningSelect = document.querySelector("#tuning-select");
     const accidentalToggle = document.querySelector("#accidental-toggle");
@@ -124,6 +126,8 @@
 
     function applyTuning() {
       fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
+      fretboardSurface.dataset.instrument = activeInstrument.id;
+      fretboardTable.dataset.instrument = activeInstrument.id;
       focus.clear();
       resetStringScope();
       renderFretboard();
@@ -309,7 +313,7 @@
       const allStringsButton = document.querySelector("#all-strings");
       allStringsButton.classList.toggle("selected", allStringsActive);
       allStringsButton.setAttribute("aria-pressed", String(allStringsActive));
-      positionFretboardCells(document.querySelector("#fretboard-table"), FRETBOARD_MAX_FRET);
+      positionFretboardCells(fretboardTable, FRETBOARD_MAX_FRET, activeInstrument.id);
       updateFocusStatus();
     }
 

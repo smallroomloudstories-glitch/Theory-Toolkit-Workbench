@@ -50,7 +50,7 @@ export const LAP_STEEL_TUNINGS = {
   },
   cgcdgc: {
     id: "cgcdgc",
-    name: "C G C D G C",
+    name: "C9 (C G C D G C)",
     strings: [
       { string: 1, label: "1 (C)", note: "C" },
       { string: 2, label: "2 (G)", note: "G" },

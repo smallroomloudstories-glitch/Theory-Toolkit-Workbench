@@ -60,6 +60,11 @@
 .fretboard-diagnostic td.hidden-note { background: rgba(255, 255, 255, .08); }
 .fretboard-diagnostic .open-position { z-index: 2; border-color: transparent; background: rgba(255, 255, 255, .58); }
 .fretboard-diagnostic-surface::before { background-position: -5.25rem calc(50% - 5.25rem); background-size: 162% auto; }
+.fretboard-diagnostic-surface[data-instrument="lapSteel"]::before {
+  background-image: url("../../assets/daryl-rogue-lap-steel.png?v=20260827-1");
+  background-position: center center;
+  background-size: contain;
+}
 .fretboard-view td.focused-position { background: #fff3a6 !important; }
 
 /* Finished Fretboard Explorer presentation: calibrated cells remain as large
@@ -160,6 +165,10 @@
 }
 .fretboard-diagnostic td[data-fret="14"] .note-label {
   transform: translate(calc(-50% + 6px), -50%);
+}
+.fretboard-diagnostic[data-instrument="lapSteel"] td[data-fret="12"] .note-label,
+.fretboard-diagnostic[data-instrument="lapSteel"] td[data-fret="14"] .note-label {
+  transform: translate(-50%, -50%);
 }
 .fretboard-diagnostic tbody .string-scope-button {
   color: #fff;
