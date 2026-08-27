@@ -14,7 +14,7 @@
 .fretboard-surface::before {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   content: "";
   background: url("../../assets/studio-guitar-fretboard.png?v=20260819-2dot") left center / 140% auto no-repeat;
   opacity: .52;
@@ -22,6 +22,7 @@
 
 .fretboard-view {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
