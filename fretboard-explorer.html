@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit - Fretboard Explorer Workbench</title>
-  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260827-lapsteel7">
+  <link rel="stylesheet" href="./src/styles/fretboard-view.css?v=20260827-lapsteel8">
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
@@ -14,6 +14,8 @@
     .controls-grid { display: grid; grid-template-columns: max-content max-content 1fr; gap: 1rem; align-items: start; }
     .controls-grid fieldset { margin: 0; min-width: 0; }
     .display-panel { box-sizing: border-box; width: 23rem; }
+    .instrument-thumbnail { box-sizing: border-box; width: 100%; height: 7rem; margin: 0; display: flex; align-items: center; justify-content: flex-start; overflow: hidden; }
+    .instrument-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left center; }
     .notes-panel { grid-column: 1 / -1; }
     .note-panel-actions { display: flex; align-items: center; gap: .65rem; margin-top: .2rem; }
     .accidental-toggle-control { display: inline-flex; align-items: center; gap: .35rem; font-size: inherit; }
@@ -63,6 +65,10 @@
       <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
     </fieldset>
 
+    <figure class="instrument-thumbnail" aria-label="Selected instrument">
+      <img id="instrument-thumbnail" alt="">
+    </figure>
+
     <fieldset class="notes-panel">
       <legend>Select Notes</legend>
       <div id="note-controls"></div>
@@ -77,14 +83,15 @@
   </div>
 
   <script type="module">
-    import { CHROMATIC_SHARPS, FRETBOARD_INSTRUMENTS } from "./src/data/music-data.js?v=20260827-lapsteel1";
+    import { CHROMATIC_SHARPS, FRETBOARD_INSTRUMENTS } from "./src/data/music-data.js?v=20260827-lapsteel2";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
-    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260827-lapsteel6";
+    import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260827-lapsteel7";
 
     let activeInstrument = FRETBOARD_INSTRUMENTS.guitar;
     let activeTuning = activeInstrument.tunings[activeInstrument.defaultTuning];
-    let fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
+    let activeMaxFret = activeInstrument.maxFret ?? FRETBOARD_MAX_FRET;
+    let fretboard = buildFretboard(activeTuning.strings, activeMaxFret);
     const focus = createFretboardFocus();
     const focusOverrides = new Set();
     const selectedStrings = new Set();
@@ -98,6 +105,7 @@
     const fretboardTable = document.querySelector("#fretboard-table");
     const instrumentSelect = document.querySelector("#instrument-select");
     const tuningSelect = document.querySelector("#tuning-select");
+    const instrumentThumbnail = document.querySelector("#instrument-thumbnail");
     const accidentalToggle = document.querySelector("#accidental-toggle");
     const noteButtons = new Map();
     const flatNames = new Map([["C#", "Db"], ["D#", "Eb"], ["F#", "Gb"], ["G#", "Ab"], ["A#", "Bb"]]);
@@ -125,11 +133,15 @@
     }
 
     function applyTuning() {
-      fretboard = buildFretboard(activeTuning.strings, FRETBOARD_MAX_FRET);
+      activeMaxFret = activeInstrument.maxFret ?? FRETBOARD_MAX_FRET;
+      fretboard = buildFretboard(activeTuning.strings, activeMaxFret);
       fretboardSurface.dataset.instrument = activeInstrument.id;
       fretboardTable.dataset.instrument = activeInstrument.id;
+      instrumentThumbnail.src = activeInstrument.thumbnail;
+      instrumentThumbnail.alt = activeInstrument.thumbnailAlt;
       focus.clear();
       resetStringScope();
+      configureActiveFretboard();
       renderFretboard();
     }
 
@@ -222,17 +234,18 @@
       clearFocus.disabled = focus.size === 0;
     }
 
-    configureFretboardView({
-      table: document.querySelector("#fretboard-table"),
-      head: document.querySelector("#fretboard-head"),
-      maxFret: FRETBOARD_MAX_FRET,
-      firstHeader: '<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">Show All</button>'
-    });
-
-    document.querySelector("#all-strings").addEventListener("click", () => {
-      resetStringScope();
-      renderFretboard();
-    });
+    function configureActiveFretboard() {
+      configureFretboardView({
+        table: fretboardTable,
+        head: document.querySelector("#fretboard-head"),
+        maxFret: activeMaxFret,
+        firstHeader: '<button type="button" id="all-strings" class="string-scope-button selected" aria-pressed="true" title="Show all strings">Show All</button>'
+      });
+      document.querySelector("#all-strings").addEventListener("click", () => {
+        resetStringScope();
+        renderFretboard();
+      });
+    }
 
     function renderFretboard() {
       const body = document.querySelector("#fretboard-body");
@@ -268,7 +281,7 @@
 
           const cell = document.createElement("td");
           cell.classList.add("fret-position");
-          if (fretNumber === FRETBOARD_MAX_FRET) cell.classList.add("suppressed-fret");
+          if (activeInstrument.suppressLastFret && fretNumber === activeMaxFret) cell.classList.add("suppressed-fret");
           if (!visible && !isFocusOverride) cell.classList.add("hidden-note");
           if (visible && noteMatches) cell.classList.add("selected-note");
           if (isFocused && (visible || isFocusOverride)) cell.classList.add("focused-position");
@@ -313,14 +326,14 @@
       const allStringsButton = document.querySelector("#all-strings");
       allStringsButton.classList.toggle("selected", allStringsActive);
       allStringsButton.setAttribute("aria-pressed", String(allStringsActive));
-      positionFretboardCells(fretboardTable, FRETBOARD_MAX_FRET, activeInstrument.id);
+      positionFretboardCells(fretboardTable, activeMaxFret, activeInstrument.id);
       updateFocusStatus();
     }
 
     resetStringScope();
     populateTuningSelect();
     updateNoteButtons();
-    renderFretboard();
+    applyTuning();
   </script>
 </body>
 </html>

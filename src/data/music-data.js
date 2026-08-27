@@ -66,12 +66,20 @@ export const FRETBOARD_INSTRUMENTS = {
   guitar: {
     id: "guitar",
     name: "Guitar",
+    maxFret: 15,
+    suppressLastFret: true,
+    thumbnail: "./assets/studio-guitar-full.webp",
+    thumbnailAlt: "The full STUDio guitar",
     defaultTuning: "standard",
     tunings: GUITAR_TUNINGS
   },
   lapSteel: {
     id: "lapSteel",
     name: "Lap Steel",
+    maxFret: 18,
+    suppressLastFret: false,
+    thumbnail: "./assets/daryl-electro-hawaiian-lap-steel.webp",
+    thumbnailAlt: "Daryl Clemons's Electro Hawaiian lap steel",
     defaultTuning: "openD",
     tunings: LAP_STEEL_TUNINGS
   }
