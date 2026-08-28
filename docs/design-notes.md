@@ -494,6 +494,15 @@ No DNS or production-domain change was made during this session. Prepare the roo
 - Keep the instrument selector itself functional and uncluttered. The thumbnail and information card carry identity and personality without turning tuning choices into presentation metadata.
 - This establishes a consistent character for Theory Toolkit: its illustrated instruments are real instruments used and cared for by real players, not anonymous clip art.
 
+### Viola Bass Easter egg
+
+- Preserve the phrase **“View uncensored close-up of the nut”** as a possible harmless Easter egg associated with the Viola Bass instrument details.
+- Keep it out of the normal instructional interface. The ordinary control should remain professionally labeled, such as “View original instrument photograph.”
+- A possible trigger is clicking or tapping the nut area of the Viola thumbnail several times. After the hidden threshold, the ordinary photograph link may temporarily change to “View uncensored close-up of the nut.”
+- Activating it should reveal the entirely respectable close fretboard reference photograph. The joke comes from the unexpected label, not from inappropriate content or disruptive behavior.
+- Keyboard and touch users should be able to discover or activate the Easter egg if the thumbnail interaction is implemented, but it must never interfere with normal access to instrument information.
+- Do not let the joke spread into navigation, metadata, search descriptions, classroom-facing instructions, or feedback text. It should reward improbable persistence without making Theory Toolkit look unserious to an ordinary visitor.
+
 ### Promotion checkpoint
 
 - The lap-steel expansion and Progression Explorer Build 1 are considered ready for Live Test, but promotion is intentionally paused until Rob is at his computer and can immediately validate the adapted live pages.
