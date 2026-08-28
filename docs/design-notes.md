@@ -456,3 +456,47 @@ No DNS or production-domain change was made during this session. Prepare the roo
 - Rob does not intend to manufacture forum participation merely to qualify for promotion. Open theory discussions are often tedious and are not the best use of development time.
 - Direct instructor relationships, Guitars for Veterans, Facebook musician contacts, and referrals are producing more valuable engagement.
 - Daryl's feedback confirms that a small number of serious users is more valuable at this stage than broad low-engagement visibility.
+
+## Instrument-aware Fretboard Explorer — 2026-08-28
+
+### Lap steel implementation and validation
+
+- Fretboard Explorer is now instrument-aware rather than being duplicated into separate guitar and lap-steel Explorers.
+- Each instrument profile may define its own tunings, string count, artwork, calibrated overlay geometry, visible fret range, full-instrument thumbnail, and presentation metadata while continuing to use the shared note, filtering, string-scope, accidental, and Focus behavior.
+- The first alternate instrument is Daryl Clemons's six-string Electro Hawaiian lap steel. Do not identify it as his Rogue lap steel; that is a different instrument.
+- The initial lap-steel tunings are Open D (D A D F# A D) and C9 (C G C D G C), listed low to high in the tuning name while the displayed strings retain conventional first-string-to-sixth-string order.
+- The lap steel displays and labels through fret 18. Guitar retains its previously approved range and presentation ending just beyond fret 14, with its final interactive position suppressed visually.
+- Daryl tested the implementation and verified the tunings, note isolation, string isolation, and general usefulness. Open D helped him recognize why omitting the third string changes the IV chord and produced immediate conceptual connections.
+- The illustrated fretboard and full-body thumbnail are based on photographs supplied by Daryl. He does not require credit but is comfortable having his name attached. Use a quiet acknowledgment such as “Lap steel reference photography and testing: Daryl Clemons” rather than prominent interface branding.
+- The final lap-steel geometry was accepted as approximately 99 percent aligned. Remaining microscopic discrepancies are not usability problems and should not delay live-test promotion.
+
+### Bass as the next instrument before promotion
+
+- Add a standard four-string bass profile before promoting the expanded Fretboard Explorer to Live Test.
+- Bass is the next architectural checkpoint because it verifies that the Explorer does not contain hidden six-string assumptions.
+- Begin with Standard tuning, E A D G low to high, displayed conventionally as string 1 G, string 2 D, string 3 A, and string 4 E.
+- Do not expand the first increment into five-string bass, alternate tunings, left-handed presentation, or multiple bass profiles.
+- Rob's Epiphone Viola Bass will be the visual representative. Although a Fender Jazz Bass is the more generic textbook choice, the Viola is distinctive, personally meaningful, and fully valid for teaching a standard four-string fretboard.
+- The Viola's shorter scale does not change the chromatic engine. Calibrate its artwork and overlay to the photographed instrument without changing the accepted guitar or lap-steel geometry.
+
+### Instrument thumbnail information cards
+
+- The full-instrument thumbnail is now part of the instructional and visual identity of Fretboard Explorer, not merely decoration. Daryl specifically valued seeing the same instrument on screen and in his lap as a visual reinforcement.
+- Give each instrument profile reusable information-card metadata rather than hard-coding individual popups.
+- Hovering over the thumbnail may reveal the card on pointer devices, but hover must not be the only access method. The same information must be available through keyboard focus and click or tap.
+- The compact card may include:
+  - Instrument name, make, and model.
+  - Owner or contributor when appropriate.
+  - String count, scale description, and normal tuning.
+  - Artwork, reference-photography, and testing credit.
+  - A link or control for expanded details.
+- Expanded details may use a lightweight modal containing the original color photograph, fuller instrument specifications, provenance, contributor acknowledgment, and an optional short personal note.
+- Keep the instrument selector itself functional and uncluttered. The thumbnail and information card carry identity and personality without turning tuning choices into presentation metadata.
+- This establishes a consistent character for Theory Toolkit: its illustrated instruments are real instruments used and cared for by real players, not anonymous clip art.
+
+### Promotion checkpoint
+
+- The lap-steel expansion and Progression Explorer Build 1 are considered ready for Live Test, but promotion is intentionally paused until Rob is at his computer and can immediately validate the adapted live pages.
+- Progression Explorer no longer requires song examples before its first Live Test. Real instructor feedback on the progression choices, explanations, terminology, and detail panel is more valuable before that larger research effort. Song examples remain a planned later build.
+- Promotion must adapt both pages to the Live Test shell, navigation, build labels, and feedback system rather than copying Workbench pages blindly.
+- Verify the landing-page entries, all new assets and imports, instrument switching, four- and six-string behavior, Progression Explorer interactions, and end-to-end feedback in the actual Live Test environment before declaring promotion complete.
