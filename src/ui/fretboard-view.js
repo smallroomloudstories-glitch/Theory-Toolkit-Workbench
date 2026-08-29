@@ -87,6 +87,20 @@ const LAP_STEEL_EXPLORER_GEOMETRY = {
   ]
 };
 
+const BASS_EXPLORER_GEOMETRY = {
+  // Calibrated to Rob's close overhead photograph of his Epiphone Viola Bass.
+  nutX: 7.10, lastFretX: 92.77, headerTop: 88, headerHeight: 7.5,
+  labelLeft: 1.8, labelWidth: 3.4,
+  selectorHeaderLeft: .5, selectorHeaderTop: 3,
+  selectorHeaderWidth: 6.2, selectorHeaderHeight: 5.8,
+  nutTopString: 32, nutStringGap: 9.8,
+  bodyTopString: 28.5, bodyStringGap: 12.4,
+  fretBoundaries: [
+    7.10, 15.17, 22.85, 30.14, 37.11, 43.68, 49.80, 55.34,
+    60.87, 66.15, 71.22, 76.04, 80.92, 84.83, 89.32, 92.77
+  ]
+};
+
 function setBox(element, left, top, width, height) {
   element.style.setProperty("--cell-left", `${left}%`);
   element.style.setProperty("--cell-top", `${top}%`);
@@ -119,9 +133,12 @@ function stringBox(stringIndex, xCenter, geometry) {
 
 export function positionFretboardCells(table, maxFret = FRETBOARD_MAX_FRET, instrumentId = table.dataset.instrument) {
   const compactOpen = table.classList.contains("fretboard-diagnostic");
-  const geometry = compactOpen
-    ? (instrumentId === "lapSteel" ? LAP_STEEL_EXPLORER_GEOMETRY : FRETBOARD_EXPLORER_GEOMETRY)
-    : DEFAULT_GEOMETRY;
+  const explorerGeometries = {
+    guitar: FRETBOARD_EXPLORER_GEOMETRY,
+    lapSteel: LAP_STEEL_EXPLORER_GEOMETRY,
+    bass: BASS_EXPLORER_GEOMETRY
+  };
+  const geometry = compactOpen ? (explorerGeometries[instrumentId] ?? FRETBOARD_EXPLORER_GEOMETRY) : DEFAULT_GEOMETRY;
   const boundaries = fretBoundaries(maxFret, geometry);
   const headerCells = table.querySelectorAll("thead th");
   const openWidth = compactOpen ? 3 : 6;

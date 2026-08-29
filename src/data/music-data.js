@@ -62,6 +62,19 @@ export const LAP_STEEL_TUNINGS = {
   }
 };
 
+export const BASS_TUNINGS = {
+  standard: {
+    id: "standard",
+    name: "Standard (E A D G)",
+    strings: [
+      { string: 1, label: "1 (G)", note: "G" },
+      { string: 2, label: "2 (D)", note: "D" },
+      { string: 3, label: "3 (A)", note: "A" },
+      { string: 4, label: "4 (E)", note: "E" }
+    ]
+  }
+};
+
 export const FRETBOARD_INSTRUMENTS = {
   guitar: {
     id: "guitar",
@@ -82,6 +95,16 @@ export const FRETBOARD_INSTRUMENTS = {
     thumbnailAlt: "Daryl Clemons's Electro Hawaiian lap steel",
     defaultTuning: "openD",
     tunings: LAP_STEEL_TUNINGS
+  },
+  bass: {
+    id: "bass",
+    name: "Bass",
+    maxFret: 15,
+    suppressLastFret: true,
+    thumbnail: "./assets/rob-epiphone-viola-bass-full.webp",
+    thumbnailAlt: "Rob's Epiphone Viola Bass",
+    defaultTuning: "standard",
+    tunings: BASS_TUNINGS
   }
 };
 

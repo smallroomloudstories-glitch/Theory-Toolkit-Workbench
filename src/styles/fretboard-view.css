@@ -67,6 +67,13 @@
   background-size: 100% 100%;
   transform: translateX(2.27%);
 }
+.fretboard-diagnostic-surface[data-instrument="bass"]::before {
+  background-image: url("../../assets/rob-epiphone-viola-bass-fretboard.webp?v=20260829-1");
+  background-position: center center;
+  background-size: 100% 100%;
+  filter: grayscale(1) contrast(1.08);
+  opacity: .58;
+}
 .fretboard-view td.focused-position { background: #fff3a6 !important; }
 
 /* Finished Fretboard Explorer presentation: calibrated cells remain as large
@@ -170,6 +177,10 @@
 }
 .fretboard-diagnostic[data-instrument="lapSteel"] td[data-fret="12"] .note-label,
 .fretboard-diagnostic[data-instrument="lapSteel"] td[data-fret="14"] .note-label {
+  transform: translate(-50%, -50%);
+}
+.fretboard-diagnostic[data-instrument="bass"] td[data-fret="12"] .note-label,
+.fretboard-diagnostic[data-instrument="bass"] td[data-fret="14"] .note-label {
   transform: translate(-50%, -50%);
 }
 .fretboard-diagnostic tbody .string-scope-button {
