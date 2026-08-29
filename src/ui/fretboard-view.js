@@ -93,8 +93,8 @@ const BASS_EXPLORER_GEOMETRY = {
   labelLeft: 1.8, labelWidth: 3.4,
   selectorHeaderLeft: .5, selectorHeaderTop: 3,
   selectorHeaderWidth: 6.2, selectorHeaderHeight: 5.8,
-  nutTopString: 32, nutStringGap: 9.8,
-  bodyTopString: 28.5, bodyStringGap: 12.4,
+  nutTopString: 33.46, nutStringGap: 9.8,
+  bodyTopString: 29.96, bodyStringGap: 12.4,
   fretBoundaries: [
     7.10, 15.17, 22.85, 30.14, 37.11, 43.68, 49.80, 55.34,
     60.87, 66.15, 71.22, 76.04, 80.92, 84.83, 89.32, 92.77
