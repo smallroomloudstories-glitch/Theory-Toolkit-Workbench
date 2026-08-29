@@ -109,7 +109,7 @@ export const FRETBOARD_INSTRUMENTS = {
       title: "Daryl Clemons's Electro Hawaiian Lap Steel",
       summary: "The six-string lap steel used to develop and validate Theory Toolkit's first alternate-instrument profile.",
       credit: "Reference photography and testing: Daryl Clemons",
-      photo: "./assets/daryl-electro-hawaiian-original.jpg",
+      photo: "./assets/daryl-electro-hawaiian-original.webp",
       photoAlt: "Daryl Clemons's red Electro Hawaiian lap steel",
       facts: [
         ["Instrument", "Electro Hawaiian lap steel"],
