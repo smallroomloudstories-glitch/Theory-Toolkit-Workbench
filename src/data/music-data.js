@@ -87,8 +87,8 @@ export const FRETBOARD_INSTRUMENTS = {
       title: "Rob's STUDio Guitar",
       summary: "The Yamaha acoustic guitar whose fretboard became Theory Toolkit's original illustrated reference instrument.",
       credit: "Instrument and reference photography: Rob Miles",
-      photo: "./assets/studio-guitar-full.webp",
-      photoAlt: "Full illustrated view of Rob's STUDio guitar",
+      photo: "./assets/rob-studio-guitar-original.webp",
+      photoAlt: "Rob's Yamaha STUDio guitar covered with guest signatures",
       facts: [
         ["Instrument", "Yamaha acoustic guitar"],
         ["Strings", "Six"],
