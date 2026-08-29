@@ -83,6 +83,18 @@ export const FRETBOARD_INSTRUMENTS = {
     suppressLastFret: true,
     thumbnail: "./assets/studio-guitar-full.webp",
     thumbnailAlt: "The full STUDio guitar",
+    info: {
+      title: "Rob's STUDio Guitar",
+      summary: "The Yamaha acoustic guitar whose fretboard became Theory Toolkit's original illustrated reference instrument.",
+      credit: "Instrument and reference photography: Rob Miles",
+      photo: "./assets/studio-guitar-full.webp",
+      photoAlt: "Full illustrated view of Rob's STUDio guitar",
+      facts: [
+        ["Instrument", "Yamaha acoustic guitar"],
+        ["Strings", "Six"],
+        ["Toolkit role", "Representative guitar"]
+      ]
+    },
     defaultTuning: "standard",
     tunings: GUITAR_TUNINGS
   },
@@ -93,6 +105,18 @@ export const FRETBOARD_INSTRUMENTS = {
     suppressLastFret: false,
     thumbnail: "./assets/daryl-electro-hawaiian-lap-steel.webp",
     thumbnailAlt: "Daryl Clemons's Electro Hawaiian lap steel",
+    info: {
+      title: "Daryl Clemons's Electro Hawaiian Lap Steel",
+      summary: "The six-string lap steel used to develop and validate Theory Toolkit's first alternate-instrument profile.",
+      credit: "Reference photography and testing: Daryl Clemons",
+      photo: "./assets/daryl-electro-hawaiian-original.jpg",
+      photoAlt: "Daryl Clemons's red Electro Hawaiian lap steel",
+      facts: [
+        ["Instrument", "Electro Hawaiian lap steel"],
+        ["Strings", "Six"],
+        ["Toolkit role", "Representative lap steel"]
+      ]
+    },
     defaultTuning: "openD",
     tunings: LAP_STEEL_TUNINGS
   },
@@ -103,6 +127,18 @@ export const FRETBOARD_INSTRUMENTS = {
     suppressLastFret: true,
     thumbnail: "./assets/rob-epiphone-viola-bass-full.webp",
     thumbnailAlt: "Rob's Epiphone Viola Bass",
+    info: {
+      title: "Rob's Epiphone Viola Bass",
+      summary: "The short-scale four-string bass used to prove that Fretboard Explorer is not secretly wearing six-string trousers.",
+      credit: "Instrument and reference photography: Rob Miles",
+      photo: "./assets/rob-epiphone-viola-bass-full-original.jpg",
+      photoAlt: "Rob's sunburst Epiphone Viola Bass",
+      facts: [
+        ["Instrument", "Epiphone Viola Bass"],
+        ["Strings", "Four"],
+        ["Toolkit role", "Representative bass"]
+      ]
+    },
     defaultTuning: "standard",
     tunings: BASS_TUNINGS
   }

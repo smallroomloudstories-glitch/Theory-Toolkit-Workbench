@@ -14,8 +14,30 @@
     .controls-grid { display: grid; grid-template-columns: max-content max-content 1fr; gap: 1rem; align-items: start; }
     .controls-grid fieldset { margin: 0; min-width: 0; }
     .display-panel { box-sizing: border-box; width: 23rem; }
-    .instrument-thumbnail { box-sizing: border-box; width: 100%; height: 7rem; margin: 0; display: flex; align-items: center; justify-content: flex-start; overflow: hidden; }
+    .instrument-feature { position: relative; box-sizing: border-box; width: 100%; height: 7rem; margin: 0; z-index: 10; }
+    .instrument-thumbnail { box-sizing: border-box; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: flex-start; overflow: hidden; }
+    .instrument-thumbnail:hover, .instrument-thumbnail:focus-visible { outline: 2px solid #777; outline-offset: 2px; }
     .instrument-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left center; }
+    .instrument-card { position: absolute; top: calc(100% + .35rem); right: 0; box-sizing: border-box; width: min(25rem, 100%); padding: .7rem .8rem; border: 1px solid #777; background: #fff; box-shadow: 0 .3rem .85rem rgba(0,0,0,.25); }
+    .instrument-card[hidden] { display: none; }
+    .instrument-card h2 { margin: 0 0 .3rem; font-size: 1rem; }
+    .instrument-card p { margin: .25rem 0; }
+    .instrument-card .instrument-credit { color: #555; font-size: .85rem; }
+    .instrument-card button { margin: .4rem 0 0; padding: .3rem .55rem; }
+    .instrument-dialog { width: min(52rem, calc(100% - 2rem)); padding: 0; border: 1px solid #666; }
+    .instrument-dialog::backdrop { background: rgba(0,0,0,.55); }
+    .instrument-dialog-inner { padding: 1rem 1.15rem 1.2rem; }
+    .instrument-dialog-header { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+    .instrument-dialog-header h2 { margin: 0; }
+    .instrument-dialog-close { margin: 0; padding: .25rem .5rem; }
+    .instrument-dialog-content { display: grid; grid-template-columns: minmax(16rem, 1.2fr) minmax(14rem, .8fr); gap: 1rem; margin-top: .8rem; }
+    .instrument-dialog-photo { display: block; width: 100%; max-height: 28rem; object-fit: contain; background: #f5f2ea; }
+    .instrument-dialog-summary { margin-top: 0; }
+    .instrument-dialog-facts { display: grid; grid-template-columns: max-content 1fr; gap: .25rem .6rem; }
+    .instrument-dialog-facts dt { font-weight: bold; }
+    .instrument-dialog-facts dd { margin: 0; }
+    .instrument-dialog-credit { color: #555; }
+    @media (max-width: 760px) { .instrument-dialog-content { grid-template-columns: 1fr; } }
     .notes-panel { grid-column: 1 / -1; }
     .note-panel-actions { display: flex; align-items: center; gap: .65rem; margin-top: .2rem; }
     .accidental-toggle-control { display: inline-flex; align-items: center; gap: .35rem; font-size: inherit; }
@@ -65,9 +87,17 @@
       <label><input type="radio" name="display-mode" value="highlight"> Show all notes + highlight selections</label>
     </fieldset>
 
-    <figure class="instrument-thumbnail" aria-label="Selected instrument">
-      <img id="instrument-thumbnail" alt="">
-    </figure>
+    <div class="instrument-feature" id="instrument-feature">
+      <button type="button" class="instrument-thumbnail" id="instrument-thumbnail-button" aria-expanded="false" aria-controls="instrument-card">
+        <img id="instrument-thumbnail" alt="">
+      </button>
+      <section class="instrument-card" id="instrument-card" aria-live="polite" hidden>
+        <h2 id="instrument-card-title"></h2>
+        <p id="instrument-card-summary"></p>
+        <p class="instrument-credit" id="instrument-card-credit"></p>
+        <button type="button" id="instrument-more-details">More details</button>
+      </section>
+    </div>
 
     <fieldset class="notes-panel">
       <legend>Select Notes</legend>
@@ -82,8 +112,25 @@
     </fieldset>
   </div>
 
+  <dialog class="instrument-dialog" id="instrument-dialog" aria-labelledby="instrument-dialog-title">
+    <div class="instrument-dialog-inner">
+      <div class="instrument-dialog-header">
+        <h2 id="instrument-dialog-title"></h2>
+        <form method="dialog"><button class="instrument-dialog-close" aria-label="Close instrument details">Close</button></form>
+      </div>
+      <div class="instrument-dialog-content">
+        <img class="instrument-dialog-photo" id="instrument-dialog-photo" alt="">
+        <div>
+          <p class="instrument-dialog-summary" id="instrument-dialog-summary"></p>
+          <dl class="instrument-dialog-facts" id="instrument-dialog-facts"></dl>
+          <p class="instrument-dialog-credit" id="instrument-dialog-credit"></p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script type="module">
-    import { CHROMATIC_SHARPS, FRETBOARD_INSTRUMENTS } from "./src/data/music-data.js?v=20260829-bass1";
+    import { CHROMATIC_SHARPS, FRETBOARD_INSTRUMENTS } from "./src/data/music-data.js?v=20260829-instrumentinfo1";
     import { buildFretboard } from "./src/engine/fretboard.js";
     import { createFretboardFocus } from "./src/engine/fretboard-focus.js";
     import { FRETBOARD_MAX_FRET, configureFretboardView, positionFretboardCells } from "./src/ui/fretboard-view.js?v=20260829-bass3";
@@ -106,10 +153,24 @@
     const instrumentSelect = document.querySelector("#instrument-select");
     const tuningSelect = document.querySelector("#tuning-select");
     const instrumentThumbnail = document.querySelector("#instrument-thumbnail");
+    const instrumentFeature = document.querySelector("#instrument-feature");
+    const instrumentThumbnailButton = document.querySelector("#instrument-thumbnail-button");
+    const instrumentCard = document.querySelector("#instrument-card");
+    const instrumentCardTitle = document.querySelector("#instrument-card-title");
+    const instrumentCardSummary = document.querySelector("#instrument-card-summary");
+    const instrumentCardCredit = document.querySelector("#instrument-card-credit");
+    const instrumentMoreDetails = document.querySelector("#instrument-more-details");
+    const instrumentDialog = document.querySelector("#instrument-dialog");
+    const instrumentDialogTitle = document.querySelector("#instrument-dialog-title");
+    const instrumentDialogPhoto = document.querySelector("#instrument-dialog-photo");
+    const instrumentDialogSummary = document.querySelector("#instrument-dialog-summary");
+    const instrumentDialogFacts = document.querySelector("#instrument-dialog-facts");
+    const instrumentDialogCredit = document.querySelector("#instrument-dialog-credit");
     const accidentalToggle = document.querySelector("#accidental-toggle");
     const noteButtons = new Map();
     const flatNames = new Map([["C#", "Db"], ["D#", "Eb"], ["F#", "Gb"], ["G#", "Ab"], ["A#", "Bb"]]);
     let accidentalDisplay = "sharps";
+    let instrumentCardPinned = false;
 
     const positionKey = (stringNumber, fretNumber) => `${stringNumber}:${fretNumber}`;
     const displayNote = note => accidentalDisplay === "flats" ? (flatNames.get(note) ?? note) : note;
@@ -139,11 +200,67 @@
       fretboardTable.dataset.instrument = activeInstrument.id;
       instrumentThumbnail.src = activeInstrument.thumbnail;
       instrumentThumbnail.alt = activeInstrument.thumbnailAlt;
+      instrumentThumbnailButton.setAttribute("aria-label", `About ${activeInstrument.info.title}`);
+      updateInstrumentInformation();
       focus.clear();
       resetStringScope();
       configureActiveFretboard();
       renderFretboard();
     }
+
+    function updateInstrumentInformation() {
+      const info = activeInstrument.info;
+      instrumentCardTitle.textContent = info.title;
+      instrumentCardSummary.textContent = info.summary;
+      instrumentCardCredit.textContent = info.credit;
+      instrumentDialogTitle.textContent = info.title;
+      instrumentDialogPhoto.src = info.photo;
+      instrumentDialogPhoto.alt = info.photoAlt;
+      instrumentDialogSummary.textContent = info.summary;
+      instrumentDialogCredit.textContent = info.credit;
+      instrumentDialogFacts.innerHTML = "";
+      for (const [term, description] of info.facts) {
+        const dt = document.createElement("dt");
+        const dd = document.createElement("dd");
+        dt.textContent = term;
+        dd.textContent = description;
+        instrumentDialogFacts.append(dt, dd);
+      }
+      hideInstrumentCard();
+    }
+
+    function showInstrumentCard({ pinned = instrumentCardPinned } = {}) {
+      instrumentCardPinned = pinned;
+      instrumentCard.hidden = false;
+      instrumentThumbnailButton.setAttribute("aria-expanded", "true");
+    }
+
+    function hideInstrumentCard() {
+      instrumentCardPinned = false;
+      instrumentCard.hidden = true;
+      instrumentThumbnailButton.setAttribute("aria-expanded", "false");
+    }
+
+    instrumentFeature.addEventListener("pointerenter", () => showInstrumentCard());
+    instrumentFeature.addEventListener("pointerleave", () => { if (!instrumentCardPinned) hideInstrumentCard(); });
+    instrumentFeature.addEventListener("focusin", () => showInstrumentCard());
+    instrumentFeature.addEventListener("focusout", () => {
+      setTimeout(() => {
+        if (!instrumentFeature.contains(document.activeElement) && !instrumentCardPinned) hideInstrumentCard();
+      });
+    });
+    instrumentThumbnailButton.addEventListener("click", event => {
+      event.stopPropagation();
+      if (instrumentCardPinned) hideInstrumentCard();
+      else showInstrumentCard({ pinned: true });
+    });
+    instrumentMoreDetails.addEventListener("click", () => {
+      instrumentDialog.showModal();
+      hideInstrumentCard();
+    });
+    document.addEventListener("click", event => {
+      if (!instrumentFeature.contains(event.target)) hideInstrumentCard();
+    });
 
     instrumentSelect.addEventListener("change", () => {
       activeInstrument = FRETBOARD_INSTRUMENTS[instrumentSelect.value];
