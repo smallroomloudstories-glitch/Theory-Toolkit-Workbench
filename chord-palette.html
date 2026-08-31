@@ -30,6 +30,7 @@
     .sound-toggle label { display: inline-flex; align-items: center; gap: .25rem; padding: .28rem .5rem; border: 1px solid #888; background: #fff; cursor: pointer; }
     .sound-toggle label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); font-weight: bold; }
     .secondary-control { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .55rem; border: 1px solid #888; background: #fff; font-weight: bold; cursor: pointer; }
+    .secondary-control[hidden] { display: none; }
     .palette-heading { margin: 1.15rem 0 .45rem; }
     .palette-scroll { overflow-x: auto; padding: .1rem 0 .4rem; }
     .palette { display: grid; grid-template-columns: repeat(8, minmax(115px, 1fr)); min-width: 920px; gap: .45rem; }
@@ -60,20 +61,25 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 5</p>
-  <p class="checkpoint-note">Choose a major key, freely audition its diatonic chords, and optionally expose the secondary dominants that point toward chords inside the key.</p>
+  <p class="build-mark">Chord Palette Test Build 6</p>
+  <p class="checkpoint-note">Hear the same diatonic materials from their major or relative-minor perspective, then freely audition the chords in either tonal center.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
-      <label class="control-label" id="controls-heading" for="key-select">Major Key</label>
+      <label class="control-label" id="controls-heading" for="key-select">Major Key Family</label>
       <select id="key-select"></select>
     </div>
+    <fieldset class="sound-toggle">
+      <legend>Perspective</legend>
+      <label><input type="radio" name="perspective" value="major" checked> Major</label>
+      <label><input type="radio" name="perspective" value="relative-minor"> Relative Minor</label>
+    </fieldset>
     <fieldset class="sound-toggle">
       <legend>Sound</legend>
       <label><input type="radio" name="sound" value="roots"> Roots</label>
       <label><input type="radio" name="sound" value="chords" checked> Chords</label>
     </fieldset>
-    <label class="secondary-control"><input type="checkbox" id="show-secondary"> Show secondary dominants</label>
+    <label class="secondary-control" id="secondary-control"><input type="checkbox" id="show-secondary"> Show secondary dominants</label>
     <span>Use the buttons in any order. Changing key does not play a chord.</span>
   </section>
 
@@ -115,6 +121,7 @@
     const keySelect = document.querySelector("#key-select");
     const paletteHeading = document.querySelector("#palette-heading");
     const palette = document.querySelector("#palette");
+    const secondaryControl = document.querySelector("#secondary-control");
     const showSecondary = document.querySelector("#show-secondary");
     const secondarySection = document.querySelector("#secondary-section");
     const secondaryPalette = document.querySelector("#secondary-palette");
@@ -123,6 +130,7 @@
     let selectedKey = MAJOR_KEYS[0];
     let playingDegree = null;
     let soundMode = "chords";
+    let perspective = "major";
     let secondaryQuality = "triads";
 
     const SECONDARY_DOMINANTS = [
@@ -133,10 +141,35 @@
       { function: "V/vi", rootDegree: 2, targetDegree: 5, targetNumeral: "vi" }
     ];
 
+    const MINOR_SOURCE_DEGREES = [5, 6, 0, 1, 2, 3, 4];
+    const MINOR_NUMERALS = ["i", "ii°", "III", "iv", "v", "VI", "VII"];
+
     const chordName = chord => `${selectedKey.notes[chord.triadDegrees[0]]}${chord.suffix}`;
     const chordNotes = chord => chord.triadDegrees.map(index => selectedKey.notes[index]);
+    const perspectiveTonic = () => perspective === "major" ? selectedKey.notes[0] : selectedKey.notes[5];
+    const contextLabel = () => perspective === "major"
+      ? `${selectedKey.label} major`
+      : `${selectedKey.notes[5]} natural minor`;
 
     function paletteChords() {
+      if (perspective === "relative-minor") {
+        const minorChords = MINOR_SOURCE_DEGREES.map((sourceIndex, index) => ({
+          ...DIATONIC_CHORDS[sourceIndex],
+          degree: MINOR_NUMERALS[index],
+          paletteId: `minor-${MINOR_NUMERALS[index]}`,
+          octaveOffset: 0
+        }));
+        return [
+          ...minorChords,
+          {
+            ...minorChords[0],
+            paletteId: "minor-i-octave",
+            octaveOffset: 12,
+            octaveTonic: true
+          }
+        ];
+      }
+
       const tonic = DIATONIC_CHORDS[0];
       return [
         ...DIATONIC_CHORDS.map(chord => ({ ...chord, paletteId: chord.degree, octaveOffset: 0 })),
@@ -145,19 +178,21 @@
     }
 
     function renderPalette() {
-      paletteHeading.textContent = `Diatonic Chords in ${selectedKey.label} Major`;
+      paletteHeading.textContent = perspective === "major"
+        ? `Diatonic Chords in ${selectedKey.label} Major`
+        : `Diatonic Chords in ${selectedKey.notes[5]} Natural Minor — Relative Minor of ${selectedKey.label} Major`;
       palette.innerHTML = "";
 
       paletteChords().forEach(chord => {
         const name = chordName(chord);
         const notes = chordNotes(chord);
-        const rootMidi = ascendingMidiNote(selectedKey.notes[0], notes[0]) + chord.octaveOffset;
+        const rootMidi = ascendingMidiNote(perspectiveTonic(), notes[0]) + chord.octaveOffset;
         const button = document.createElement("button");
         button.type = "button";
         button.className = `chord-button${chord.degree === "I" ? " tonic" : ""}${playingDegree === chord.paletteId ? " playing" : ""}`;
         button.setAttribute("aria-label", chord.octaveTonic
           ? `Play the upper tonic ${name}: ${notes.join(", ")}`
-          : `Play ${name}, the ${chord.degree} chord: ${notes.join(", ")}`);
+          : `Play ${name}, the ${chord.degree} chord in ${contextLabel()}: ${notes.join(", ")}`);
         button.innerHTML = `
           <span class="degree">${chord.octaveTonic ? "I · octave" : chord.degree}</span>
           <span class="chord-name">${name}</span>
@@ -168,13 +203,13 @@
           renderPalette();
           if (soundMode === "roots") {
             nowPlaying.innerHTML = chord.octaveTonic
-              ? `<strong>${notes[0]}</strong> — upper tonic of ${selectedKey.label} major`
-              : `<strong>${notes[0]}</strong> — root of ${name}, the ${chord.degree} chord in ${selectedKey.label} major`;
+              ? `<strong>${notes[0]}</strong> — upper tonic of ${contextLabel()}`
+              : `<strong>${notes[0]}</strong> — root of ${name}, the ${chord.degree} chord in ${contextLabel()}`;
             await playRoot(rootMidi);
           } else {
             nowPlaying.innerHTML = chord.octaveTonic
-              ? `<strong>${name}</strong> — upper tonic chord in ${selectedKey.label} major — ${notes.join(" · ")}`
-              : `<strong>${name}</strong> — ${chord.degree} in ${selectedKey.label} major — ${notes.join(" · ")}`;
+              ? `<strong>${name}</strong> — upper tonic chord in ${contextLabel()} — ${notes.join(" · ")}`
+              : `<strong>${name}</strong> — ${chord.degree} in ${contextLabel()} — ${notes.join(" · ")}`;
             await playTriad(notes[0], chord.quality, rootMidi);
           }
         };
@@ -244,9 +279,27 @@
     keySelect.addEventListener("change", () => {
       selectedKey = MAJOR_KEYS.find(key => key.id === keySelect.value);
       playingDegree = null;
-      nowPlaying.textContent = "Choose a chord to hear it.";
+      nowPlaying.textContent = `Choose a chord in ${contextLabel()} to hear it.`;
       renderPalette();
       renderSecondaryPalette();
+    });
+
+    document.querySelectorAll('input[name="perspective"]').forEach(input => {
+      input.addEventListener("change", event => {
+        perspective = event.target.value;
+        playingDegree = null;
+        if (perspective === "relative-minor") {
+          showSecondary.checked = false;
+          secondarySection.hidden = true;
+          secondaryControl.hidden = true;
+          nowPlaying.textContent = `Choose a chord in ${selectedKey.notes[5]} natural minor to hear it.`;
+        } else {
+          secondaryControl.hidden = false;
+          nowPlaying.textContent = `Choose a chord in ${selectedKey.label} major to hear it.`;
+        }
+        renderPalette();
+        renderSecondaryPalette();
+      });
     });
 
     document.querySelectorAll('input[name="sound"]').forEach(input => {
