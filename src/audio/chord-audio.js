@@ -59,7 +59,7 @@ function releaseActiveVoices(context) {
   activeVoices = [];
 }
 
-function createVoice(context, destination, midi, startTime) {
+function createVoice(context, destination, midi, startTime, level = 1) {
   const gain = context.createGain();
   const filter = context.createBiquadFilter();
   const frequency = midiToFrequency(midi);
@@ -69,8 +69,8 @@ function createVoice(context, destination, midi, startTime) {
   filter.Q.setValueAtTime(0.55, startTime);
 
   gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.17, startTime + 0.032);
-  gain.gain.exponentialRampToValueAtTime(0.075, startTime + 0.48);
+  gain.gain.exponentialRampToValueAtTime(0.17 * level, startTime + 0.032);
+  gain.gain.exponentialRampToValueAtTime(0.075 * level, startTime + 0.48);
   gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.15);
 
   gain.connect(filter);
@@ -126,21 +126,27 @@ export function triadMidiNotesFromRoot(root, quality) {
   return intervals.map(interval => root + interval);
 }
 
-async function playMidiNotes(midiNotes) {
+async function playMidiNotes(midiNotes, voiceLevels = []) {
   const context = getAudioContext();
   if (context.state === "suspended") await context.resume();
 
   releaseActiveVoices(context);
 
   const startTime = context.currentTime + 0.008;
-  activeVoices = midiNotes.map(midi => createVoice(context, masterCompressor, midi, startTime));
+  activeVoices = midiNotes.map((midi, index) => createVoice(
+    context,
+    masterCompressor,
+    midi,
+    startTime,
+    voiceLevels[index] ?? 1
+  ));
 }
 
 export async function playTriad(rootName, quality, rootMidi = null) {
   const notes = rootMidi === null
     ? triadMidiNotes(rootName, quality)
     : triadMidiNotesFromRoot(rootMidi, quality);
-  await playMidiNotes(notes);
+  await playMidiNotes(notes, [1, 0.72, 0.58]);
 }
 
 export async function playRoot(rootMidi) {
