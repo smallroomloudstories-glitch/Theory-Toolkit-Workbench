@@ -102,6 +102,21 @@ export function triadMidiNotes(rootName, quality) {
   if (pitchClass === undefined) throw new Error(`Unknown note name: ${rootName}`);
 
   const root = 48 + pitchClass;
+  return triadMidiNotesFromRoot(root, quality);
+}
+
+export function ascendingMidiNote(tonicName, noteName) {
+  const tonicPitchClass = NOTE_TO_PITCH_CLASS[tonicName];
+  const notePitchClass = NOTE_TO_PITCH_CLASS[noteName];
+  if (tonicPitchClass === undefined) throw new Error(`Unknown tonic name: ${tonicName}`);
+  if (notePitchClass === undefined) throw new Error(`Unknown note name: ${noteName}`);
+
+  const tonic = 48 + tonicPitchClass;
+  const distanceFromTonic = (notePitchClass - tonicPitchClass + 12) % 12;
+  return tonic + distanceFromTonic;
+}
+
+export function triadMidiNotesFromRoot(root, quality) {
   const intervals = quality === "diminished"
     ? [0, 3, 6]
     : quality === "minor"
@@ -111,13 +126,23 @@ export function triadMidiNotes(rootName, quality) {
   return intervals.map(interval => root + interval);
 }
 
-export async function playTriad(rootName, quality) {
+async function playMidiNotes(midiNotes) {
   const context = getAudioContext();
   if (context.state === "suspended") await context.resume();
 
   releaseActiveVoices(context);
 
   const startTime = context.currentTime + 0.008;
-  activeVoices = triadMidiNotes(rootName, quality)
-    .map(midi => createVoice(context, masterCompressor, midi, startTime));
+  activeVoices = midiNotes.map(midi => createVoice(context, masterCompressor, midi, startTime));
+}
+
+export async function playTriad(rootName, quality, rootMidi = null) {
+  const notes = rootMidi === null
+    ? triadMidiNotes(rootName, quality)
+    : triadMidiNotesFromRoot(rootMidi, quality);
+  await playMidiNotes(notes);
+}
+
+export async function playRoot(rootMidi) {
+  await playMidiNotes([rootMidi]);
 }
