@@ -73,7 +73,7 @@
 
   <script type="module">
     import { MAJOR_KEYS, DIATONIC_CHORDS } from "./src/data/key-explorer-data.js?v=20260831-1";
-    import { playTriad } from "./src/audio/chord-audio.js?v=20260831-1";
+    import { playTriad } from "./src/audio/chord-audio.js?v=20260831-2";
 
     const keySelect = document.querySelector("#key-select");
     const paletteHeading = document.querySelector("#palette-heading");
@@ -102,11 +102,18 @@
           <span class="chord-name">${name}</span>
           <span class="quality">${chord.quality}</span>
         `;
-        button.addEventListener("click", async () => {
+        const playChord = async () => {
           playingDegree = chord.degree;
           renderPalette();
           nowPlaying.innerHTML = `<strong>${name}</strong> — ${chord.degree} in ${selectedKey.label} major — ${notes.join(" · ")}`;
           await playTriad(notes[0], chord.quality);
+        };
+        button.addEventListener("pointerdown", playChord);
+        button.addEventListener("keydown", event => {
+          if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
+            event.preventDefault();
+            playChord();
+          }
         });
         palette.appendChild(button);
       });

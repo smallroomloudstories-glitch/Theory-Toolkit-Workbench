@@ -22,6 +22,7 @@ const NOTE_TO_PITCH_CLASS = {
 };
 
 let audioContext;
+let masterCompressor;
 let activeVoices = [];
 
 const midiToFrequency = midi => 440 * (2 ** ((midi - 69) / 12));
@@ -30,6 +31,14 @@ function getAudioContext() {
   if (!audioContext) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
+
+    masterCompressor = audioContext.createDynamicsCompressor();
+    masterCompressor.threshold.setValueAtTime(-18, audioContext.currentTime);
+    masterCompressor.knee.setValueAtTime(12, audioContext.currentTime);
+    masterCompressor.ratio.setValueAtTime(4, audioContext.currentTime);
+    masterCompressor.attack.setValueAtTime(0.005, audioContext.currentTime);
+    masterCompressor.release.setValueAtTime(0.2, audioContext.currentTime);
+    masterCompressor.connect(audioContext.destination);
   }
   return audioContext;
 }
@@ -37,9 +46,15 @@ function getAudioContext() {
 function releaseActiveVoices(context) {
   const now = context.currentTime;
   activeVoices.forEach(({ gain, oscillators }) => {
-    gain.gain.cancelScheduledValues(now);
-    gain.gain.setTargetAtTime(0.0001, now, 0.025);
-    oscillators.forEach(oscillator => oscillator.stop(now + 0.14));
+    if (typeof gain.gain.cancelAndHoldAtTime === "function") {
+      gain.gain.cancelAndHoldAtTime(now);
+    } else {
+      const currentLevel = Math.max(gain.gain.value, 0.0001);
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(currentLevel, now);
+    }
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
+    oscillators.forEach(oscillator => oscillator.stop(now + 0.08));
   });
   activeVoices = [];
 }
@@ -54,7 +69,7 @@ function createVoice(context, destination, midi, startTime) {
   filter.Q.setValueAtTime(0.55, startTime);
 
   gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.17, startTime + 0.018);
+  gain.gain.exponentialRampToValueAtTime(0.17, startTime + 0.032);
   gain.gain.exponentialRampToValueAtTime(0.075, startTime + 0.48);
   gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.15);
 
@@ -102,15 +117,7 @@ export async function playTriad(rootName, quality) {
 
   releaseActiveVoices(context);
 
-  const compressor = context.createDynamicsCompressor();
-  compressor.threshold.setValueAtTime(-18, context.currentTime);
-  compressor.knee.setValueAtTime(12, context.currentTime);
-  compressor.ratio.setValueAtTime(4, context.currentTime);
-  compressor.attack.setValueAtTime(0.005, context.currentTime);
-  compressor.release.setValueAtTime(0.2, context.currentTime);
-  compressor.connect(context.destination);
-
   const startTime = context.currentTime + 0.008;
   activeVoices = triadMidiNotes(rootName, quality)
-    .map(midi => createVoice(context, compressor, midi, startTime));
+    .map(midi => createVoice(context, masterCompressor, midi, startTime));
 }
