@@ -1,0 +1,116 @@
+const NOTE_TO_PITCH_CLASS = {
+  C: 0,
+  "C#": 1,
+  Db: 1,
+  D: 2,
+  "D#": 3,
+  Eb: 3,
+  E: 4,
+  "E#": 5,
+  Fb: 4,
+  F: 5,
+  "F#": 6,
+  Gb: 6,
+  G: 7,
+  "G#": 8,
+  Ab: 8,
+  A: 9,
+  "A#": 10,
+  Bb: 10,
+  B: 11,
+  Cb: 11
+};
+
+let audioContext;
+let activeVoices = [];
+
+const midiToFrequency = midi => 440 * (2 ** ((midi - 69) / 12));
+
+function getAudioContext() {
+  if (!audioContext) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContext();
+  }
+  return audioContext;
+}
+
+function releaseActiveVoices(context) {
+  const now = context.currentTime;
+  activeVoices.forEach(({ gain, oscillators }) => {
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setTargetAtTime(0.0001, now, 0.025);
+    oscillators.forEach(oscillator => oscillator.stop(now + 0.14));
+  });
+  activeVoices = [];
+}
+
+function createVoice(context, destination, midi, startTime) {
+  const gain = context.createGain();
+  const filter = context.createBiquadFilter();
+  const frequency = midiToFrequency(midi);
+
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(2400, startTime);
+  filter.Q.setValueAtTime(0.55, startTime);
+
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.17, startTime + 0.018);
+  gain.gain.exponentialRampToValueAtTime(0.075, startTime + 0.48);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.15);
+
+  gain.connect(filter);
+  filter.connect(destination);
+
+  const components = [
+    { type: "triangle", ratio: 1, level: 1 },
+    { type: "sine", ratio: 2, level: 0.16 }
+  ];
+
+  const oscillators = components.map(component => {
+    const oscillator = context.createOscillator();
+    const componentGain = context.createGain();
+    oscillator.type = component.type;
+    oscillator.frequency.setValueAtTime(frequency * component.ratio, startTime);
+    componentGain.gain.setValueAtTime(component.level, startTime);
+    oscillator.connect(componentGain);
+    componentGain.connect(gain);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 2.2);
+    return oscillator;
+  });
+
+  return { gain, oscillators };
+}
+
+export function triadMidiNotes(rootName, quality) {
+  const pitchClass = NOTE_TO_PITCH_CLASS[rootName];
+  if (pitchClass === undefined) throw new Error(`Unknown note name: ${rootName}`);
+
+  const root = 48 + pitchClass;
+  const intervals = quality === "diminished"
+    ? [0, 3, 6]
+    : quality === "minor"
+      ? [0, 3, 7]
+      : [0, 4, 7];
+
+  return intervals.map(interval => root + interval);
+}
+
+export async function playTriad(rootName, quality) {
+  const context = getAudioContext();
+  if (context.state === "suspended") await context.resume();
+
+  releaseActiveVoices(context);
+
+  const compressor = context.createDynamicsCompressor();
+  compressor.threshold.setValueAtTime(-18, context.currentTime);
+  compressor.knee.setValueAtTime(12, context.currentTime);
+  compressor.ratio.setValueAtTime(4, context.currentTime);
+  compressor.attack.setValueAtTime(0.005, context.currentTime);
+  compressor.release.setValueAtTime(0.2, context.currentTime);
+  compressor.connect(context.destination);
+
+  const startTime = context.currentTime + 0.008;
+  activeVoices = triadMidiNotes(rootName, quality)
+    .map(midi => createVoice(context, compressor, midi, startTime));
+}
