@@ -126,6 +126,10 @@ export function triadMidiNotesFromRoot(root, quality) {
   return intervals.map(interval => root + interval);
 }
 
+export function dominantSeventhMidiNotesFromRoot(root) {
+  return [0, 4, 7, 10].map(interval => root + interval);
+}
+
 async function playMidiNotes(midiNotes, voiceLevels = []) {
   const context = getAudioContext();
   if (context.state === "suspended") await context.resume();
@@ -147,6 +151,10 @@ export async function playTriad(rootName, quality, rootMidi = null) {
     ? triadMidiNotes(rootName, quality)
     : triadMidiNotesFromRoot(rootMidi, quality);
   await playMidiNotes(notes, [1, 0.72, 0.58]);
+}
+
+export async function playDominantSeventh(rootMidi) {
+  await playMidiNotes(dominantSeventhMidiNotesFromRoot(rootMidi), [1, 0.72, 0.58, 0.64]);
 }
 
 export async function playRoot(rootMidi) {

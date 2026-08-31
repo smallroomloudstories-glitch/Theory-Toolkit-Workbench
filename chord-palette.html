@@ -29,6 +29,7 @@
     .sound-toggle legend { margin-bottom: .3rem; padding: 0; font-weight: bold; }
     .sound-toggle label { display: inline-flex; align-items: center; gap: .25rem; padding: .28rem .5rem; border: 1px solid #888; background: #fff; cursor: pointer; }
     .sound-toggle label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); font-weight: bold; }
+    .secondary-control { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .55rem; border: 1px solid #888; background: #fff; font-weight: bold; cursor: pointer; }
     .palette-heading { margin: 1.15rem 0 .45rem; }
     .palette-scroll { overflow-x: auto; padding: .1rem 0 .4rem; }
     .palette { display: grid; grid-template-columns: repeat(8, minmax(115px, 1fr)); min-width: 920px; gap: .45rem; }
@@ -39,6 +40,15 @@
     .degree { display: block; font-size: 1rem; font-weight: bold; }
     .chord-name { display: block; margin: .2rem 0 .12rem; font-size: 1.45rem; font-weight: bold; }
     .quality { display: block; color: #555; font-size: .85rem; }
+    .secondary-section { margin-top: 1.15rem; padding: .7rem .8rem .8rem; border: 2px solid #826500; background: #fffdf1; }
+    .secondary-section[hidden] { display: none; }
+    .secondary-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: .65rem; }
+    .secondary-heading { margin: 0; font-size: 1.2rem; }
+    .secondary-intro { margin: .25rem 0 .65rem; color: #4f430d; }
+    .secondary-palette { display: grid; grid-template-columns: repeat(5, minmax(135px, 1fr)); min-width: 675px; gap: .45rem; }
+    .secondary-button { border-color: #9a7a16; background: #fffef8; }
+    .secondary-button:hover { border-color: #5f4900; background: #fff8d6; }
+    .secondary-button.playing { border-color: #5f4900; background: #fff3a6; }
     .now-playing { min-height: 4.8rem; margin-top: .8rem; padding: .7rem .8rem; border: 1px solid #bbb; background: var(--surface); }
     .now-playing h2 { margin: 0 0 .25rem; font-size: 1rem; }
     .now-playing p { margin: 0; }
@@ -50,8 +60,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 4</p>
-  <p class="checkpoint-note">Choose a major key, then click any diatonic chord—or the upper tonic—to hear the roots or complete triads immediately.</p>
+  <p class="build-mark">Chord Palette Test Build 5</p>
+  <p class="checkpoint-note">Choose a major key, freely audition its diatonic chords, and optionally expose the secondary dominants that point toward chords inside the key.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -63,6 +73,7 @@
       <label><input type="radio" name="sound" value="roots"> Roots</label>
       <label><input type="radio" name="sound" value="chords" checked> Chords</label>
     </fieldset>
+    <label class="secondary-control"><input type="checkbox" id="show-secondary"> Show secondary dominants</label>
     <span>Use the buttons in any order. Changing key does not play a chord.</span>
   </section>
 
@@ -71,6 +82,21 @@
     <div class="palette-scroll">
       <div class="palette" id="palette" aria-labelledby="palette-heading"></div>
     </div>
+
+    <section class="secondary-section" id="secondary-section" hidden aria-labelledby="secondary-heading">
+      <div class="secondary-header">
+        <h2 class="secondary-heading" id="secondary-heading">Secondary Dominants</h2>
+        <fieldset class="sound-toggle">
+          <legend>Secondary chord type</legend>
+          <label><input type="radio" name="secondary-quality" value="triads" checked> Triads</label>
+          <label><input type="radio" name="secondary-quality" value="sevenths"> Dominant 7ths</label>
+        </fieldset>
+      </div>
+      <p class="secondary-intro">Each chord temporarily acts as V of the diatonic chord shown beneath it.</p>
+      <div class="palette-scroll">
+        <div class="secondary-palette" id="secondary-palette"></div>
+      </div>
+    </section>
 
     <section class="now-playing" aria-live="polite">
       <h2>Last played</h2>
@@ -84,16 +110,28 @@
 
   <script type="module">
     import { MAJOR_KEYS, DIATONIC_CHORDS } from "./src/data/key-explorer-data.js?v=20260831-1";
-    import { ascendingMidiNote, playRoot, playTriad } from "./src/audio/chord-audio.js?v=20260831-4";
+    import { ascendingMidiNote, playDominantSeventh, playRoot, playTriad } from "./src/audio/chord-audio.js?v=20260831-5";
 
     const keySelect = document.querySelector("#key-select");
     const paletteHeading = document.querySelector("#palette-heading");
     const palette = document.querySelector("#palette");
+    const showSecondary = document.querySelector("#show-secondary");
+    const secondarySection = document.querySelector("#secondary-section");
+    const secondaryPalette = document.querySelector("#secondary-palette");
     const nowPlaying = document.querySelector("#now-playing");
 
     let selectedKey = MAJOR_KEYS[0];
     let playingDegree = null;
     let soundMode = "chords";
+    let secondaryQuality = "triads";
+
+    const SECONDARY_DOMINANTS = [
+      { function: "V/ii", rootDegree: 5, targetDegree: 1, targetNumeral: "ii" },
+      { function: "V/iii", rootDegree: 6, targetDegree: 2, targetNumeral: "iii" },
+      { function: "V/IV", rootDegree: 0, targetDegree: 3, targetNumeral: "IV" },
+      { function: "V/V", rootDegree: 1, targetDegree: 4, targetNumeral: "V" },
+      { function: "V/vi", rootDegree: 2, targetDegree: 5, targetNumeral: "vi" }
+    ];
 
     const chordName = chord => `${selectedKey.notes[chord.triadDegrees[0]]}${chord.suffix}`;
     const chordNotes = chord => chord.triadDegrees.map(index => selectedKey.notes[index]);
@@ -151,6 +189,51 @@
       });
     }
 
+    function renderSecondaryPalette() {
+      secondaryPalette.innerHTML = "";
+
+      SECONDARY_DOMINANTS.forEach(chord => {
+        const rootName = selectedKey.notes[chord.rootDegree];
+        const target = DIATONIC_CHORDS[chord.targetDegree];
+        const targetName = `${selectedKey.notes[chord.targetDegree]}${target.suffix}`;
+        const chordName = `${rootName}${secondaryQuality === "sevenths" ? "7" : ""}`;
+        const rootMidi = ascendingMidiNote(selectedKey.notes[0], rootName);
+        const paletteId = `secondary-${chord.function}`;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `chord-button secondary-button${playingDegree === paletteId ? " playing" : ""}`;
+        button.setAttribute("aria-label", `Play ${chordName}, ${chord.function}, pointing toward ${targetName}`);
+        button.innerHTML = `
+          <span class="degree">${chord.function}</span>
+          <span class="chord-name">${chordName}</span>
+          <span class="quality">→ ${targetName} (${chord.targetNumeral})</span>
+        `;
+        const playChord = async () => {
+          playingDegree = paletteId;
+          renderPalette();
+          renderSecondaryPalette();
+          if (soundMode === "roots") {
+            nowPlaying.innerHTML = `<strong>${rootName}</strong> — root of ${chordName}, ${chord.function}, pointing toward ${targetName}`;
+            await playRoot(rootMidi);
+          } else if (secondaryQuality === "sevenths") {
+            nowPlaying.innerHTML = `<strong>${chordName}</strong> — ${chord.function}, pointing toward ${targetName}`;
+            await playDominantSeventh(rootMidi);
+          } else {
+            nowPlaying.innerHTML = `<strong>${chordName}</strong> — ${chord.function}, pointing toward ${targetName}`;
+            await playTriad(rootName, "Major", rootMidi);
+          }
+        };
+        button.addEventListener("pointerdown", playChord);
+        button.addEventListener("keydown", event => {
+          if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
+            event.preventDefault();
+            playChord();
+          }
+        });
+        secondaryPalette.appendChild(button);
+      });
+    }
+
     MAJOR_KEYS.forEach(key => {
       const option = document.createElement("option");
       option.value = key.id;
@@ -163,6 +246,7 @@
       playingDegree = null;
       nowPlaying.textContent = "Choose a chord to hear it.";
       renderPalette();
+      renderSecondaryPalette();
     });
 
     document.querySelectorAll('input[name="sound"]').forEach(input => {
@@ -173,10 +257,34 @@
           ? "Choose a chord button to hear its root."
           : "Choose a chord to hear it.";
         renderPalette();
+        renderSecondaryPalette();
+      });
+    });
+
+    showSecondary.addEventListener("change", () => {
+      secondarySection.hidden = !showSecondary.checked;
+      playingDegree = null;
+      nowPlaying.textContent = showSecondary.checked
+        ? "Choose a diatonic chord or secondary dominant to hear it."
+        : "Choose a chord to hear it.";
+      renderPalette();
+      renderSecondaryPalette();
+    });
+
+    document.querySelectorAll('input[name="secondary-quality"]').forEach(input => {
+      input.addEventListener("change", event => {
+        secondaryQuality = event.target.value;
+        playingDegree = null;
+        nowPlaying.textContent = secondaryQuality === "sevenths"
+          ? "Secondary dominants will play as dominant seventh chords."
+          : "Secondary dominants will play as major triads.";
+        renderPalette();
+        renderSecondaryPalette();
       });
     });
 
     renderPalette();
+    renderSecondaryPalette();
   </script>
 </body>
 </html>
