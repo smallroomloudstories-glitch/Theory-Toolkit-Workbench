@@ -93,8 +93,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 12</p>
-  <p class="checkpoint-note">Minor-key dominant alterations now show the raised leading tone in red and hatch the natural scale tone it replaces.</p>
+  <p class="build-mark">Chord Palette Test Build 13</p>
+  <p class="checkpoint-note">Altered tones in both Major secondary dominants and Relative Minor dominants now hatch the diatonic scale tones they replace.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -232,6 +232,15 @@
     const pitchClass = note => ascendingMidiNote(selectedKey.notes[0], note) % 12;
     const scalePitchClasses = () => new Set(selectedKey.notes.map(pitchClass));
 
+    function replacedScalePitchClasses(chordToneNames) {
+      const scale = scalePitchClasses();
+      const scaleByLetter = new Map(selectedKey.notes.map(note => [note[0], pitchClass(note)]));
+      return [...new Set(chordToneNames
+        .filter(note => !scale.has(pitchClass(note)))
+        .map(note => scaleByLetter.get(note[0]))
+        .filter(pc => pc !== undefined))];
+    }
+
     function spellNoteAtInterval(rootName, semitones, letterSteps) {
       const rootLetterIndex = NOTE_LETTERS.indexOf(rootName[0]);
       const targetLetter = NOTE_LETTERS[(rootLetterIndex + letterSteps) % NOTE_LETTERS.length];
@@ -278,8 +287,8 @@
       const scale = scalePitchClasses();
       const harmonyPcs = new Set(selectedHarmony?.midiNotes.map(note => note % 12) ?? []);
       const harmonyRootPc = selectedHarmony?.rootMidi % 12;
-      const replacedPitchClass = selectedHarmony?.replacedPitchClass;
-      replacedLegend.hidden = replacedPitchClass === undefined;
+      const replacedPitchClasses = new Set(selectedHarmony?.replacedPitchClasses ?? []);
+      replacedLegend.hidden = replacedPitchClasses.size === 0;
       let whiteIndex = 0;
 
       for (let midi = 48; midi <= 84; midi += 1) {
@@ -293,8 +302,8 @@
           : `${whiteIndex * 46}px`;
         if (!isBlack) whiteIndex += 1;
 
-        if (scale.has(pc) && pc !== replacedPitchClass) key.classList.add("scale-note");
-        if (pc === replacedPitchClass) key.classList.add("replaced-tone");
+        if (scale.has(pc) && !replacedPitchClasses.has(pc)) key.classList.add("scale-note");
+        if (replacedPitchClasses.has(pc)) key.classList.add("replaced-tone");
         if (harmonyPcs.has(pc)) {
           key.classList.add(scale.has(pc) ? "chord-tone" : "altered-tone");
         }
@@ -453,7 +462,8 @@
             rootMidi,
             midiNotes: secondaryQuality === "sevenths"
               ? dominantSeventhMidiNotesFromRoot(rootMidi)
-              : triadMidiNotesFromRoot(rootMidi, "Major")
+              : triadMidiNotesFromRoot(rootMidi, "Major"),
+            replacedPitchClasses: replacedScalePitchClasses(notes)
           };
           renderPalette();
           renderSecondaryPalette();
@@ -508,7 +518,7 @@
             midiNotes: chord.seventh
               ? dominantSeventhMidiNotesFromRoot(rootMidi)
               : triadMidiNotesFromRoot(rootMidi, "Major"),
-            replacedPitchClass: pitchClass(selectedKey.notes[4])
+            replacedPitchClasses: [pitchClass(selectedKey.notes[4])]
           };
           renderPalette();
           renderMinorDominantPalette();
