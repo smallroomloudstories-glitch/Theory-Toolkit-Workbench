@@ -24,6 +24,7 @@ const NOTE_TO_PITCH_CLASS = {
 let audioContext;
 let masterCompressor;
 let activeVoices = [];
+const keyboardVoices = new Map();
 
 const midiToFrequency = midi => 440 * (2 ** ((midi - 69) / 12));
 
@@ -97,6 +98,53 @@ function createVoice(context, destination, midi, startTime, level = 1) {
   return { gain, oscillators };
 }
 
+function createKeyboardVoice(context, destination, midi, startTime) {
+  const gain = context.createGain();
+  const filter = context.createBiquadFilter();
+  const frequency = midiToFrequency(midi);
+
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(2200, startTime);
+  filter.Q.setValueAtTime(0.5, startTime);
+
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.14, startTime + 0.028);
+  gain.gain.exponentialRampToValueAtTime(0.07, startTime + 0.42);
+  gain.connect(filter);
+  filter.connect(destination);
+
+  const components = [
+    { type: "triangle", ratio: 1, level: 1 },
+    { type: "sine", ratio: 2, level: 0.13 }
+  ];
+  const oscillators = components.map(component => {
+    const oscillator = context.createOscillator();
+    const componentGain = context.createGain();
+    oscillator.type = component.type;
+    oscillator.frequency.setValueAtTime(frequency * component.ratio, startTime);
+    componentGain.gain.setValueAtTime(component.level, startTime);
+    oscillator.connect(componentGain);
+    componentGain.connect(gain);
+    oscillator.start(startTime);
+    return oscillator;
+  });
+
+  return { gain, oscillators };
+}
+
+function fadeAndStopVoice(context, voice, releaseTime = 0.08) {
+  const now = context.currentTime;
+  if (typeof voice.gain.gain.cancelAndHoldAtTime === "function") {
+    voice.gain.gain.cancelAndHoldAtTime(now);
+  } else {
+    const currentLevel = Math.max(voice.gain.gain.value, 0.0001);
+    voice.gain.gain.cancelScheduledValues(now);
+    voice.gain.gain.setValueAtTime(currentLevel, now);
+  }
+  voice.gain.gain.exponentialRampToValueAtTime(0.0001, now + releaseTime);
+  voice.oscillators.forEach(oscillator => oscillator.stop(now + releaseTime + 0.02));
+}
+
 export function triadMidiNotes(rootName, quality) {
   const pitchClass = NOTE_TO_PITCH_CLASS[rootName];
   if (pitchClass === undefined) throw new Error(`Unknown note name: ${rootName}`);
@@ -159,4 +207,21 @@ export async function playDominantSeventh(rootMidi) {
 
 export async function playRoot(rootMidi) {
   await playMidiNotes([rootMidi]);
+}
+
+export async function startKeyboardNote(noteId, midi) {
+  const context = getAudioContext();
+  if (context.state === "suspended") await context.resume();
+  if (keyboardVoices.has(noteId)) return;
+
+  const voice = createKeyboardVoice(context, masterCompressor, midi, context.currentTime + 0.005);
+  keyboardVoices.set(noteId, voice);
+}
+
+export function stopKeyboardNote(noteId) {
+  if (!audioContext) return;
+  const voice = keyboardVoices.get(noteId);
+  if (!voice) return;
+  fadeAndStopVoice(audioContext, voice);
+  keyboardVoices.delete(noteId);
 }

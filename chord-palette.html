@@ -54,6 +54,35 @@
     .now-playing h2 { margin: 0 0 .25rem; font-size: 1rem; }
     .now-playing p { margin: 0; }
     .now-playing strong { font-size: 1.15rem; }
+    .keyboard-section { margin-top: 1rem; padding: .75rem .8rem .9rem; border: 1px solid #999; background: #fafafa; }
+    .keyboard-heading { margin: 0; font-size: 1.2rem; }
+    .keyboard-intro { margin: .25rem 0 .6rem; color: #444; }
+    .keyboard-scroll { overflow-x: auto; padding: .15rem 0 .55rem; }
+    .keyboard { position: relative; width: 1012px; height: 184px; border: 2px solid #333; background: #222; touch-action: none; user-select: none; }
+    .piano-key { position: absolute; top: 0; margin: 0; padding: 0; border-radius: 0 0 .18rem .18rem; cursor: pointer; }
+    .piano-key.white { z-index: 1; width: 46px; height: 180px; border: 1px solid #444; background: #fff; color: #222; }
+    .piano-key.black { z-index: 2; width: 28px; height: 110px; border: 1px solid #111; background: #222; color: #fff; }
+    .piano-key.scale-note.white { background: #dcecff; }
+    .piano-key.scale-note.black { background: #416b98; }
+    .piano-key.tonic-note.white { background: #bfe8c2; }
+    .piano-key.tonic-note.black { background: #2f7436; }
+    .piano-key.chord-tone.white { background: #ffe2a8; }
+    .piano-key.chord-tone.black { background: #a96800; }
+    .piano-key.chord-root.white { background: #ffd45e; box-shadow: inset 0 0 0 4px #775700; }
+    .piano-key.chord-root.black { background: #d39700; box-shadow: inset 0 0 0 3px #fff0a8; }
+    .piano-key.altered-tone.white { background: #ffaaa3; box-shadow: inset 0 0 0 4px #9b211a; }
+    .piano-key.altered-tone.black { background: #b8322a; box-shadow: inset 0 0 0 3px #ffd2ce; }
+    .piano-key.pressed { filter: brightness(.75); transform: translateY(2px); }
+    .key-label { position: absolute; right: 0; bottom: .25rem; left: 0; font-size: .68rem; font-weight: bold; text-align: center; pointer-events: none; }
+    .piano-key.black .key-label { bottom: .2rem; font-size: .62rem; }
+    .keyboard-legend { display: flex; flex-wrap: wrap; gap: .4rem .85rem; margin-top: .35rem; font-size: .85rem; }
+    .legend-item { display: inline-flex; align-items: center; gap: .3rem; }
+    .legend-swatch { width: 1rem; height: 1rem; border: 1px solid #555; }
+    .legend-tonic { background: #bfe8c2; }
+    .legend-scale { background: #dcecff; }
+    .legend-root { background: #ffd45e; }
+    .legend-chord { background: #ffe2a8; }
+    .legend-altered { background: #ffaaa3; }
     .purpose-note { max-width: 900px; margin-top: 1rem; padding: .65rem .8rem; border-left: 4px solid var(--accent); background: #f7f7f7; }
   </style>
 </head>
@@ -61,8 +90,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 6</p>
-  <p class="checkpoint-note">Hear the same diatonic materials from their major or relative-minor perspective, then freely audition the chords in either tonal center.</p>
+  <p class="build-mark">Chord Palette Test Build 7</p>
+  <p class="checkpoint-note">Hear the same diatonic materials from their major or relative-minor perspective, then see and play those relationships on an interactive three-octave keyboard.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -109,6 +138,21 @@
       <p id="now-playing">Choose a chord to hear it.</p>
     </section>
 
+    <section class="keyboard-section" aria-labelledby="keyboard-heading">
+      <h2 class="keyboard-heading" id="keyboard-heading">Interactive Keyboard — C3 through C6</h2>
+      <p class="keyboard-intro">Press any key to sound it. Palette selections remain visible while you experiment, and altered chord tones are marked outside the current scale.</p>
+      <div class="keyboard-scroll">
+        <div class="keyboard" id="keyboard" role="group" aria-label="Playable piano keyboard from C3 through C6"></div>
+      </div>
+      <div class="keyboard-legend" aria-label="Keyboard color legend">
+        <span class="legend-item"><span class="legend-swatch legend-tonic"></span>Tonic</span>
+        <span class="legend-item"><span class="legend-swatch legend-scale"></span>Scale note</span>
+        <span class="legend-item"><span class="legend-swatch legend-root"></span>Selected chord root</span>
+        <span class="legend-item"><span class="legend-swatch legend-chord"></span>Selected chord tone</span>
+        <span class="legend-item"><span class="legend-swatch legend-altered"></span>Altered / outside scale</span>
+      </div>
+    </section>
+
     <aside class="purpose-note" role="note">
       <strong>This is a sandbox, not an exercise.</strong> There is no correct order and nothing to complete. Click chords until you hear something useful.
     </aside>
@@ -116,7 +160,16 @@
 
   <script type="module">
     import { MAJOR_KEYS, DIATONIC_CHORDS } from "./src/data/key-explorer-data.js?v=20260831-1";
-    import { ascendingMidiNote, playDominantSeventh, playRoot, playTriad } from "./src/audio/chord-audio.js?v=20260831-5";
+    import {
+      ascendingMidiNote,
+      dominantSeventhMidiNotesFromRoot,
+      playDominantSeventh,
+      playRoot,
+      playTriad,
+      startKeyboardNote,
+      stopKeyboardNote,
+      triadMidiNotesFromRoot
+    } from "./src/audio/chord-audio.js?v=20260901-7";
 
     const keySelect = document.querySelector("#key-select");
     const paletteHeading = document.querySelector("#palette-heading");
@@ -126,12 +179,14 @@
     const secondarySection = document.querySelector("#secondary-section");
     const secondaryPalette = document.querySelector("#secondary-palette");
     const nowPlaying = document.querySelector("#now-playing");
+    const keyboard = document.querySelector("#keyboard");
 
     let selectedKey = MAJOR_KEYS[0];
     let playingDegree = null;
     let soundMode = "chords";
     let perspective = "major";
     let secondaryQuality = "triads";
+    let selectedHarmony = null;
 
     const SECONDARY_DOMINANTS = [
       { function: "V/ii", rootDegree: 5, targetDegree: 1, targetNumeral: "ii" },
@@ -143,6 +198,9 @@
 
     const MINOR_SOURCE_DEGREES = [5, 6, 0, 1, 2, 3, 4];
     const MINOR_NUMERALS = ["i", "ii°", "III", "iv", "v", "VI", "VII"];
+    const BLACK_PITCH_CLASSES = new Set([1, 3, 6, 8, 10]);
+    const SHARP_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const FLAT_NAMES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
     const chordName = chord => `${selectedKey.notes[chord.triadDegrees[0]]}${chord.suffix}`;
     const chordNotes = chord => chord.triadDegrees.map(index => selectedKey.notes[index]);
@@ -150,6 +208,83 @@
     const contextLabel = () => perspective === "major"
       ? `${selectedKey.label} major`
       : `${selectedKey.notes[5]} natural minor`;
+    const pitchClass = note => ascendingMidiNote(selectedKey.notes[0], note) % 12;
+    const scalePitchClasses = () => new Set(selectedKey.notes.map(pitchClass));
+
+    function displayNoteName(midi) {
+      const pc = midi % 12;
+      const scaleName = selectedKey.notes.find(note => pitchClass(note) === pc);
+      if (scaleName) return scaleName;
+      const preferFlats = selectedKey.notes.some(note => note.includes("b"));
+      return (preferFlats ? FLAT_NAMES : SHARP_NAMES)[pc];
+    }
+
+    function renderKeyboard() {
+      keyboard.innerHTML = "";
+      const scale = scalePitchClasses();
+      const tonicPc = pitchClass(perspectiveTonic());
+      const harmonyPcs = new Set(selectedHarmony?.midiNotes.map(note => note % 12) ?? []);
+      const harmonyRootPc = selectedHarmony?.rootMidi % 12;
+      let whiteIndex = 0;
+
+      for (let midi = 48; midi <= 84; midi += 1) {
+        const pc = midi % 12;
+        const isBlack = BLACK_PITCH_CLASSES.has(pc);
+        const key = document.createElement("button");
+        key.type = "button";
+        key.className = `piano-key ${isBlack ? "black" : "white"}`;
+        key.style.left = isBlack
+          ? `${whiteIndex * 46 - 14}px`
+          : `${whiteIndex * 46}px`;
+        if (!isBlack) whiteIndex += 1;
+
+        if (scale.has(pc)) key.classList.add("scale-note");
+        if (pc === tonicPc) key.classList.add("tonic-note");
+        if (harmonyPcs.has(pc)) {
+          key.classList.add(scale.has(pc) ? "chord-tone" : "altered-tone");
+        }
+        if (selectedHarmony && pc === harmonyRootPc) key.classList.add("chord-root");
+
+        const noteName = displayNoteName(midi);
+        const octave = Math.floor(midi / 12) - 1;
+        key.setAttribute("aria-label", `Play ${noteName}${octave}`);
+        key.innerHTML = `<span class="key-label">${noteName}${octave}</span>`;
+
+        const release = event => {
+          const noteId = `keyboard-${event.pointerId}-${midi}`;
+          stopKeyboardNote(noteId);
+          key.classList.remove("pressed");
+        };
+        key.addEventListener("pointerdown", event => {
+          if (event.button !== 0 && event.pointerType === "mouse") return;
+          event.preventDefault();
+          key.setPointerCapture(event.pointerId);
+          key.classList.add("pressed");
+          startKeyboardNote(`keyboard-${event.pointerId}-${midi}`, midi);
+        });
+        key.addEventListener("pointerup", release);
+        key.addEventListener("pointercancel", release);
+        key.addEventListener("lostpointercapture", release);
+        key.addEventListener("keydown", event => {
+          if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
+            event.preventDefault();
+            key.classList.add("pressed");
+            startKeyboardNote(`keyboard-key-${midi}`, midi);
+          }
+        });
+        key.addEventListener("keyup", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            stopKeyboardNote(`keyboard-key-${midi}`);
+            key.classList.remove("pressed");
+          }
+        });
+        key.addEventListener("blur", () => {
+          stopKeyboardNote(`keyboard-key-${midi}`);
+          key.classList.remove("pressed");
+        });
+        keyboard.appendChild(key);
+      }
+    }
 
     function paletteChords() {
       if (perspective === "relative-minor") {
@@ -200,7 +335,12 @@
         `;
         const playChord = async () => {
           playingDegree = chord.paletteId;
+          selectedHarmony = {
+            rootMidi,
+            midiNotes: triadMidiNotesFromRoot(rootMidi, chord.quality)
+          };
           renderPalette();
+          renderKeyboard();
           if (soundMode === "roots") {
             nowPlaying.innerHTML = chord.octaveTonic
               ? `<strong>${notes[0]}</strong> — upper tonic of ${contextLabel()}`
@@ -245,8 +385,15 @@
         `;
         const playChord = async () => {
           playingDegree = paletteId;
+          selectedHarmony = {
+            rootMidi,
+            midiNotes: secondaryQuality === "sevenths"
+              ? dominantSeventhMidiNotesFromRoot(rootMidi)
+              : triadMidiNotesFromRoot(rootMidi, "Major")
+          };
           renderPalette();
           renderSecondaryPalette();
+          renderKeyboard();
           if (soundMode === "roots") {
             nowPlaying.innerHTML = `<strong>${rootName}</strong> — root of ${chordName}, ${chord.function}, pointing toward ${targetName}`;
             await playRoot(rootMidi);
@@ -279,15 +426,18 @@
     keySelect.addEventListener("change", () => {
       selectedKey = MAJOR_KEYS.find(key => key.id === keySelect.value);
       playingDegree = null;
+      selectedHarmony = null;
       nowPlaying.textContent = `Choose a chord in ${contextLabel()} to hear it.`;
       renderPalette();
       renderSecondaryPalette();
+      renderKeyboard();
     });
 
     document.querySelectorAll('input[name="perspective"]').forEach(input => {
       input.addEventListener("change", event => {
         perspective = event.target.value;
         playingDegree = null;
+        selectedHarmony = null;
         if (perspective === "relative-minor") {
           showSecondary.checked = false;
           secondarySection.hidden = true;
@@ -299,6 +449,7 @@
         }
         renderPalette();
         renderSecondaryPalette();
+        renderKeyboard();
       });
     });
 
@@ -306,38 +457,45 @@
       input.addEventListener("change", event => {
         soundMode = event.target.value;
         playingDegree = null;
+        selectedHarmony = null;
         nowPlaying.textContent = soundMode === "roots"
           ? "Choose a chord button to hear its root."
           : "Choose a chord to hear it.";
         renderPalette();
         renderSecondaryPalette();
+        renderKeyboard();
       });
     });
 
     showSecondary.addEventListener("change", () => {
       secondarySection.hidden = !showSecondary.checked;
       playingDegree = null;
+      selectedHarmony = null;
       nowPlaying.textContent = showSecondary.checked
         ? "Choose a diatonic chord or secondary dominant to hear it."
         : "Choose a chord to hear it.";
       renderPalette();
       renderSecondaryPalette();
+      renderKeyboard();
     });
 
     document.querySelectorAll('input[name="secondary-quality"]').forEach(input => {
       input.addEventListener("change", event => {
         secondaryQuality = event.target.value;
         playingDegree = null;
+        selectedHarmony = null;
         nowPlaying.textContent = secondaryQuality === "sevenths"
           ? "Secondary dominants will play as dominant seventh chords."
           : "Secondary dominants will play as major triads.";
         renderPalette();
         renderSecondaryPalette();
+        renderKeyboard();
       });
     });
 
     renderPalette();
     renderSecondaryPalette();
+    renderKeyboard();
   </script>
 </body>
 </html>
