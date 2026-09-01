@@ -73,6 +73,8 @@
     .piano-key.chord-root.black { background: #ffd45e; color: #222; box-shadow: inset 0 0 0 3px #775700; }
     .piano-key.altered-tone.white { background: #ffaaa3; box-shadow: inset 0 0 0 4px #9b211a; }
     .piano-key.altered-tone.black { background: #ffaaa3; color: #222; box-shadow: inset 0 0 0 3px #9b211a; }
+    .piano-key.replaced-tone.white,
+    .piano-key.replaced-tone.black { background: repeating-linear-gradient(135deg, #f2f2f2 0 6px, #999 6px 10px); color: #222; box-shadow: inset 0 0 0 3px #666; }
     .piano-key.pressed { filter: brightness(.75); transform: translateY(2px); }
     .key-label { position: absolute; right: 0; bottom: .25rem; left: 0; font-size: .68rem; font-weight: bold; text-align: center; pointer-events: none; }
     .piano-key.black .key-label { bottom: .2rem; font-size: .62rem; }
@@ -83,6 +85,7 @@
     .legend-root { background: #ffd45e; }
     .legend-chord { background: #ffe2a8; }
     .legend-altered { background: #ffaaa3; }
+    .legend-replaced { background: repeating-linear-gradient(135deg, #f2f2f2 0 5px, #999 5px 8px); }
     .purpose-note { max-width: 900px; margin-top: 1rem; padding: .65rem .8rem; border-left: 4px solid var(--accent); background: #f7f7f7; }
   </style>
 </head>
@@ -90,8 +93,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 11</p>
-  <p class="checkpoint-note">Highlighted black and white keys now use the same semantic colors, so each musical role has one visual meaning across the keyboard.</p>
+  <p class="build-mark">Chord Palette Test Build 12</p>
+  <p class="checkpoint-note">Minor-key dominant alterations now show the raised leading tone in red and hatch the natural scale tone it replaces.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -160,6 +163,7 @@
         <span class="legend-item"><span class="legend-swatch legend-root"></span>Selected chord root</span>
         <span class="legend-item"><span class="legend-swatch legend-chord"></span>Selected chord tone</span>
         <span class="legend-item"><span class="legend-swatch legend-altered"></span>Altered / outside scale</span>
+        <span class="legend-item" id="replaced-legend" hidden><span class="legend-swatch legend-replaced"></span>Replaced scale tone</span>
       </div>
     </section>
 
@@ -194,6 +198,7 @@
     const minorDominantPalette = document.querySelector("#minor-dominant-palette");
     const nowPlaying = document.querySelector("#now-playing");
     const keyboard = document.querySelector("#keyboard");
+    const replacedLegend = document.querySelector("#replaced-legend");
 
     let selectedKey = MAJOR_KEYS[0];
     let playingDegree = null;
@@ -273,6 +278,8 @@
       const scale = scalePitchClasses();
       const harmonyPcs = new Set(selectedHarmony?.midiNotes.map(note => note % 12) ?? []);
       const harmonyRootPc = selectedHarmony?.rootMidi % 12;
+      const replacedPitchClass = selectedHarmony?.replacedPitchClass;
+      replacedLegend.hidden = replacedPitchClass === undefined;
       let whiteIndex = 0;
 
       for (let midi = 48; midi <= 84; midi += 1) {
@@ -286,7 +293,8 @@
           : `${whiteIndex * 46}px`;
         if (!isBlack) whiteIndex += 1;
 
-        if (scale.has(pc)) key.classList.add("scale-note");
+        if (scale.has(pc) && pc !== replacedPitchClass) key.classList.add("scale-note");
+        if (pc === replacedPitchClass) key.classList.add("replaced-tone");
         if (harmonyPcs.has(pc)) {
           key.classList.add(scale.has(pc) ? "chord-tone" : "altered-tone");
         }
@@ -499,7 +507,8 @@
             rootMidi,
             midiNotes: chord.seventh
               ? dominantSeventhMidiNotesFromRoot(rootMidi)
-              : triadMidiNotesFromRoot(rootMidi, "Major")
+              : triadMidiNotesFromRoot(rootMidi, "Major"),
+            replacedPitchClass: pitchClass(selectedKey.notes[4])
           };
           renderPalette();
           renderMinorDominantPalette();
