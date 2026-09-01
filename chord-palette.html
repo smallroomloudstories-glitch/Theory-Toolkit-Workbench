@@ -47,6 +47,7 @@
     .secondary-heading { margin: 0; font-size: 1.2rem; }
     .secondary-intro { margin: .25rem 0 .65rem; color: #4f430d; }
     .secondary-palette { display: grid; grid-template-columns: repeat(5, minmax(135px, 1fr)); min-width: 675px; gap: .45rem; }
+    .minor-dominant-palette { display: grid; grid-template-columns: repeat(2, minmax(150px, 220px)); gap: .45rem; }
     .secondary-button { border-color: #9a7a16; background: #fffef8; }
     .secondary-button:hover { border-color: #5f4900; background: #fff8d6; }
     .secondary-button.playing { border-color: #5f4900; background: #fff3a6; }
@@ -90,8 +91,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 7</p>
-  <p class="checkpoint-note">Hear the same diatonic materials from their major or relative-minor perspective, then see and play those relationships on an interactive three-octave keyboard.</p>
+  <p class="build-mark">Chord Palette Test Build 8</p>
+  <p class="checkpoint-note">Compare natural-minor harmony with its altered primary dominant, then see the raised leading tone appear on the interactive keyboard.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -109,6 +110,7 @@
       <label><input type="radio" name="sound" value="chords" checked> Chords</label>
     </fieldset>
     <label class="secondary-control" id="secondary-control"><input type="checkbox" id="show-secondary"> Show secondary dominants</label>
+    <label class="secondary-control" id="minor-dominant-control" hidden><input type="checkbox" id="show-minor-dominant"> Show minor-key dominant alterations</label>
     <span>Use the buttons in any order. Changing key does not play a chord.</span>
   </section>
 
@@ -130,6 +132,16 @@
       <p class="secondary-intro">Each chord temporarily acts as V of the diatonic chord shown beneath it.</p>
       <div class="palette-scroll">
         <div class="secondary-palette" id="secondary-palette"></div>
+      </div>
+    </section>
+
+    <section class="secondary-section" id="minor-dominant-section" hidden aria-labelledby="minor-dominant-heading">
+      <div class="secondary-header">
+        <h2 class="secondary-heading" id="minor-dominant-heading">Minor-Key Dominant Alterations</h2>
+      </div>
+      <p class="secondary-intro">Raise scale degree 7 to turn the diatonic minor v into V or V7, creating a leading tone and a stronger pull toward i.</p>
+      <div class="palette-scroll">
+        <div class="minor-dominant-palette" id="minor-dominant-palette"></div>
       </div>
     </section>
 
@@ -178,6 +190,10 @@
     const showSecondary = document.querySelector("#show-secondary");
     const secondarySection = document.querySelector("#secondary-section");
     const secondaryPalette = document.querySelector("#secondary-palette");
+    const minorDominantControl = document.querySelector("#minor-dominant-control");
+    const showMinorDominant = document.querySelector("#show-minor-dominant");
+    const minorDominantSection = document.querySelector("#minor-dominant-section");
+    const minorDominantPalette = document.querySelector("#minor-dominant-palette");
     const nowPlaying = document.querySelector("#now-playing");
     const keyboard = document.querySelector("#keyboard");
 
@@ -416,6 +432,59 @@
       });
     }
 
+    function renderMinorDominantPalette() {
+      minorDominantPalette.innerHTML = "";
+      const rootName = selectedKey.notes[2];
+      const tonicName = selectedKey.notes[5];
+      const rootMidi = ascendingMidiNote(tonicName, rootName);
+      const alterations = [
+        { paletteId: "minor-primary-V", numeral: "V", chordName: rootName, seventh: false },
+        { paletteId: "minor-primary-V7", numeral: "V7", chordName: `${rootName}7`, seventh: true }
+      ];
+
+      alterations.forEach(chord => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `chord-button secondary-button${playingDegree === chord.paletteId ? " playing" : ""}`;
+        button.setAttribute("aria-label", `Play ${chord.chordName}, the altered ${chord.numeral} chord, pointing toward ${tonicName} minor`);
+        button.innerHTML = `
+          <span class="degree">${chord.numeral}</span>
+          <span class="chord-name">${chord.chordName}</span>
+          <span class="quality">Primary dominant → ${tonicName}m (i)</span>
+        `;
+        const playChord = async () => {
+          playingDegree = chord.paletteId;
+          selectedHarmony = {
+            rootMidi,
+            midiNotes: chord.seventh
+              ? dominantSeventhMidiNotesFromRoot(rootMidi)
+              : triadMidiNotesFromRoot(rootMidi, "Major")
+          };
+          renderPalette();
+          renderMinorDominantPalette();
+          renderKeyboard();
+          if (soundMode === "roots") {
+            nowPlaying.innerHTML = `<strong>${rootName}</strong> — root of ${chord.chordName}, the altered ${chord.numeral} pointing toward ${tonicName}m`;
+            await playRoot(rootMidi);
+          } else if (chord.seventh) {
+            nowPlaying.innerHTML = `<strong>${chord.chordName}</strong> — primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone`;
+            await playDominantSeventh(rootMidi);
+          } else {
+            nowPlaying.innerHTML = `<strong>${chord.chordName}</strong> — primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone`;
+            await playTriad(rootName, "Major", rootMidi);
+          }
+        };
+        button.addEventListener("pointerdown", playChord);
+        button.addEventListener("keydown", event => {
+          if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
+            event.preventDefault();
+            playChord();
+          }
+        });
+        minorDominantPalette.appendChild(button);
+      });
+    }
+
     MAJOR_KEYS.forEach(key => {
       const option = document.createElement("option");
       option.value = key.id;
@@ -430,6 +499,7 @@
       nowPlaying.textContent = `Choose a chord in ${contextLabel()} to hear it.`;
       renderPalette();
       renderSecondaryPalette();
+      renderMinorDominantPalette();
       renderKeyboard();
     });
 
@@ -442,13 +512,18 @@
           showSecondary.checked = false;
           secondarySection.hidden = true;
           secondaryControl.hidden = true;
+          minorDominantControl.hidden = false;
           nowPlaying.textContent = `Choose a chord in ${selectedKey.notes[5]} natural minor to hear it.`;
         } else {
           secondaryControl.hidden = false;
+          showMinorDominant.checked = false;
+          minorDominantSection.hidden = true;
+          minorDominantControl.hidden = true;
           nowPlaying.textContent = `Choose a chord in ${selectedKey.label} major to hear it.`;
         }
         renderPalette();
         renderSecondaryPalette();
+        renderMinorDominantPalette();
         renderKeyboard();
       });
     });
@@ -463,6 +538,7 @@
           : "Choose a chord to hear it.";
         renderPalette();
         renderSecondaryPalette();
+        renderMinorDominantPalette();
         renderKeyboard();
       });
     });
@@ -476,6 +552,19 @@
         : "Choose a chord to hear it.";
       renderPalette();
       renderSecondaryPalette();
+      renderMinorDominantPalette();
+      renderKeyboard();
+    });
+
+    showMinorDominant.addEventListener("change", () => {
+      minorDominantSection.hidden = !showMinorDominant.checked;
+      playingDegree = null;
+      selectedHarmony = null;
+      nowPlaying.textContent = showMinorDominant.checked
+        ? "Compare the diatonic minor v with the altered V or V7."
+        : `Choose a chord in ${contextLabel()} to hear it.`;
+      renderPalette();
+      renderMinorDominantPalette();
       renderKeyboard();
     });
 
@@ -489,12 +578,14 @@
           : "Secondary dominants will play as major triads.";
         renderPalette();
         renderSecondaryPalette();
+        renderMinorDominantPalette();
         renderKeyboard();
       });
     });
 
     renderPalette();
     renderSecondaryPalette();
+    renderMinorDominantPalette();
     renderKeyboard();
   </script>
 </body>
