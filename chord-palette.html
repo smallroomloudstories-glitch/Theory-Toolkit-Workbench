@@ -55,6 +55,8 @@
     .now-playing h2 { margin: 0 0 .25rem; font-size: 1rem; }
     .now-playing p { margin: 0; }
     .now-playing strong { font-size: 1.15rem; }
+    .last-played-notes { display: block; margin-top: .12rem; font-weight: bold; }
+    .last-played-dialogue { display: block; margin-top: .2rem; }
     .keyboard-section { margin-top: 1rem; padding: .75rem .8rem .9rem; border: 1px solid #999; background: #fafafa; }
     .keyboard-heading { margin: 0; font-size: 1.2rem; }
     .keyboard-intro { margin: .25rem 0 .6rem; color: #444; }
@@ -91,8 +93,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 8</p>
-  <p class="checkpoint-note">Compare natural-minor harmony with its altered primary dominant, then see the raised leading tone appear on the interactive keyboard.</p>
+  <p class="build-mark">Chord Palette Test Build 9</p>
+  <p class="checkpoint-note">Every Palette chord now reports its complete, correctly spelled chord tones before explaining its function or alteration.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -217,6 +219,8 @@
     const BLACK_PITCH_CLASSES = new Set([1, 3, 6, 8, 10]);
     const SHARP_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const FLAT_NAMES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+    const NOTE_LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
+    const NATURAL_PITCH_CLASSES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
     const chordName = chord => `${selectedKey.notes[chord.triadDegrees[0]]}${chord.suffix}`;
     const chordNotes = chord => chord.triadDegrees.map(index => selectedKey.notes[index]);
@@ -226,6 +230,39 @@
       : `${selectedKey.notes[5]} natural minor`;
     const pitchClass = note => ascendingMidiNote(selectedKey.notes[0], note) % 12;
     const scalePitchClasses = () => new Set(selectedKey.notes.map(pitchClass));
+
+    function spellNoteAtInterval(rootName, semitones, letterSteps) {
+      const rootLetterIndex = NOTE_LETTERS.indexOf(rootName[0]);
+      const targetLetter = NOTE_LETTERS[(rootLetterIndex + letterSteps) % NOTE_LETTERS.length];
+      const targetPitchClass = (pitchClass(rootName) + semitones) % 12;
+      let alteration = (targetPitchClass - NATURAL_PITCH_CLASSES[targetLetter] + 12) % 12;
+      if (alteration > 6) alteration -= 12;
+      const accidental = alteration === 2
+        ? "##"
+        : alteration === 1
+          ? "#"
+          : alteration === -1
+            ? "b"
+            : alteration === -2
+              ? "bb"
+              : "";
+      return `${targetLetter}${accidental}`;
+    }
+
+    function spellChordNotes(rootName, quality) {
+      const intervals = quality === "dominant7"
+        ? [[0, 0], [4, 2], [7, 4], [10, 6]]
+        : [[0, 0], [4, 2], [7, 4]];
+      return intervals.map(([semitones, letterSteps]) => spellNoteAtInterval(rootName, semitones, letterSteps));
+    }
+
+    function showLastPlayed(name, notes, dialogue) {
+      nowPlaying.innerHTML = `
+        <strong>${name}</strong>
+        <span class="last-played-notes">Notes: ${notes.join(" · ")}</span>
+        <span class="last-played-dialogue">${dialogue}</span>
+      `;
+    }
 
     function displayNoteName(midi) {
       const pc = midi % 12;
@@ -358,14 +395,22 @@
           renderPalette();
           renderKeyboard();
           if (soundMode === "roots") {
-            nowPlaying.innerHTML = chord.octaveTonic
-              ? `<strong>${notes[0]}</strong> — upper tonic of ${contextLabel()}`
-              : `<strong>${notes[0]}</strong> — root of ${name}, the ${chord.degree} chord in ${contextLabel()}`;
+            showLastPlayed(
+              name,
+              notes,
+              chord.octaveTonic
+                ? `Root-only audition of the upper tonic in ${contextLabel()}.`
+                : `Root-only audition of ${name}, the ${chord.degree} chord in ${contextLabel()}.`
+            );
             await playRoot(rootMidi);
           } else {
-            nowPlaying.innerHTML = chord.octaveTonic
-              ? `<strong>${name}</strong> — upper tonic chord in ${contextLabel()} — ${notes.join(" · ")}`
-              : `<strong>${name}</strong> — ${chord.degree} in ${contextLabel()} — ${notes.join(" · ")}`;
+            showLastPlayed(
+              name,
+              notes,
+              chord.octaveTonic
+                ? `Upper tonic chord in ${contextLabel()}.`
+                : `${chord.degree} in ${contextLabel()}.`
+            );
             await playTriad(notes[0], chord.quality, rootMidi);
           }
         };
@@ -388,6 +433,7 @@
         const target = DIATONIC_CHORDS[chord.targetDegree];
         const targetName = `${selectedKey.notes[chord.targetDegree]}${target.suffix}`;
         const chordName = `${rootName}${secondaryQuality === "sevenths" ? "7" : ""}`;
+        const notes = spellChordNotes(rootName, secondaryQuality === "sevenths" ? "dominant7" : "major");
         const rootMidi = ascendingMidiNote(selectedKey.notes[0], rootName);
         const paletteId = `secondary-${chord.function}`;
         const button = document.createElement("button");
@@ -411,13 +457,13 @@
           renderSecondaryPalette();
           renderKeyboard();
           if (soundMode === "roots") {
-            nowPlaying.innerHTML = `<strong>${rootName}</strong> — root of ${chordName}, ${chord.function}, pointing toward ${targetName}`;
+            showLastPlayed(chordName, notes, `Root-only audition. ${chord.function}, pointing toward ${targetName}.`);
             await playRoot(rootMidi);
           } else if (secondaryQuality === "sevenths") {
-            nowPlaying.innerHTML = `<strong>${chordName}</strong> — ${chord.function}, pointing toward ${targetName}`;
+            showLastPlayed(chordName, notes, `${chord.function}, pointing toward ${targetName}.`);
             await playDominantSeventh(rootMidi);
           } else {
-            nowPlaying.innerHTML = `<strong>${chordName}</strong> — ${chord.function}, pointing toward ${targetName}`;
+            showLastPlayed(chordName, notes, `${chord.function}, pointing toward ${targetName}.`);
             await playTriad(rootName, "Major", rootMidi);
           }
         };
@@ -443,6 +489,7 @@
       ];
 
       alterations.forEach(chord => {
+        const notes = spellChordNotes(rootName, chord.seventh ? "dominant7" : "major");
         const button = document.createElement("button");
         button.type = "button";
         button.className = `chord-button secondary-button${playingDegree === chord.paletteId ? " playing" : ""}`;
@@ -464,13 +511,25 @@
           renderMinorDominantPalette();
           renderKeyboard();
           if (soundMode === "roots") {
-            nowPlaying.innerHTML = `<strong>${rootName}</strong> — root of ${chord.chordName}, the altered ${chord.numeral} pointing toward ${tonicName}m`;
+            showLastPlayed(
+              chord.chordName,
+              notes,
+              `Root-only audition of the altered ${chord.numeral}, the primary dominant pointing toward ${tonicName}m.`
+            );
             await playRoot(rootMidi);
           } else if (chord.seventh) {
-            nowPlaying.innerHTML = `<strong>${chord.chordName}</strong> — primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone`;
+            showLastPlayed(
+              chord.chordName,
+              notes,
+              `Primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone.`
+            );
             await playDominantSeventh(rootMidi);
           } else {
-            nowPlaying.innerHTML = `<strong>${chord.chordName}</strong> — primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone`;
+            showLastPlayed(
+              chord.chordName,
+              notes,
+              `Primary dominant of ${tonicName} minor; raised scale degree 7 creates the leading tone.`
+            );
             await playTriad(rootName, "Major", rootMidi);
           }
         };
