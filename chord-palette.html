@@ -67,8 +67,6 @@
     .piano-key.black { z-index: 2; width: 28px; height: 110px; border: 1px solid #111; background: #222; color: #fff; }
     .piano-key.scale-note.white { background: #dcecff; }
     .piano-key.scale-note.black { background: #416b98; }
-    .piano-key.tonic-note.white { background: #bfe8c2; }
-    .piano-key.tonic-note.black { background: #2f7436; }
     .piano-key.chord-tone.white { background: #ffe2a8; }
     .piano-key.chord-tone.black { background: #a96800; }
     .piano-key.chord-root.white { background: #ffd45e; box-shadow: inset 0 0 0 4px #775700; }
@@ -81,7 +79,6 @@
     .keyboard-legend { display: flex; flex-wrap: wrap; gap: .4rem .85rem; margin-top: .35rem; font-size: .85rem; }
     .legend-item { display: inline-flex; align-items: center; gap: .3rem; }
     .legend-swatch { width: 1rem; height: 1rem; border: 1px solid #555; }
-    .legend-tonic { background: #bfe8c2; }
     .legend-scale { background: #dcecff; }
     .legend-root { background: #ffd45e; }
     .legend-chord { background: #ffe2a8; }
@@ -93,8 +90,8 @@
   <p><a href="index.html">← Workbench Home</a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
-  <p class="build-mark">Chord Palette Test Build 9</p>
-  <p class="checkpoint-note">Every Palette chord now reports its complete, correctly spelled chord tones before explaining its function or alteration.</p>
+  <p class="build-mark">Chord Palette Test Build 10</p>
+  <p class="checkpoint-note">The keyboard now reserves color for the current scale and selected harmony; the persistent tonic color has been removed to reduce visual competition.</p>
 
   <section class="controls" aria-labelledby="controls-heading">
     <div>
@@ -159,7 +156,6 @@
         <div class="keyboard" id="keyboard" role="group" aria-label="Playable piano keyboard from C3 through C6"></div>
       </div>
       <div class="keyboard-legend" aria-label="Keyboard color legend">
-        <span class="legend-item"><span class="legend-swatch legend-tonic"></span>Tonic</span>
         <span class="legend-item"><span class="legend-swatch legend-scale"></span>Scale note</span>
         <span class="legend-item"><span class="legend-swatch legend-root"></span>Selected chord root</span>
         <span class="legend-item"><span class="legend-swatch legend-chord"></span>Selected chord tone</span>
@@ -275,7 +271,6 @@
     function renderKeyboard() {
       keyboard.innerHTML = "";
       const scale = scalePitchClasses();
-      const tonicPc = pitchClass(perspectiveTonic());
       const harmonyPcs = new Set(selectedHarmony?.midiNotes.map(note => note % 12) ?? []);
       const harmonyRootPc = selectedHarmony?.rootMidi % 12;
       let whiteIndex = 0;
@@ -292,7 +287,6 @@
         if (!isBlack) whiteIndex += 1;
 
         if (scale.has(pc)) key.classList.add("scale-note");
-        if (pc === tonicPc) key.classList.add("tonic-note");
         if (harmonyPcs.has(pc)) {
           key.classList.add(scale.has(pc) ? "chord-tone" : "altered-tone");
         }
