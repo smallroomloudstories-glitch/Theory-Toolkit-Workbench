@@ -509,3 +509,44 @@ No DNS or production-domain change was made during this session. Prepare the roo
 - Progression Explorer no longer requires song examples before its first Live Test. Real instructor feedback on the progression choices, explanations, terminology, and detail panel is more valuable before that larger research effort. Song examples remain a planned later build.
 - Promotion must adapt both pages to the Live Test shell, navigation, build labels, and feedback system rather than copying Workbench pages blindly.
 - Verify the landing-page entries, all new assets and imports, instrument switching, four- and six-string behavior, Progression Explorer interactions, and end-to-end feedback in the actual Live Test environment before declaring promotion complete.
+
+## Session close — 2026-09-01: Chord Palette and playable keyboard
+
+### Chord Palette purpose and accepted behavior
+
+- Chord Palette is a musical sandbox rather than a structured exercise. The user chooses a key and freely auditions harmonies without hearing unwanted intermediate chords.
+- Major and Relative Minor perspectives share one selected major-key family. Each palette includes the seven diatonic chords plus the tonic repeated one octave higher so the roots can be heard as a complete ascending scale.
+- The Roots/Chords control lets the same palette audition either the ascending chord roots or complete harmonies. Chord voicing emphasizes the root while keeping the third and fifth quieter so the scale motion remains audible.
+- Major view may expose secondary dominants as major triads or dominant sevenths. Relative Minor view may expose V and V7 beside the diatonic minor v, demonstrating the raised leading tone and the move from natural minor toward harmonic minor.
+- Chords play on pointer press rather than release. Audio is synthesized locally in the browser rather than loaded from MIDI or prerecorded samples.
+- The interactive keyboard spans C3 through C6 and remains freely playable independently of the chord buttons. It is already useful for showing scale membership, chord construction, alterations, and the relative view of modes.
+
+### Keyboard visual grammar
+
+- Persistent tonic coloring was removed. Identifying the key center in green competed with the currently selected harmony and did not add enough instructional value.
+- Highlighted black and white keys use the same semantic colors. The shape still identifies a physical black key, but color meaning no longer changes according to key color.
+- Current meanings are:
+  - Blue: note in the selected major or natural-minor scale.
+  - Yellow: selected chord root.
+  - Tan: other selected chord tone.
+  - Red: altered chord tone outside the displayed scale.
+  - Neutral diagonal hatching: diatonic scale tone displaced by an altered chord tone.
+- Alterations are shown as substitutions rather than additions. In C minor, selecting G or G7 marks B red and hatches B-flat. Major-view secondary dominants use the same rule and support multiple simultaneous replacements.
+- The replaced-tone legend appears only while a replacement is being displayed.
+
+### Last Played presentation
+
+- Every palette chord now reports information in one consistent order: chord name, correctly spelled chord tones, then the functional explanation.
+- This applies to diatonic chords, root-only auditions, secondary-dominant triads and sevenths, and minor-key V/V7 alterations.
+- Theoretical spelling is preserved even when it requires notes such as E-sharp, B-sharp, or F-double-sharp. Do not respell these merely to avoid unfamiliar accidentals; their letter names explain chord construction and function.
+
+### Next Chord Palette session
+
+- Tighten the page layout and eliminate avoidable vertical and horizontal jumps when controls, palettes, legends, or explanations appear and disappear.
+- Reserve space according to each region's maximum intended footprint so changing perspective, exposing altered chords, or selecting harmony does not move unrelated page content.
+- Do not solve this with arbitrary oversized blank areas. Establish stable containers based on the actual maximum state and keep the compact page visually intentional.
+- Preserve the last selected chord when switching between Major and Relative Minor instead of clearing the selection and Last Played area.
+- Define persistence musically rather than by button position. Where the same named chord exists in both perspectives, keep that harmony selected and sounding contextually correct; where it does not, determine the least surprising mapped or retained state during implementation testing.
+- Preserve the keyboard's selected-harmony visualization across the perspective change so the user can directly compare how the same chord is interpreted against the relative major and natural-minor scale views.
+
+Chord Palette Build 13 is the accepted Workbench checkpoint at session close. Further work should begin from that behavior rather than revisiting the discarded tonic color or separate dark highlight colors for black keys.
