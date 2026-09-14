@@ -23,6 +23,9 @@
     * { box-sizing: border-box; }
     body { font-family: sans-serif; max-width: 1450px; margin: 1.25rem auto 2.5rem; padding: 0 1rem; line-height: 1.4; }
     h1 { margin: .35rem 0; }
+    .workbench-home { display: inline-flex; align-items: center; gap: .55rem; color: #333; font-weight: bold; text-decoration: none; }
+    .workbench-home:hover, .workbench-home:focus-visible { text-decoration: underline; }
+    .workbench-home img { display: block; width: min(15rem, 60vw); height: auto; }
     button { font: inherit; cursor: pointer; }
     button:focus-visible { outline: 3px solid #245a9a; outline-offset: 2px; }
     .workbench-mark { margin: .25rem 0; font-weight: bold; }
@@ -80,7 +83,7 @@
   </style>
 </head>
 <body>
-  <p><a href="index.html">← Workbench Home</a></p>
+  <p><a class="workbench-home" href="index.html"><img src="./assets/brand/theory-toolkit-logo-no-tagline.png" alt="Theory Toolkit"><span>Workbench Home</span></a></p>
   <h1>Key Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
   <p class="checkpoint-note">Build 2 — compact major-key harmony map with C major selected by default.</p>

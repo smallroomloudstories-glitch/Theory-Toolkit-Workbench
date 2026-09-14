@@ -19,6 +19,9 @@
     * { box-sizing: border-box; }
     body { max-width: 1200px; margin: 1.25rem auto 3rem; padding: 0 1rem; color: #222; font-family: sans-serif; line-height: 1.45; }
     h1 { margin: .35rem 0; }
+    .workbench-home { display: inline-flex; align-items: center; gap: .55rem; color: #333; font-weight: bold; text-decoration: none; }
+    .workbench-home:hover, .workbench-home:focus-visible { text-decoration: underline; }
+    .workbench-home img { display: block; width: min(15rem, 60vw); height: auto; }
     button, select { font: inherit; }
     button { cursor: pointer; }
     button:focus-visible, select:focus-visible { outline: 3px solid #245a9a; outline-offset: 2px; }
@@ -93,7 +96,7 @@
   </style>
 </head>
 <body>
-  <p><a href="index.html">← Workbench Home</a></p>
+  <p><a class="workbench-home" href="index.html"><img src="./assets/brand/theory-toolkit-logo-no-tagline.png" alt="Theory Toolkit"><span>Workbench Home</span></a></p>
   <h1>Chord Palette — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
   <p class="build-mark">Chord Palette Test Build 13</p>
