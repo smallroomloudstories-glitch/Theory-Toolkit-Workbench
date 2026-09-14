@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theory Toolkit — Workbench</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/brand/favicon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/apple-touch-icon.png">
   <style>
     :root {
       --border: #aaa;
@@ -19,9 +22,11 @@
     h1, h2, h3 { line-height: 1.2; }
     a { font-weight: bold; }
     .hero { border: 3px solid #222; padding: 1rem 1.25rem; background: #fafafa; }
-    .hero h1 { margin: 0 0 .35rem; }
+    .brand-heading { margin: 0; }
+    .brand-logo { display: block; width: min(46rem, 100%); height: auto; }
     .hero p { max-width: 850px; margin: .35rem 0; }
     .workbench-mark { font-weight: bold; }
+    .workbench-label { display: inline-block; margin-right: .35rem; padding: .08rem .4rem; background: var(--accent); color: #fff; letter-spacing: .04em; }
     .start-note { margin: 1rem 0 .8rem; padding: .7rem .85rem; border-left: 5px solid var(--accent); background: var(--accent-soft); }
     .start-note p { margin: .2rem 0; }
     .section-heading { margin: 1.25rem 0 .25rem; }
@@ -74,8 +79,8 @@
 </head>
 <body>
   <header class="hero">
-    <h1>Theory Toolkit — WORKBENCH</h1>
-    <p class="workbench-mark">Experimental development version.</p>
+    <h1 class="brand-heading"><img class="brand-logo" src="./assets/brand/theory-toolkit-logo.svg" alt="Theory Toolkit — See How Music Fits Together"></h1>
+    <p class="workbench-mark"><span class="workbench-label">WORKBENCH</span> Experimental development version.</p>
     <p>Theory Toolkit is a visual companion for music students and instructors. It is designed to make musical relationships easier to see during a lesson and easier to revisit while practicing or reviewing.</p>
   </header>
 
