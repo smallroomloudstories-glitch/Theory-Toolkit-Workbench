@@ -550,3 +550,55 @@ No DNS or production-domain change was made during this session. Prepare the roo
 - Preserve the keyboard's selected-harmony visualization across the perspective change so the user can directly compare how the same chord is interpreted against the relative major and natural-minor scale views.
 
 Chord Palette Build 13 is the accepted Workbench checkpoint at session close. Further work should begin from that behavior rather than revisiting the discarded tonic color or separate dark highlight colors for black keys.
+
+
+## Planning notes — 2026-09-24: Instructor presentation, PDF export, and collaborative expansion
+
+### September 30 Guitars 4 Vets instructor presentation
+
+- Rob is scheduled to present Theory Toolkit to other Guitars 4 Vets online instructors on September 30.
+- Keep the presentation under 10 minutes and center it on the modules that are actually live and accepted at presentation time.
+- Do not rush Chord Palette to the live site for the presentation. It may remain available as an optional Workbench preview of development in progress.
+- Presentation preparation should use a **run-of-show rather than a word-for-word script**. Script the navigation, teaching examples, and sequence of clicks; let Rob explain them naturally.
+- Rehearse the clicks and timing. Aim for a practiced runtime of roughly 8–8.5 minutes so normal conversation, jokes, or brief explanation do not force the demo over 10 minutes.
+- Present modules through concrete teaching situations rather than feature inventories: identify a student/instructor problem, manipulate the tool, and show how the visualization helps.
+- PDF export should be demonstrated as part of a teaching workflow: configure a useful view, export it, and show that the instructor can give the student the same diagram used during the lesson.
+- The presentation is also an invitation for instructor feedback: **help me see what I have not seen.** Missing features or unfamiliar teaching areas are opportunities for collaboration rather than promises that Rob already has every answer.
+
+### PDF export before the presentation
+
+- The immediate development priority is PDF export, beginning with Fretboard Explorer in the Workbench.
+- Workbench implementation and Rob's real-world testing come before any live-site promotion.
+- After the Fretboard Explorer export is accepted, adapt the accepted approach across the other appropriate live modules, test them, and only then promote the PDF feature to the live site.
+- Adding Print PDF must not change established page geography, cause controls to wrap, move visualizations, or reintroduce layout jumps.
+- On the three fretboard-based modules, the preferred starting location is directly below the fretboard in the same horizontal area as Focus, using existing horizontal room.
+- On Key Explorer and Progression Explorer, use the existing key-selection boxes/areas, which have sufficient horizontal room. Keep placement visually consistent without forcing identical page structure where the modules differ.
+- Use the PDF work as an opportunity for a **small consistency pass only where needed**. Do not turn the September deadline into a broad redesign.
+- Chord Palette does not currently need PDF export merely for consistency. Revisit whether it has a useful printable artifact as the module develops.
+
+### Chord Shape Explorer: later instrument and tuning expansion
+
+- Chord Shape Explorer should eventually support alternate tunings and likely additional instruments.
+- This is explicitly later development and is **not** required before the September 30 presentation.
+- Bass chord-shape support remains an open design question. Bass players use partial harmony, double stops, arpeggios, and voicings, but do not add a conventional guitar-style chord-shape mode unless there is a real teaching use for it.
+- Alternate tunings require more than changing note labels. Useful chord shapes are idiomatic to the tuning, and a mathematically valid fingering is not automatically a shape an experienced player would teach.
+- Rob does not need to pretend expertise in tunings or instruments outside his playing experience. If an instructor asks about alternate tunings during the presentation, the intended answer is that Rob wants to add them and would welcome help from instructors who actually teach and use them.
+
+### Collaborative development with subject-matter experts
+
+- A useful collaboration model is a Zoom session with screen sharing. The subject-matter expert does not need programming knowledge.
+- Ask the collaborator to describe what an instructor or student should see, what shapes or conventions are actually useful, what terminology is appropriate, and what the current Workbench gets wrong.
+- Rob supplies teaching/product judgment and directs what the tool should accomplish; implementation can then translate that domain knowledge into the Workbench for iterative review.
+- This model is particularly appropriate for alternate tunings, unfamiliar instruments, accessibility needs, and other areas where another instructor has deeper practical expertise.
+- Prefer iterative validation with the expert over generating a large theoretical database and assuming mathematical correctness equals instructional usefulness.
+- During the instructor presentation, feature requests outside Rob's expertise can become invitations: get on Zoom, share the screen, and help design the teaching tool correctly.
+
+### Contributor recognition
+
+- Give direct contributors meaningful credit when they want it.
+- Distinguish broad suggestions from substantive domain contribution. A casual feature suggestion may be covered by a general thanks; someone who supplies tuning information, photographs, useful chord shapes, teaching conventions, testing, corrections, or sustained design guidance has materially contributed and may receive specific acknowledgment.
+- Credit should be proportional and accurate rather than bureaucratic. Examples may include feature/instrument notes such as “developed with assistance from …” or inclusion in a future Contributors section.
+- Some contributors may prefer not to be named; respect that choice.
+- A future Credits/Contributors area may distinguish material contributors from broader thanks to instructors and users who test, report problems, and suggest improvements.
+- The larger goal is to let Theory Toolkit acquire reliable teaching knowledge beyond **Things Rob Already Knows™** while preserving clear acknowledgment of the people who supplied that expertise.
+
