@@ -602,3 +602,13 @@ Chord Palette Build 13 is the accepted Workbench checkpoint at session close. Fu
 - A future Credits/Contributors area may distinguish material contributors from broader thanks to instructors and users who test, report problems, and suggest improvements.
 - The larger goal is to let Theory Toolkit acquire reliable teaching knowledge beyond **Things Rob Already Knows™** while preserving clear acknowledgment of the people who supplied that expertise.
 
+
+
+### PDF export interaction clarification — 2026-09-28
+
+- Use the interface label **Export PDF** rather than “Print PDF.” The action creates a portable handout from the configured Explorer state; it is not merely a wrapper around the browser print command.
+- Export PDF should **not intentionally behave as a blind file download**. The preferred flow is: generate the PDF locally in the browser, open/display the generated PDF for immediate review, and let the user's normal browser/operating-system PDF handling take over.
+- A web page cannot reliably force a particular desktop PDF application to launch. Depending on the user's browser and system settings, the PDF may open in the browser's built-in viewer or be handled according to the user's configured PDF behavior. Do not promise behavior the browser cannot control.
+- The important UX requirement is immediate visual confirmation of the exported handout before the user chooses what to do with it. From the PDF viewer/environment, the user can print, save, or otherwise handle the file using their normal tools.
+- Do not clutter the normal Explorer interface with PDF-reader recommendations. Most users already have adequate browser or operating-system PDF support. If standalone-viewer guidance proves useful, place it in Help/documentation and recommend only a reputable, lightweight option.
+- If Export PDF is not accepted and live by the September 30 instructor presentation, it may still be mentioned accurately as **in development** and coming soon. Describe the intended teaching workflow rather than presenting it as an available feature: configure a useful Explorer view, export what the instructor and student were looking at, and provide that handout to the student afterward.
