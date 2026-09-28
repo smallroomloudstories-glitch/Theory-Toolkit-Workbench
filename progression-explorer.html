@@ -14,8 +14,10 @@
       --surface: #f5f5f5;
       --selected: #1e4f87;
       --selected-soft: #eaf3ff;
-      --tonic: #bfe8c2;
-      --tonic-ink: #163b1a;
+      --step-1: #cfe8cf;
+      --step-2: #cfe1f2;
+      --step-3: #f4d8b8;
+      --step-4: #dedede;
     }
     * { box-sizing: border-box; }
     body { font-family: sans-serif; max-width: 1450px; margin: 1.25rem auto 2.5rem; padding: 0 1rem; line-height: 1.4; }
@@ -52,8 +54,11 @@
     .chord-scroll { overflow-x: auto; padding: .1rem 0 .3rem; }
     .chord-grid { display: grid; grid-template-columns: repeat(7, minmax(105px, 1fr)); min-width: 735px; gap: .35rem; }
     .chord-card { min-height: 4.65rem; padding: .4rem .35rem; border: 2px solid #999; background: #fff; text-align: center; }
-    .chord-card.used { border-color: var(--selected); background: var(--selected-soft); }
-    .chord-card.tonic { background: var(--tonic); color: var(--tonic-ink); }
+    .chord-card.step-1 { background: var(--step-1); }
+    .chord-card.step-2 { background: var(--step-2); }
+    .chord-card.step-3 { background: var(--step-3); }
+    .chord-card.step-4 { background: var(--step-4); }
+    .chord-card.step-1, .chord-card.step-2, .chord-card.step-3, .chord-card.step-4 { border-color: #777; }
     .chord-degree { display: block; font-size: 1rem; font-weight: bold; }
     .chord-name { display: block; min-height: 1.45rem; margin: .2rem 0 .05rem; font-size: 1.15rem; font-weight: bold; }
     .chord-quality { display: block; color: #555; font-size: .82rem; }
@@ -264,10 +269,14 @@
     function renderChords() {
       chordsHeading.textContent = `Diatonic Chords in ${selectedKey.label} Major`;
       chordGrid.innerHTML = "";
-      const usedDegrees = new Set(selectedProgression?.numerals ?? []);
+      const progressionPositions = new Map();
+      (selectedProgression?.numerals ?? []).forEach((degree, index) => {
+        if (!progressionPositions.has(degree)) progressionPositions.set(degree, index + 1);
+      });
       DIATONIC_CHORDS.forEach(chord => {
         const card = document.createElement("div");
-        card.className = `chord-card${usedDegrees.has(chord.degree) ? " used" : ""}${chord.degree === "I" ? " tonic" : ""}`;
+        const step = progressionPositions.get(chord.degree);
+        card.className = `chord-card${step && step <= 4 ? ` step-${step}` : ""}`;
         card.innerHTML = `<span class="chord-degree">${chord.degree}</span><span class="chord-name">${chordName(selectedKey, chord)}</span><span class="chord-quality">${chord.quality}</span>`;
         chordGrid.appendChild(card);
       });
