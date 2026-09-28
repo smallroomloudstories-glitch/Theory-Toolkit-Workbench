@@ -59,6 +59,14 @@
     .chord-card.step-3 { background: var(--step-3); }
     .chord-card.step-4 { background: var(--step-4); }
     .chord-card.step-1, .chord-card.step-2, .chord-card.step-3, .chord-card.step-4 { border-color: #777; }
+    .progression-color-key { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .8rem; margin: .35rem 0 .65rem; color: #444; font-size: .88rem; }
+    .progression-color-key strong { color: #222; }
+    .progression-color-key .key-item { display: inline-flex; align-items: center; gap: .3rem; }
+    .progression-color-key .swatch { width: 1.05rem; height: 1.05rem; border: 1px solid #888; border-radius: 2px; }
+    .progression-color-key .step-1 { background: var(--step-1); }
+    .progression-color-key .step-2 { background: var(--step-2); }
+    .progression-color-key .step-3 { background: var(--step-3); }
+    .progression-color-key .step-4 { background: var(--step-4); }
     .chord-degree { display: block; font-size: 1rem; font-weight: bold; }
     .chord-name { display: block; min-height: 1.45rem; margin: .2rem 0 .05rem; font-size: 1.15rem; font-weight: bold; }
     .chord-quality { display: block; color: #555; font-size: .82rem; }
@@ -116,6 +124,13 @@
 
   <main>
     <h2 class="section-title" id="chords-heading">Diatonic Chords in C Major</h2>
+    <div class="progression-color-key" aria-label="Progression color key">
+      <strong>Progression order:</strong>
+      <span class="key-item"><span class="swatch step-1" aria-hidden="true"></span>1st</span>
+      <span class="key-item"><span class="swatch step-2" aria-hidden="true"></span>2nd</span>
+      <span class="key-item"><span class="swatch step-3" aria-hidden="true"></span>3rd</span>
+      <span class="key-item"><span class="swatch step-4" aria-hidden="true"></span>4th</span>
+    </div>
     <div class="chord-scroll"><div class="chord-grid" id="chord-grid" aria-labelledby="chords-heading"></div></div>
 
     <h2 class="section-title" id="progressions-heading">Common Progressions</h2>
