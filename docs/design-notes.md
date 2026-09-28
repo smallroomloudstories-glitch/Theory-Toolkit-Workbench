@@ -612,3 +612,31 @@ Chord Palette Build 13 is the accepted Workbench checkpoint at session close. Fu
 - The important UX requirement is immediate visual confirmation of the exported handout before the user chooses what to do with it. From the PDF viewer/environment, the user can print, save, or otherwise handle the file using their normal tools.
 - Do not clutter the normal Explorer interface with PDF-reader recommendations. Most users already have adequate browser or operating-system PDF support. If standalone-viewer guidance proves useful, place it in Help/documentation and recommend only a reputable, lightweight option.
 - If Export PDF is not accepted and live by the September 30 instructor presentation, it may still be mentioned accurately as **in development** and coming soon. Describe the intended teaching workflow rather than presenting it as an available feature: configure a useful Explorer view, export what the instructor and student were looking at, and provide that handout to the student afterward.
+
+
+### Scale Explorer — relative major/minor shortcut (planned)
+
+Add a small **Relative Minor** / **Relative Major** shortcut to Scale Explorer. This is an additional teaching control, not a replacement for the existing Major/Minor selector.
+
+The two controls intentionally demonstrate different relationships:
+
+- The existing **Major / Minor** selector keeps the same tonic. For example, G major → G minor. The physical viewing area stays put and the student can see which notes change when the scale quality changes while the tonal center remains G.
+- The planned **Relative Minor / Relative Major** shortcut changes to the relative key. For example, G major → E minor. The pitch collection and physical fretboard region stay the same while the tonal center changes.
+
+When using the relative-key shortcut:
+- Preserve the current scale view and physical fretboard region.
+- Preserve the user's other relevant display choices, including Notes vs. Intervals and Diatonic/Pentatonic/Blues where musically applicable.
+- Change the tonic/key and Major/Minor state together.
+- **Remap the displayed Shape number so the same physical region is named relative to the new tonal center.** Example: the region labeled **G major — Shape 5** becomes **E minor — Shape 1** when switching to the relative minor.
+- In Notes view, this should make it visually obvious that the notes have not moved or changed.
+- In Intervals view, the same physical notes should be relabeled according to their functions relative to the new tonic.
+
+#### Intentional shape-label convention
+
+Shape numbering in Theory Toolkit is a pedagogical convention, not a claim that these labels are universal. Some teaching systems keep the same shape name for a physical pattern when moving between a major key and its relative minor. Theory Toolkit **intentionally does not do that**.
+
+Here, shape numbers are tonic-relative. The remapping is deliberate because it helps expose the major/relative-minor relationship: the student can see that the dots occupy exactly the same place while the tonic, interval functions, and shape label change. Do not later “simplify” the implementation by preserving the shape number across a relative-key switch; that would remove an intentional teaching cue.
+
+Useful teaching contrast:
+- **Major ↔ Minor:** keep the root; what changes?
+- **Relative Major ↔ Relative Minor:** keep the notes/physical region; what changes?
