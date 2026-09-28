@@ -22,12 +22,13 @@
     h1 { margin: .35rem 0; }
     .toolkit-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: min(1618px, calc(100vw - 2rem)); margin-left: 50%; transform: translateX(-50%); }
     .toolkit-header > p { margin: 0; }
-    .explorer-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; margin-left: auto; }
+    .explorer-nav { display: grid; grid-template-columns: 5.8rem 4.5rem 7.4rem 4rem 6.5rem; justify-content: end; gap: .45rem; margin-left: auto; }
+    .explorer-nav a, .explorer-nav .current { text-align: center; white-space: nowrap; }
     .explorer-nav a, .explorer-nav .current { display: inline-block; padding: .3rem .55rem; border: 1px solid #c8c8c8; border-radius: 3px; font-size: .9rem; text-decoration: none; }
     .explorer-nav a { color: #444; background: #fff; }
     .explorer-nav a:hover, .explorer-nav a:focus-visible { border-color: #888; text-decoration: underline; }
     .explorer-nav .current { color: #888; background: #f4f4f4; }
-    @media (max-width: 900px) { .toolkit-header { align-items: flex-start; flex-direction: column; gap: .65rem; } .explorer-nav { justify-content: flex-start; margin-left: 0; } }
+    @media (max-width: 900px) { .toolkit-header { align-items: flex-start; flex-direction: column; gap: .65rem; }  .explorer-nav { display: flex; justify-content: flex-start; margin-left: 0; } }
 
     .workbench-home { display: inline-flex; align-items: center; gap: .55rem; color: #333; font-weight: bold; text-decoration: none; }
     .workbench-home:hover, .workbench-home:focus-visible { text-decoration: underline; }
