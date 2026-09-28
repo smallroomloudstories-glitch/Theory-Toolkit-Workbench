@@ -637,6 +637,15 @@ Shape numbering in Theory Toolkit is a pedagogical convention, not a claim that 
 
 Here, shape numbers are tonic-relative. The remapping is deliberate because it helps expose the major/relative-minor relationship: the student can see that the dots occupy exactly the same place while the tonic, interval functions, and shape label change. Do not later “simplify” the implementation by preserving the shape number across a relative-key switch; that would remove an intentional teaching cue.
 
+For the current five-shape system, the explicit mapping from a major key to its relative minor is:
+- Major Shape 1 → Relative Minor Shape 2
+- Major Shape 2 → Relative Minor Shape 3
+- Major Shape 3 → Relative Minor Shape 4
+- Major Shape 4 → Relative Minor Shape 5
+- Major Shape 5 → Relative Minor Shape 1
+
+The reverse mapping applies when switching from relative minor back to major. Example: **G major Shape 1 → E minor Shape 2**, while **G major Shape 5 → E minor Shape 1**. The displayed physical fretboard region must remain unchanged during this relabeling.
+
 Useful teaching contrast:
 - **Major ↔ Minor:** keep the root; what changes?
 - **Relative Major ↔ Relative Minor:** keep the notes/physical region; what changes?
