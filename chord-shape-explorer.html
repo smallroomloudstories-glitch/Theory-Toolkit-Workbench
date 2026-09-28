@@ -11,6 +11,15 @@
   <style>
     body { font-family: sans-serif; max-width: 1650px; margin: 1.25rem auto 2rem; padding: 0 1rem; }
     h1 { margin: .35rem 0; }
+    .toolkit-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .toolkit-header > p { margin: 0; }
+    .explorer-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; margin-left: auto; }
+    .explorer-nav a, .explorer-nav .current { display: inline-block; padding: .3rem .55rem; border: 1px solid #c8c8c8; border-radius: 3px; font-size: .9rem; text-decoration: none; }
+    .explorer-nav a { color: #444; background: #fff; }
+    .explorer-nav a:hover, .explorer-nav a:focus-visible { border-color: #888; text-decoration: underline; }
+    .explorer-nav .current { color: #888; background: #f4f4f4; }
+    @media (max-width: 900px) { .toolkit-header { align-items: flex-start; flex-direction: column; gap: .65rem; } .explorer-nav { justify-content: flex-start; margin-left: 0; } }
+
     .workbench-home { display: inline-flex; align-items: center; gap: .55rem; color: #333; font-weight: bold; text-decoration: none; }
     .workbench-home:hover, .workbench-home:focus-visible { text-decoration: underline; }
     .workbench-home img { display: block; width: min(15rem, 60vw); height: auto; }
@@ -48,7 +57,16 @@
   <link rel="stylesheet" href="src/ui/mobile-support-notice.css">
 </head>
 <body>
+  <header class="toolkit-header">
   <p><a class="workbench-home" href="index.html"><img src="./assets/brand/theory-toolkit-logo-no-tagline.png" alt="Theory Toolkit"><span>Workbench Home</span></a></p>
+  <nav class="explorer-nav" aria-label="Explorer navigation">
+      <a href="fretboard-explorer.html">Fretboard</a>
+      <a href="scale-explorer.html">Scale</a>
+      <span class="current" aria-current="page">Chord Shapes</span>
+      <a href="key-explorer.html">Key</a>
+      <a href="progression-explorer.html">Progressions</a>
+  </nav>
+</header>
   <h1>Chord Shape Explorer — WORKBENCH</h1>
   <p class="workbench-mark">Experimental development version.</p>
   <p class="checkpoint-note">Build 1 — beginner open-chord shapes on the shared illustrated fretboard. Select a complete fingering from the chord wheel; use Focus to discuss individual chord tones.</p>
