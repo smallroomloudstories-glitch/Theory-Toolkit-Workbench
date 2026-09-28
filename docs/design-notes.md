@@ -649,3 +649,26 @@ The reverse mapping applies when switching from relative minor back to major. Ex
 Useful teaching contrast:
 - **Major ↔ Minor:** keep the root; what changes?
 - **Relative Major ↔ Relative Minor:** keep the notes/physical region; what changes?
+
+
+### Cross-Explorer shared musical context (future consideration) — 2026-09-28
+
+Consider allowing compatible Explorers to carry a small amount of **shared musical context** when the user moves between them. The goal is lesson continuity, not blanket persistence of every control.
+
+Initial teaching case:
+- If Scale Explorer is set to **G Major**, then navigating directly to Key Explorer or Progression Explorer should open in **G Major** rather than resetting to a default key.
+- This supports a continuous teaching story such as **G chord → G major scale → chords in G major → progression in G major**.
+- Navigation can therefore function as movement between different views of the same musical idea, rather than each Explorer behaving like an unrelated fresh start.
+
+Design principles to resolve before implementation:
+- Start with values that translate cleanly between Explorers, especially **tonal center/key**.
+- Carry **Major/Minor context** only when the destination Explorer understands that state; do not force unsupported musical states onto a page.
+- Consider instrument/tuning as a later shared context among compatible fretboard-based Explorers.
+- Keep page-specific state local unless there is a clear teaching reason to share it. Examples include Focus positions, selected strings, Notes/Intervals display, and a selected progression.
+- Distinguish **cross-page lesson continuity** from **long-term persistent preferences**. Carrying G Major from Scale to Key during the same session does not automatically imply that the Toolkit should reopen in G Major days later.
+- Define the intended teaching behavior before choosing browser-storage or other implementation details. Implementation convenience should not determine what state follows the instructor.
+
+Suggested first experiment after the September 30 presentation:
+**Scale: G Major → Key: G Major → Progressions: G Major.**
+
+Evaluate whether that small amount of continuity feels natural before expanding the shared state model.
