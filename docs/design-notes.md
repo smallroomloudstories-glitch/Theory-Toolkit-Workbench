@@ -672,3 +672,32 @@ Suggested first experiment after the September 30 presentation:
 **Scale: G Major → Key: G Major → Progressions: G Major.**
 
 Evaluate whether that small amount of continuity feels natural before expanding the shared state model.
+
+
+### Cross-platform and mobile support (future priority) — 2026-10-01
+
+Mobile support is a genuine future development priority, not merely a cosmetic cleanup. A significant number of instructors and students may primarily use phones or tablets, and Theory Toolkit should support the real teaching workflow of an instructor sending a student a link without first needing to ask what device the student will use.
+
+North-star requirement:
+
+> **An instructor should be able to send a student a Theory Toolkit link without first asking what device they're going to open it on.**
+
+The experience does **not** need to be visually or interactively identical on every device. The goal is to preserve the musical information, teaching purpose, and useful interaction while adapting the interface appropriately to the available screen and input method.
+
+Development principles:
+- Treat responsive behavior as **adaptation**, not merely shrinking the desktop interface.
+- Prioritize, in order: **musically correct → usable → readable → visually consistent → identical**.
+- Desktop/laptop, tablets, phone landscape, and phone portrait may legitimately use different layouts or interaction patterns.
+- Tablet and phone-landscape layouts may be able to preserve much of the existing Explorer presentation.
+- Phone portrait may require more substantial changes such as collapsible controls, horizontal fretboard scrolling, a smaller visible fret range, or other device-appropriate presentation.
+- Do not create separate Android and iPhone products by default. Build around screen size, orientation, touch/pointer behavior, and browser capability, while explicitly testing major iOS/Safari and Android/Chrome environments and accommodating platform-specific browser behavior where necessary.
+- Work Explorer by Explorer rather than assuming one responsive treatment will fit all five. Landing, Key, and Progressions may be simpler; Fretboard, Scale, and Chord Shape Explorers require particular care because their illustrated fretboards carry substantial teaching information.
+- Feature parity is not automatically required if a device-appropriate presentation better serves the same teaching goal.
+
+This priority should eventually connect with **shareable Explorer state**. A useful target workflow is:
+1. An instructor configures an Explorer to a specific teaching state (for example, G Major → Shape 1 → Intervals).
+2. The instructor sends a link to the student.
+3. The student opens that link on Windows, macOS, Chromebook, iPad/tablet, iPhone, or Android.
+4. The same musical state is restored in a layout appropriate to that device.
+
+This makes cross-platform/mobile work part of the teaching workflow rather than compatibility for its own sake.
