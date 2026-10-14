@@ -701,3 +701,55 @@ This priority should eventually connect with **shareable Explorer state**. A use
 4. The same musical state is restored in a layout appropriate to that device.
 
 This makes cross-platform/mobile work part of the teaching workflow rather than compatibility for its own sake.
+
+## Modes Explorer — comparison-first concept
+
+**Status:** Concept documented; not yet implemented.
+
+Modes Explorer should teach modes by making the relationship visible rather than beginning with seven isolated Greek names.
+
+### Core layout
+
+1. **Choose a key / tonic.** The upper reference scale shows the notes of that tonic's **Major scale**.
+2. Beneath it, choose one of the seven modes from a mode selector. **Ionian is the default.**
+3. The middle scale shows the **parallel mode** on the same tonic.
+4. Beneath that, show the mode's **parent / relative Major scale** — the Major scale containing the same pitch collection.
+
+Example with tonic D and Dorian selected:
+
+- **D Major:** D – E – F♯ – G – A – B – C♯
+- **D Dorian:** D – E – F – G – A – B – C
+- **Parent Major:** C Major — C – D – E – F – G – A – B
+
+The comparison should also state the interval recipe relative to the parallel Major scale, e.g. **Dorian differs from Major by ♭3 and ♭7**.
+
+### Changed-note highlighting
+
+The important visual behavior is a paired comparison. When a non-Ionian mode is selected, highlight **both**:
+
+- each note in the Major reference scale that changes, and
+- its replacement note in the selected parallel mode.
+
+For D Dorian, F♯ and C♯ are highlighted in D Major while F and C are highlighted in D Dorian. Shared notes remain visually quiet.
+
+Changing modes recalculates the highlighted pairs. For example, D Phrygian highlights E/F♯/B/C♯ in D Major and E♭/F/B♭/C in D Phrygian.
+
+With Ionian selected, no notes are highlighted because the parallel mode and Major scale are identical. This zero-change state reinforces that Ionian **is** the Major scale.
+
+The visual goal is effectively **“THIS → BECOMES THIS”**, not merely “these are the unusual notes.”
+
+### Optional compact keyboards
+
+Consider a **small keyboard visualization beside each displayed scale** (Major reference, selected mode, and parent Major). Each keyboard can identify the notes belonging to that scale/pitch collection.
+
+Do **not** duplicate the changed-note comparison highlighting on the keyboards unless later testing shows a real need. The note-name comparison has already established what changed; the keyboard's purpose is simply to provide a second spatial visualization of the scale tones.
+
+### Teaching purpose
+
+This layout should allow the user to understand two complementary ways of thinking about modes at once:
+
+- **Parallel:** What changes when D Major becomes D Dorian?
+- **Relative/parent:** What Major scale contains the notes of D Dorian?
+
+The Explorer should let the relationship reveal itself through selection and comparison rather than requiring a paragraph of mode theory before the controls become meaningful.
+
