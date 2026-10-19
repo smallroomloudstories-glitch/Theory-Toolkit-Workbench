@@ -158,7 +158,7 @@ function update(){
  renderKeyboard(document.querySelector("#major-keyboard"),maj);renderKeyboard(document.querySelector("#mode-keyboard"),modal);renderKeyboard(document.querySelector("#parent-keyboard"),parent);
  const summary=document.querySelector("#change-summary");
  summary.innerHTML=m.degree===0?'<span class="quiet">Ionian is the Major scale, so no notes change.</span>':m.name+' differs from Major by: '+m.changes;
- document.querySelector("#parent-note").textContent=t+" "+m.name+" uses the same notes as "+pt+" Major, but "+t+" is the tonal center.";
+ document.querySelector("#parent-note").textContent=m.degree===0?t+" Ionian uses the same notes as "+pt+" Major.":t+" "+m.name+" uses the same notes as "+pt+" Major, but "+t+" is the tonal center.";
 }
 modeSelect.addEventListener("change",update);update();
 </script>
