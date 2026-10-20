@@ -753,3 +753,26 @@ This layout should allow the user to understand two complementary ways of thinki
 
 The Explorer should let the relationship reveal itself through selection and comparison rather than requiring a paragraph of mode theory before the controls become meaningful.
 
+### Future fretboard representation
+
+Consider adding a compact fretboard representation that makes the same three-part comparison as the keyboards without turning Modes Explorer into another full Scale Explorer.
+
+Use one familiar, fixed Major-scale fretboard position as the reference. The specific key is not important because the relationship being taught is invariant when transposed; a separate tonic/key selector is therefore unnecessary for this fretboard demonstration.
+
+The three fretboards should function as a controlled comparison:
+
+1. **Major reference:** Show the familiar Major-scale pattern in a fixed physical fretboard region.
+2. **Parallel mode:** Keep the same physical tonic and fretboard region. Move only the notes required to create the selected parallel mode, highlighting the changed Major notes and their modal replacements.
+3. **Relative / parent Major:** Preserve exactly the same physical notes shown in the parallel mode, but change which note is identified as the tonic. The notes do not move; their interval functions are reinterpreted around the new tonal center.
+
+The visual lesson should therefore be:
+
+- **Parallel:** keep home fixed; change the notes.
+- **Relative:** keep the notes fixed; change home.
+
+This is the fretboard analogue of the current comparison structure, not a general-purpose fretboard scale browser. Scale Explorer remains the place to choose arbitrary keys, positions, and instrument-specific scale views.
+
+Do not add the fretboard merely because many users play guitar. Its purpose is to expose modal relationships through familiar fretboard geometry: first show which physical notes change while the tonic stays fixed, then show the same physical pitch collection with a different tonic.
+
+Keyboard and fretboard representations may ultimately coexist because they reveal different aspects of the same relationship. The keyboard makes semitone movement especially transparent; the fretboard connects that relationship to familiar scale geometry and helps transfer the concept back to the instrument.
+
