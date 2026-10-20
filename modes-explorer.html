@@ -16,6 +16,8 @@ h1{margin:.35rem 0}.toolkit-header{display:flex;align-items:center;justify-conte
 .explorer-nav{display:flex;justify-content:flex-end;gap:.4rem;margin-left:auto;flex-wrap:wrap}.explorer-nav a,.explorer-nav .current{display:inline-block;padding:.3rem .5rem;border:1px solid #c8c8c8;border-radius:3px;font-size:.88rem;text-decoration:none;white-space:nowrap}.explorer-nav a{color:#444;background:#fff}.explorer-nav a:hover,.explorer-nav a:focus-visible{text-decoration:underline;border-color:#888}.explorer-nav .current{color:#888;background:#f4f4f4}
 .workbench-mark{margin:.25rem 0;font-weight:bold}.checkpoint-note{margin:.4rem 0 1.2rem;max-width:950px}
 .controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;padding:.7rem .8rem;border:1px solid var(--soft);background:#fafafa}.control label{display:block;margin-bottom:.25rem;font-weight:bold}.control select{min-width:9rem;padding:.35rem .5rem;font:inherit}.tonic-wheel{position:relative;width:7rem}.tonic-wheel-trigger{width:100%;min-height:2.15rem;padding:.3rem .5rem;border:1px solid #777;background:#fff;text-align:left;font:inherit;cursor:pointer}.tonic-wheel-trigger::after{float:right;content:"▾"}.tonic-wheel-menu{position:absolute;top:50%;left:0;z-index:20;width:100%;border:1px solid #777;background:#fff;box-shadow:0 .25rem .75rem rgba(0,0,0,.25);overflow:hidden;transform:translateY(-50%)}.tonic-wheel-menu[hidden]{display:none}.tonic-wheel-option{display:block;width:100%;margin:0;padding:.24rem .4rem;border:0;background:#fff;text-align:center;font:inherit;cursor:pointer}.tonic-wheel-option:hover,.tonic-wheel-option:focus{background:#e3efff}.tonic-wheel-option.center{border-top:1px solid #777;border-bottom:1px solid #777;background:#f1f1f1;font-weight:bold}.spelling-help{position:relative;display:inline-block;margin-left:.35rem;vertical-align:middle}.spelling-help-button{width:1.35rem;height:1.35rem;padding:0;border:1px solid #888;border-radius:50%;background:#fff;color:#555;font:bold .82rem/1 sans-serif;cursor:help}.spelling-help-popup{position:absolute;left:1.75rem;top:-.35rem;z-index:30;width:20rem;padding:.6rem .7rem;border:1px solid #888;border-radius:.25rem;background:#fff;box-shadow:0 .25rem .75rem rgba(0,0,0,.2);color:#333;font-size:.82rem;line-height:1.35}.spelling-help-popup{display:none}.spelling-help:hover .spelling-help-popup,.spelling-help:focus-within .spelling-help-popup,.spelling-help-popup.is-open{display:block}
+.discovery-wrap{position:relative;display:none;width:max-content;max-width:100%;margin:.55rem 0 0 auto}.discovery-wrap.unlocked{display:block}.discovery-button{padding:.42rem .72rem;border:1px solid #754760;border-radius:999px;background:#ead8e4;color:#4d2e40;font:600 .9rem/1.2 sans-serif;cursor:pointer;box-shadow:0 .12rem .3rem rgba(0,0,0,.12)}.discovery-button:hover,.discovery-button:focus-visible{background:#dfc4d5;border-color:#593447}.discovery-wrap.just-unlocked{animation:discovery-arrive .65s cubic-bezier(.18,.82,.3,1)}@keyframes discovery-arrive{from{transform:translateX(45vw);opacity:.15}to{transform:translateX(0);opacity:1}}.discovery-popup{position:absolute;right:0;top:calc(100% + .45rem);z-index:40;width:min(31rem,calc(100vw - 2rem));padding:.8rem .9rem;border:1px solid #8e5a7b;border-radius:.35rem;background:#fff;box-shadow:0 .35rem 1rem rgba(0,0,0,.22);font-size:.9rem;line-height:1.4}.discovery-popup[hidden]{display:none}.discovery-popup p{margin:.25rem 0 .55rem}.discovery-popup p:last-child{margin-bottom:.1rem}.mode-path{font-weight:bold;color:#56354a}.discovery-close{float:right;margin:-.15rem -.15rem .25rem .6rem;border:0;background:transparent;color:#555;font-size:1.25rem;line-height:1;cursor:pointer}
+@media(prefers-reduced-motion:reduce){.discovery-wrap.just-unlocked{animation:discovery-fade .2s ease-out}@keyframes discovery-fade{from{opacity:0}to{opacity:1}}}
 .flow{margin-top:1rem}.scale-panel{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:1rem;align-items:center;padding:.8rem;border:1px solid var(--border);background:#fff}.scale-panel+.connector{margin:.25rem 0}
 .scale-panel.mode{border:2px solid var(--accent);background:#fbfdff}.panel-heading{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0 0 .55rem}.panel-heading h2{margin:0;font-size:1.15rem}.relationship{color:#555;font-size:.88rem}.parent-explanation{color:#555;font-size:.9rem}
 .note-row{display:grid;grid-template-columns:repeat(7,minmax(55px,1fr));border:1px solid var(--soft);min-width:420px}.note-cell{text-align:center;padding:.45rem .2rem;border-right:1px solid var(--soft);background:#fff}.note-cell:last-child{border-right:0}.degree{display:block;color:#666;font-size:.75rem}.note{display:block;font-size:1.25rem;font-weight:bold}.note-cell.changed{background:var(--changed);box-shadow:inset 0 0 0 2px var(--changed-border)}
@@ -41,6 +43,16 @@ h1{margin:.35rem 0}.toolkit-header{display:flex;align-items:center;justify-conte
 <div class="control"><label id="tonic-label">Choose a Tonic <span class="spelling-help"><button type="button" class="spelling-help-button" id="spelling-help-button" aria-label="Why some tonics use sharps and others use flats" aria-expanded="false">?</button><span class="spelling-help-popup" id="spelling-help-popup" role="tooltip">Sharps and flats are chosen for conventional, readable scale spelling. Each mode is spelled by letter name in scale order—one of each letter—so the same pitch may be written with a sharp or flat depending on the tonic and mode.</span></span></label><div class="tonic-wheel" id="tonic-wheel"><button type="button" class="tonic-wheel-trigger" id="tonic-wheel-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="tonic-label tonic-wheel-trigger">D</button><div class="tonic-wheel-menu" id="tonic-wheel-menu" role="listbox" aria-label="Tonics" hidden></div></div></div>
 <div class="control"><label for="mode">Mode</label><select id="mode"></select></div>
 </section>
+<div class="discovery-wrap" id="discovery-wrap">
+<button type="button" class="discovery-button" id="discovery-button" aria-expanded="false" aria-controls="discovery-popup">✨ Want to see something cool?</button>
+<div class="discovery-popup" id="discovery-popup" hidden>
+<button type="button" class="discovery-close" id="discovery-close" aria-label="Close">×</button>
+<p><strong>Try this:</strong> Pick any tonic, then move through the modes in this order:</p>
+<p class="mode-path">Lydian → Ionian → Mixolydian → Dorian → Aeolian → Phrygian → Locrian</p>
+<p>Pay attention to what changes each time. Only one note moves—and each time, it moves down by one semitone.</p>
+<p>Listen as you go. Does the sound seem to get progressively darker?</p>
+</div>
+</div>
 <p class="legend"><span class="swatch"></span>Highlighted notes show what changes between the Major reference and the selected parallel mode.</p>
 
 <main class="flow">
@@ -128,6 +140,29 @@ function renderKeyboard(el,notes){
 }
 const tonicWheel=document.querySelector("#tonic-wheel"),tonicTrigger=document.querySelector("#tonic-wheel-trigger"),tonicMenu=document.querySelector("#tonic-wheel-menu"),modeSelect=document.querySelector("#mode");
 let tonicIndex=TONICS.indexOf("D");
+let previousExplorerState=null,explorerStateChanges=0,discoveryUnlocked=false;
+const discoveryWrap=document.querySelector("#discovery-wrap"),discoveryButton=document.querySelector("#discovery-button"),discoveryPopup=document.querySelector("#discovery-popup"),discoveryClose=document.querySelector("#discovery-close");
+function noteExplorerState(){
+ const state=tonicValue()+"|"+modeSelect.value;
+ if(previousExplorerState!==null&&state!==previousExplorerState&&!discoveryUnlocked){
+  explorerStateChanges++;
+  if(explorerStateChanges>=5){
+   discoveryUnlocked=true;
+   discoveryWrap.classList.add("unlocked","just-unlocked");
+   discoveryWrap.addEventListener("animationend",()=>discoveryWrap.classList.remove("just-unlocked"),{once:true});
+  }
+ }
+ previousExplorerState=state;
+}
+function setDiscoveryPopup(open){
+ discoveryPopup.hidden=!open;
+ discoveryButton.setAttribute("aria-expanded",open?"true":"false");
+}
+discoveryButton.addEventListener("click",e=>{e.stopPropagation();setDiscoveryPopup(discoveryPopup.hidden)});
+discoveryClose.addEventListener("click",()=>{setDiscoveryPopup(false);discoveryButton.focus()});
+document.addEventListener("click",e=>{if(discoveryUnlocked&&!discoveryWrap.contains(e.target))setDiscoveryPopup(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!discoveryPopup.hidden){setDiscoveryPopup(false);discoveryButton.focus()}});
+
 MODES.forEach((m,i)=>modeSelect.add(new Option(m.name,i)));modeSelect.value="0";
 function tonicValue(){return TONICS[tonicIndex]}
 function buildTonicMenu(){
@@ -163,6 +198,7 @@ function update(){
  const summary=document.querySelector("#change-summary");
  summary.innerHTML=m.degree===0?'<span class="quiet">Ionian is the Major scale, so no notes change.</span>':m.name+' differs from Major by: '+m.changes;
  document.querySelector("#parent-note").textContent=m.degree===0?t+" Ionian uses the same notes as "+pt+" Major.":t+" "+m.name+" uses the same notes as "+pt+" Major, but "+t+" is the tonal center.";
+ noteExplorerState();
 }
 modeSelect.addEventListener("change",update);update();
 </script>
