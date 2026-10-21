@@ -28,8 +28,8 @@
 </nav>
 </header>
 <h1>Modes Explorer — WORKBENCH</h1>
-<p class="workbench-mark">Experimental development version. <strong>Guitar pass 3</strong></p>
-<p class="checkpoint-note">Guitar pass 3 — simplify first: establish and verify the fixed traditional Major-scale box before adding modal transformations.</p>
+<p class="workbench-mark">Experimental development version. <strong>Guitar pass 4</strong></p>
+<p class="checkpoint-note">Guitar pass 4 — verify the agreed fixed Major-scale pattern, with one blank fret of working room on either side.</p>
 
 <section class="controls" aria-label="Mode controls">
 <div class="control"><label id="tonic-label">Choose a Tonic <span class="spelling-help"><button type="button" class="spelling-help-button" id="spelling-help-button" aria-label="Why some tonics use sharps and others use flats" aria-expanded="false">?</button><span class="spelling-help-popup" id="spelling-help-popup" role="tooltip">Sharps and flats are chosen for conventional, readable scale spelling. Each mode is spelled by letter name in scale order—one of each letter—so the same pitch may be written with a sharp or flat depending on the tonic and mode.</span></span></label><div class="tonic-wheel" id="tonic-wheel"><button type="button" class="tonic-wheel-trigger" id="tonic-wheel-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="tonic-label tonic-wheel-trigger">D</button><div class="tonic-wheel-menu" id="tonic-wheel-menu" role="listbox" aria-label="Tonics" hidden></div></div></div>
@@ -52,21 +52,22 @@ function accidental(d){return d===0?"":d===1?"♯":d===2?"♯♯":d===-1?"♭":d
 function spell(letter,target){let d=(target-NATURAL[letter]+12)%12;if(d>6)d-=12;return letter+accidental(d)}
 function parentTonic(tonic,mode){const p=parseNote(tonic),li=LETTERS.indexOf(p.letter),letter=LETTERS[(li-mode.degree+14)%7],pc=(p.pc-MAJOR[mode.degree]+120)%12;return spell(letter,pc)}
 function degreeLabels(formula){return formula.map((step,i)=>{const d=step-MAJOR[i];return d===-1?"♭"+(i+1):d===1?"♯"+(i+1):String(i+1)})}
-function renderFretboard(el,view="major"){
- // Fixed traditional Major-scale position, rooted on the low E string.
- // Coordinates are [string index high-e..low-E, column 0..3, degree].
+function renderFretboard(el){
+ // Agreed traditional G-major reference shape.
+ // Six visible fret spaces: one blank on each side of the four-fret scale box.
+ // Coordinates: [string index high-e..low-E, visible column 0..5, degree].
  const majorPattern=[
-  [0,0,"R"],[0,2,"2"],[0,3,"3"],
-  [1,0,"5"],[1,2,"6"],[1,3,"7"],
-  [2,0,"2"],[2,2,"3"],[2,3,"4"],
-  [3,0,"6"],[3,2,"7"],[3,3,"R"],
-  [4,0,"3"],[4,1,"4"],[4,3,"5"],
-  [5,0,"R"],[5,2,"2"],[5,3,"3"]
+  [0,2,"7"],[0,3,"R"],[0,5,"2"],
+  [1,1,"5"],[1,3,"6"],
+  [2,1,"2"],[2,3,"3"],[2,4,"4"],
+  [3,1,"6"],[3,2,"7"],[3,4,"R"],
+  [4,1,"3"],[4,2,"4"],[4,4,"5"],
+  [5,1,"R"],[5,3,"2"]
  ];
  let html="";
  for(let s=0;s<6;s++){const y=13+s*14.8;html+='<span class="fb-string" style="top:'+y+'%"></span>'}
- for(let col=0;col<=4;col++){const x=5+(col/4)*93;html+='<span class="fb-fret" style="left:'+x+'%"></span>'}
- for(const [s,col,label] of majorPattern){const x=5+((col+.5)/4)*93,y=13+s*14.8,cls=["fb-dot"];if(label==="R")cls.push("root");html+='<span class="'+cls.join(" ")+'" style="left:'+x+'%;top:'+y+'%">'+label+'</span>'}
+ for(let edge=0;edge<=6;edge++){const x=5+(edge/6)*93;html+='<span class="fb-fret" style="left:'+x+'%"></span>'}
+ for(const [s,col,label] of majorPattern){const x=5+((col+.5)/6)*93,y=13+s*14.8,cls=["fb-dot"];if(label==="R")cls.push("root");html+='<span class="'+cls.join(" ")+'" style="left:'+x+'%;top:'+y+'%">'+label+'</span>'}
  el.innerHTML=html;
 }
 
