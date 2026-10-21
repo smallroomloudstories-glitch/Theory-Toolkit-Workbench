@@ -12,11 +12,11 @@
 *{box-sizing:border-box} body{font-family:sans-serif;max-width:1250px;margin:1.25rem auto 3rem;padding:0 1rem;line-height:1.4;color:#222} h1{margin:.35rem 0}
 .toolkit-header{display:flex;align-items:center;justify-content:space-between;gap:2rem;width:min(1450px,calc(100vw - 2rem));margin-left:50%;transform:translateX(-50%)} .toolkit-header>p{margin:0}.workbench-home{display:inline-flex;align-items:center;gap:.55rem;color:#333;font-weight:bold;text-decoration:none}.workbench-home img{display:block;width:min(15rem,60vw);height:auto}
 .explorer-nav{display:flex;justify-content:flex-end;gap:.4rem;margin-left:auto;flex-wrap:wrap}.explorer-nav a,.explorer-nav .current{display:inline-block;padding:.3rem .5rem;border:1px solid #c8c8c8;border-radius:3px;font-size:.88rem;text-decoration:none;white-space:nowrap}.explorer-nav a{color:#444;background:#fff}.explorer-nav .current{color:#888;background:#f4f4f4}
-.workbench-mark{margin:.25rem 0;font-weight:bold}.checkpoint-note{margin:.4rem 0 1rem;max-width:950px}.controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;padding:.7rem .8rem;border:1px solid var(--soft);background:#fafafa}.control label{display:block;margin-bottom:.25rem;font-weight:bold}.control select{min-width:9rem;padding:.35rem .5rem;font:inherit}.tonic-wheel{position:relative;width:7rem}.tonic-wheel-trigger{width:100%;min-height:2.15rem;padding:.3rem .5rem;border:1px solid #777;background:#fff;text-align:left;font:inherit;cursor:pointer}.tonic-wheel-trigger::after{float:right;content:"▾"}.tonic-wheel-menu{position:absolute;top:50%;left:0;z-index:20;width:100%;border:1px solid #777;background:#fff;box-shadow:0 .25rem .75rem rgba(0,0,0,.25);overflow:hidden;transform:translateY(-50%)}.tonic-wheel-menu[hidden]{display:none}.tonic-wheel-option{display:block;width:100%;margin:0;padding:.24rem .4rem;border:0;background:#fff;text-align:center;font:inherit;cursor:pointer}.tonic-wheel-option:hover,.tonic-wheel-option:focus{background:#e3efff}.tonic-wheel-option.center{border-top:1px solid #777;border-bottom:1px solid #777;background:#f1f1f1;font-weight:bold}
+.workbench-mark{margin:.25rem 0;font-weight:bold}.checkpoint-note{margin:.4rem 0 1rem;max-width:950px}.controls{display:none;flex-wrap:wrap;gap:1rem;align-items:end;padding:.7rem .8rem;border:1px solid var(--soft);background:#fafafa}.control label{display:block;margin-bottom:.25rem;font-weight:bold}.control select{min-width:9rem;padding:.35rem .5rem;font:inherit}.tonic-wheel{position:relative;width:7rem}.tonic-wheel-trigger{width:100%;min-height:2.15rem;padding:.3rem .5rem;border:1px solid #777;background:#fff;text-align:left;font:inherit;cursor:pointer}.tonic-wheel-trigger::after{float:right;content:"▾"}.tonic-wheel-menu{position:absolute;top:50%;left:0;z-index:20;width:100%;border:1px solid #777;background:#fff;box-shadow:0 .25rem .75rem rgba(0,0,0,.25);overflow:hidden;transform:translateY(-50%)}.tonic-wheel-menu[hidden]{display:none}.tonic-wheel-option{display:block;width:100%;margin:0;padding:.24rem .4rem;border:0;background:#fff;text-align:center;font:inherit;cursor:pointer}.tonic-wheel-option:hover,.tonic-wheel-option:focus{background:#e3efff}.tonic-wheel-option.center{border-top:1px solid #777;border-bottom:1px solid #777;background:#f1f1f1;font-weight:bold}
 .spelling-help{position:relative;display:inline-block;margin-left:.35rem}.spelling-help-button{width:1.35rem;height:1.35rem;padding:0;border:1px solid #888;border-radius:50%;background:#fff;color:#555;font:bold .82rem/1 sans-serif}.spelling-help-popup{position:absolute;left:1.75rem;top:-.35rem;z-index:30;width:20rem;padding:.6rem .7rem;border:1px solid #888;background:#fff;box-shadow:0 .25rem .75rem rgba(0,0,0,.2);font-size:.82rem;display:none}.spelling-help:hover .spelling-help-popup,.spelling-help:focus-within .spelling-help-popup{display:block}
 .legend{margin:.7rem 0;color:#555;font-size:.88rem}.swatch{display:inline-block;width:1.1rem;height:.8rem;margin:0 .25rem 0 .45rem;vertical-align:-.05rem;background:var(--changed);border:1px solid var(--changed-border)}
-.scale-panel{padding:.85rem;border:1px solid var(--border);background:#fff}.scale-panel.mode{border:2px solid var(--accent);background:#fbfdff}.panel-heading{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0 0 .55rem}.panel-heading h2{margin:0;font-size:1.15rem}.relationship,.parent-explanation{color:#555;font-size:.88rem}.change-summary{margin:.55rem 0 0;font-weight:bold}.change-summary .quiet{font-weight:normal;color:#555}.connector{text-align:center;color:#666;font-size:.9rem;margin:.3rem 0}.connector strong{color:#333}
-.hero-fretboard{position:relative;width:100%;height:250px;border:1px solid #777;background:#f1e4c8;overflow:hidden}.fb-string{position:absolute;left:5%;right:2%;height:1px;background:#555}.fb-fret{position:absolute;top:8%;bottom:7%;width:1px;background:#777}.fb-fret-label{position:absolute;bottom:1%;transform:translateX(-50%);font-size:.68rem;color:#555}.fb-string-label{position:absolute;left:.6%;transform:translateY(-50%);font-size:.68rem;color:#555}.fb-dot{position:absolute;width:34px;height:34px;display:grid;place-items:center;transform:translate(-50%,-50%);border:2px solid #6f8fac;border-radius:50%;background:#dcecff;color:#173c61;font-size:.8rem;font-weight:800;z-index:3}.fb-dot.root{background:var(--root);border-color:var(--root-border);color:#163b1a}.fb-dot.changed{background:var(--changed);border-color:var(--changed-border);color:#4c3900}.fb-dot.root.changed{box-shadow:0 0 0 3px var(--changed-border)}
+.scale-panel{padding:.85rem;border:1px solid var(--border);background:#fff}.scale-panel.mode{display:none;border:2px solid var(--accent);background:#fbfdff}.panel-heading{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0 0 .55rem}.panel-heading h2{margin:0;font-size:1.15rem}.relationship,.parent-explanation{color:#555;font-size:.88rem}.change-summary{margin:.55rem 0 0;font-weight:bold}.change-summary .quiet{font-weight:normal;color:#555}.connector{display:none;text-align:center;color:#666;font-size:.9rem;margin:.3rem 0}.connector strong{color:#333}
+.hero-fretboard{position:relative;width:100%;height:250px;border:1px solid #777;background:#f1e4c8;overflow:hidden}.fb-string{position:absolute;left:5%;right:2%;height:1px;background:#555}.fb-fret{position:absolute;top:8%;bottom:7%;width:1px;background:#777}.fb-fret-label{display:none;position:absolute;bottom:1%;transform:translateX(-50%);font-size:.68rem;color:#555}.fb-string-label{display:none;position:absolute;left:.6%;transform:translateY(-50%);font-size:.68rem;color:#555}.fb-dot{position:absolute;width:34px;height:34px;display:grid;place-items:center;transform:translate(-50%,-50%);border:2px solid #6f8fac;border-radius:50%;background:#dcecff;color:#173c61;font-size:.8rem;font-weight:800;z-index:3}.fb-dot.root{background:var(--root);border-color:var(--root-border);color:#163b1a}.fb-dot.changed{background:var(--changed);border-color:var(--changed-border);color:#4c3900}.fb-dot.root.changed{box-shadow:0 0 0 3px var(--changed-border)}
 @media(max-width:800px){.toolkit-header{align-items:flex-start;flex-direction:column;gap:.65rem}.explorer-nav{justify-content:flex-start;margin-left:0}.hero-fretboard{min-width:760px}.scale-panel{overflow-x:auto}}
 </style>
 </head>
@@ -28,20 +28,20 @@
 </nav>
 </header>
 <h1>Modes Explorer — WORKBENCH</h1>
-<p class="workbench-mark">Experimental development version. <strong>Guitar pass 2</strong></p>
-<p class="checkpoint-note">Guitar pass 2 — the fretboard is the hero: Major reference, parallel mode in the same box, then the identical modal shape relabeled around its parent Major tonic.</p>
+<p class="workbench-mark">Experimental development version. <strong>Guitar pass 3</strong></p>
+<p class="checkpoint-note">Guitar pass 3 — simplify first: establish and verify the fixed traditional Major-scale box before adding modal transformations.</p>
 
 <section class="controls" aria-label="Mode controls">
 <div class="control"><label id="tonic-label">Choose a Tonic <span class="spelling-help"><button type="button" class="spelling-help-button" id="spelling-help-button" aria-label="Why some tonics use sharps and others use flats" aria-expanded="false">?</button><span class="spelling-help-popup" id="spelling-help-popup" role="tooltip">Sharps and flats are chosen for conventional, readable scale spelling. Each mode is spelled by letter name in scale order—one of each letter—so the same pitch may be written with a sharp or flat depending on the tonic and mode.</span></span></label><div class="tonic-wheel" id="tonic-wheel"><button type="button" class="tonic-wheel-trigger" id="tonic-wheel-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="tonic-label tonic-wheel-trigger">D</button><div class="tonic-wheel-menu" id="tonic-wheel-menu" role="listbox" aria-label="Tonics" hidden></div></div></div>
 <div class="control"><label for="mode">Mode</label><select id="mode"></select></div>
 </section>
-<p class="legend"><span class="swatch"></span>Yellow markers show degrees changed from the Major reference. The fretboard box and physical scale shape stay fixed through all three views.</p>
+<p class="legend"><strong>Major-scale reference box:</strong> fixed position, interval labels only. No key movement or fret-number transposition in this checkpoint.</p>
 <main class="flow">
 <section class="scale-panel"><div class="panel-heading"><h2 id="major-title">D Major</h2><span class="relationship">Major reference</span></div><div class="hero-fretboard" id="major-fretboard"></div></section>
 <div class="connector">↓ <strong>same tonic</strong>, selected mode</div>
 <section class="scale-panel mode"><div class="panel-heading"><h2 id="mode-title">D Ionian</h2><span class="relationship">Parallel mode</span></div><div class="hero-fretboard" id="mode-fretboard"></div><p class="change-summary" id="change-summary"></p></section>
 <div class="connector">↓ <strong>same physical notes</strong>, new tonal center</div>
-<section class="scale-panel"><div class="panel-heading"><h2 id="parent-title">D Major</h2><span class="parent-explanation" id="parent-note"></span></div><div class="hero-fretboard" id="parent-fretboard"></div></section>
+<section class="scale-panel" style="display:none"><div class="panel-heading"><h2 id="parent-title">D Major</h2><span class="parent-explanation" id="parent-note"></span></div><div class="hero-fretboard" id="parent-fretboard"></div></section>
 </main>
 <script>
 const NATURAL={C:0,D:2,E:4,F:5,G:7,A:9,B:11},LETTERS=["C","D","E","F","G","A","B"],MAJOR=[0,2,4,5,7,9,11];
@@ -52,27 +52,33 @@ function accidental(d){return d===0?"":d===1?"♯":d===2?"♯♯":d===-1?"♭":d
 function spell(letter,target){let d=(target-NATURAL[letter]+12)%12;if(d>6)d-=12;return letter+accidental(d)}
 function parentTonic(tonic,mode){const p=parseNote(tonic),li=LETTERS.indexOf(p.letter),letter=LETTERS[(li-mode.degree+14)%7],pc=(p.pc-MAJOR[mode.degree]+120)%12;return spell(letter,pc)}
 function degreeLabels(formula){return formula.map((step,i)=>{const d=step-MAJOR[i];return d===-1?"♭"+(i+1):d===1?"♯"+(i+1):String(i+1)})}
-function renderFretboard(el,tonic,formula,labels,changed=[],homePc=parseNote(tonic).pc){
- const tonicPc=parseNote(tonic).pc,start=(tonicPc-TUNING[0]+12)%12,end=start+4,pcs=formula.map(x=>(tonicPc+x)%12),pcToDegree=new Map(pcs.map((pc,i)=>[pc,i]));
+function renderFretboard(el,view="major"){
+ // Fixed traditional Major-scale position, rooted on the low E string.
+ // Coordinates are [string index high-e..low-E, column 0..3, degree].
+ const majorPattern=[
+  [0,0,"R"],[0,2,"2"],[0,3,"3"],
+  [1,0,"5"],[1,2,"6"],[1,3,"7"],
+  [2,0,"2"],[2,2,"3"],[2,3,"4"],
+  [3,0,"6"],[3,2,"7"],[3,3,"R"],
+  [4,0,"3"],[4,1,"4"],[4,3,"5"],
+  [5,0,"R"],[5,2,"2"],[5,3,"3"]
+ ];
  let html="";
- for(let s=0;s<6;s++){const y=13+s*14.8;html+='<span class="fb-string" style="top:'+y+'%"></span><span class="fb-string-label" style="top:'+y+'%">'+STRING_NAMES[s]+'</span>'}
- for(let f=start;f<=end+1;f++){const x=5+((f-start)/5)*93;html+='<span class="fb-fret" style="left:'+x+'%"></span>';if(f<=end)html+='<span class="fb-fret-label" style="left:'+(5+((f-start+.5)/5)*93)+'%">'+f+'</span>'}
- for(let s=0;s<6;s++)for(let f=start;f<=end;f++){const pc=(TUNING[s]+f)%12,di=pcToDegree.get(pc);if(di===undefined)continue;const x=5+((f-start+.5)/5)*93,y=13+s*14.8,cls=["fb-dot"];if(pc===homePc)cls.push("root");if(changed.includes(di))cls.push("changed");const label=pc===homePc?"R":labels[di];html+='<span class="'+cls.join(" ")+'" style="left:'+x+'%;top:'+y+'%">'+label+'</span>'}
+ for(let s=0;s<6;s++){const y=13+s*14.8;html+='<span class="fb-string" style="top:'+y+'%"></span>'}
+ for(let col=0;col<=4;col++){const x=5+(col/4)*93;html+='<span class="fb-fret" style="left:'+x+'%"></span>'}
+ for(const [s,col,label] of majorPattern){const x=5+((col+.5)/4)*93,y=13+s*14.8,cls=["fb-dot"];if(label==="R")cls.push("root");html+='<span class="'+cls.join(" ")+'" style="left:'+x+'%;top:'+y+'%">'+label+'</span>'}
  el.innerHTML=html;
 }
+
 const tonicWheel=document.querySelector("#tonic-wheel"),tonicTrigger=document.querySelector("#tonic-wheel-trigger"),tonicMenu=document.querySelector("#tonic-wheel-menu"),modeSelect=document.querySelector("#mode");let tonicIndex=TONICS.indexOf("D");
 MODES.forEach((m,i)=>modeSelect.add(new Option(m.name,i)));modeSelect.value="0";
 function tonicValue(){return TONICS[tonicIndex]}
 function buildTonicMenu(){tonicMenu.innerHTML="";for(let o=-3;o<=3;o++){const idx=(tonicIndex+o+12)%12,b=document.createElement("button");b.type="button";b.className="tonic-wheel-option"+(o===0?" center":"");b.textContent=TONICS[idx];b.addEventListener("click",()=>{tonicIndex=idx;closeTonicMenu();syncTonic();update()});tonicMenu.appendChild(b)}}
 function syncTonic(){tonicTrigger.textContent=tonicValue();buildTonicMenu()} function openTonicMenu(){buildTonicMenu();tonicMenu.hidden=false;tonicTrigger.setAttribute("aria-expanded","true")} function closeTonicMenu(){tonicMenu.hidden=true;tonicTrigger.setAttribute("aria-expanded","false")}
 tonicTrigger.addEventListener("click",()=>tonicMenu.hidden?openTonicMenu():closeTonicMenu());tonicWheel.addEventListener("wheel",e=>{e.preventDefault();tonicIndex=(tonicIndex+(e.deltaY>0?1:-1)+12)%12;syncTonic();update()},{passive:false});document.addEventListener("click",e=>{if(!tonicWheel.contains(e.target))closeTonicMenu()});modeSelect.addEventListener("change",update);
-function update(){const t=tonicValue(),m=MODES[+modeSelect.value],changed=MAJOR.map((v,i)=>v!==m.formula[i]?i:-1).filter(i=>i>=0),pt=parentTonic(t,m),majorLabels=["1","2","3","4","5","6","7"],modalLabels=degreeLabels(m.formula),parentRootPc=parseNote(pt).pc,parentRootDegree=m.formula.findIndex(x=>(parseNote(t).pc+x)%12===parentRootPc),parentLabels=m.formula.map((_,i)=>String(((i-parentRootDegree+7)%7)+1));
- document.querySelector("#major-title").textContent=t+" Major";document.querySelector("#mode-title").textContent=t+" "+m.name;document.querySelector("#parent-title").textContent=pt+" Major";
- renderFretboard(document.querySelector("#major-fretboard"),t,MAJOR,majorLabels,changed,parseNote(t).pc);
- renderFretboard(document.querySelector("#mode-fretboard"),t,m.formula,modalLabels,changed,parseNote(t).pc);
- renderFretboard(document.querySelector("#parent-fretboard"),t,m.formula,parentLabels,[],parentRootPc);
- document.querySelector("#change-summary").innerHTML=m.degree===0?'<span class="quiet">Ionian is the Major scale, so no degrees change.</span>':m.name+" differs from Major by: "+m.changes;
- document.querySelector("#parent-note").textContent=m.degree===0?t+" Ionian uses the same shape and tonal center as "+pt+" Major.":t+" "+m.name+" uses the same physical notes as "+pt+" Major; only the tonal center and degree labels change.";
+function update(){
+ document.querySelector("#major-title").textContent="Major Scale";
+ renderFretboard(document.querySelector("#major-fretboard"));
 }
 syncTonic();update();
 </script>
